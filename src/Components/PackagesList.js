@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import "../CSS/PackagesList.css";
 
 export default function PackagesList({ packages }) {
   const { id } = useParams();

@@ -1,20 +1,60 @@
-// PhoneNumberPopup.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const PhoneNumberPopup = ({ isOpen, onClose }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [timer, setTimer] = useState(60);
 
-  const handleInputChange = (e) => {
+  useEffect(() => {
+    let interval;
+    if (isOtpSent && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isOtpSent, timer]);
+
+  const handlePhoneNumberChange = (e) => {
     setPhoneNumber(e.target.value);
+  };
+
+  const handleOtpChange = (e) => {
+    setOtp(e.target.value);
+  };
+
+  const handleSendOtp = () => {
+    // Simulate sending OTP
+    console.log("Sending OTP to:", phoneNumber);
+    setIsOtpSent(true);
+    setTimer(60); // Reset the timer
+  };
+
+  const handleVerifyOtp = () => {
+    // Simulate OTP verification
+    if (otp === "1234") {
+      console.log("OTP Verified!");
+      setPhoneNumber("");
+      setOtp("");
+      setIsOtpSent(false);
+      onClose();
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
+  };
+
+  const handleResendOtp = () => {
+    handleSendOtp();
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle the phone number submission logic here
-    console.log("Phone Number Submitted:", phoneNumber);
-    // Optionally clear the input
-    setPhoneNumber("");
-    onClose(); // Close the popup after submission
+    if (!isOtpSent) {
+      handleSendOtp();
+    } else {
+      handleVerifyOtp();
+    }
   };
 
   if (!isOpen) return null;
@@ -30,11 +70,37 @@ const PhoneNumberPopup = ({ isOpen, onClose }) => {
           <input
             type="tel"
             value={phoneNumber}
-            onChange={handleInputChange}
+            onChange={handlePhoneNumberChange}
             placeholder="03XXXXXXXXX"
             required
+            disabled={isOtpSent} // Disable input after OTP is sent
           />
-          <button type="submit">Submit</button>
+          {isOtpSent && (
+            <>
+              <input
+                type="number"
+                value={otp}
+                onChange={handleOtpChange}
+                placeholder="Enter OTP"
+                required
+              />
+              <div className="otp-timer">
+                <p>
+                  {timer > 0
+                    ? `Time remaining: ${String(timer).padStart(2, "0")}s`
+                    : "OTP expired!"}
+                </p>
+                {timer === 0 && (
+                  <button type="button" onClick={handleResendOtp}>
+                    Resend OTP
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+          <button type="submit">
+            {isOtpSent ? "Verify OTP" : "Send OTP"}
+          </button>
         </form>
       </div>
     </div>

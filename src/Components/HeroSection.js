@@ -1,4 +1,5 @@
 import React from "react";
+import "../CSS/MainSection.css";
 
 export default function HeroSection() {
   return (

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../CSS/SignUp.css";
 
 function SignupForm() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,11 @@ function SignupForm() {
     city: "",
   });
 
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(59);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,8 +28,73 @@ function SignupForm() {
     });
   };
 
+  const handleSendOtp = async () => {
+    if (!formData.phoneNumber) {
+      alert("Please enter your phone number.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/operations/otp/send_otp/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ phone_number: formData.phoneNumber }),
+        }
+      );
+      if (response.ok) {
+        startTimer();
+        alert("OTP sent successfully!");
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to send OTP.");
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      setErrorMessage("Something went wrong. Please try again.");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp) {
+      alert("Please enter the OTP.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/operations/otp/confirm_otp/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ phone_number: formData.phoneNumber, otp }),
+        }
+      );
+      if (response.ok) {
+        setOtpVerified(true);
+        alert("OTP verified successfully!");
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to verify OTP.");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setErrorMessage("Something went wrong. Please try again.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!otpVerified) {
+      alert("Please verify OTP before signing up.");
+      return;
+    }
+
     const signupData = {
       user: {
         email: formData.email,
@@ -67,6 +138,16 @@ function SignupForm() {
     }
   };
 
+  const startTimer = () => {
+    let countdown = 59;
+    setTimer(countdown);
+    const interval = setInterval(() => {
+      countdown -= 1;
+      setTimer(countdown);
+      if (countdown <= 0) clearInterval(interval);
+    }, 1000);
+  };
+
   const handleNavigateToLogin = () => {
     navigate("/login");
   };
@@ -99,22 +180,35 @@ function SignupForm() {
               onChange={handleChange}
             />
             <input
-              type="number"
+              type="text"
               className="otp"
               placeholder="WhatsApp Number"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
             />
-            <input type="number" className="otp" placeholder="OTP" disabled />
+            <input
+              type="text"
+              className="otp"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
             <div className="side-otp-buttons">
-              <input type="submit" className="ghost-otp" value="OTP" disabled />
-              <input
-                type="submit"
+              <button
+                type="button"
                 className="ghost-otp"
-                value="Verify"
-                disabled
-              />
+                onClick={handleSendOtp}
+              >
+                Send OTP
+              </button>
+              <button
+                type="button"
+                className="ghost-otp"
+                onClick={handleVerifyOtp}
+              >
+                Verify OTP
+              </button>
             </div>
           </div>
 
@@ -151,10 +245,18 @@ function SignupForm() {
         </div>
 
         <div className="otp-timer">
-          <p>Time remaining 00:59</p>
-          <a href="#">Resend OTP</a>
+          <p>
+            Time remaining:{" "}
+            {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "Expired"}
+          </p>
+          {timer === 0 && (
+            <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
+              Resend OTP
+            </a>
+          )}
           <button type="submit">Create</button>
         </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
     </section>
   );

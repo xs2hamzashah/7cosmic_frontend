@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import PackagesList from "../Components/PackagesList";
+import CalculatorButtons from "../Components/CalculatorButtons";
 
 export default function HomePage() {
   const [packages, setPackages] = useState([]);
@@ -70,6 +71,9 @@ export default function HomePage() {
     <section>
       <Navbar onSearch={handleSearch} />
       {!isSearching && <HeroSection />}
+      <div className="calculator">
+        <CalculatorButtons />
+      </div>
       <section className="card-section">
         <h1>Featured Listing</h1>
         <PackagesList

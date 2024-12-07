@@ -9,22 +9,26 @@ import ProductDetailList from "./Pages/ProductDetailsList";
 import HomePage from "./Pages/HomePage";
 import SellerAnalytics from "./Components/SellerAnalytics";
 import Signup from "./Pages/Signup";
+import AdminDashboard from "./AdminDashboard";
+import ResetPassword from "./Pages/ResetPassword";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/add-product/:id" element={<AddPackageForm />} />
         <Route path="/product-detail/:id" element={<ProductDetail />} />
         <Route path="/seller-dashboard" element={<SellerDashboard />} />
-        <Route path="/seller-analytics" element={<SellerAnalytics />} />
+        <Route path="/seller-analytics/:id" element={<SellerAnalytics />} />
         <Route
           path="/product-detail-list/:id"
           element={<ProductDetailList />}
         />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/product-image-upload/:id" element={<ImageUploader />} />
       </Routes>
     </BrowserRouter>

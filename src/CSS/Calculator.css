@@ -1,0 +1,68 @@
+.calculator {
+  margin: 0 0 5em 7em;
+}
+
+.calculator button {
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.calculator .btn {
+  padding: 15px 50px;
+  background-color: #ff6f20;
+  color: #fff;
+}
+
+.calculator .ghost {
+  padding: 13px 48px;
+  background-color: #fff;
+  border: 2px solid #ff6f20;
+  color: #ff6f20;
+}
+
+/* =========================== Pop up ============================== */
+
+.calculator-pop-up h3 {
+  font-size: 25px;
+  color: #ff6f20;
+}
+
+.calculator-pop-up {
+  width: 500px;
+  /* height: 400px; */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.calculator-section {
+  background-color: #fff;
+  text-align: center;
+  padding: 30px;
+}
+
+.calculator-section div input,
+.calculator-section div select,
+.calculator-section button {
+  width: 400px;
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid #ff6f20;
+  border-radius: 5px;
+  outline: none;
+}
+
+.calculator-section button {
+  background-color: #ff6f20;
+  color: #fff;
+  text-transform: capitalize;
+  border: none;
+}

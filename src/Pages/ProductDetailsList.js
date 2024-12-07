@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import AddPackageForm from "./AddPackageForm";
 import ElectricalWork from "../Components/Product-details-components/ElectricalWork";
 import MechanicalWork from "../Components/Product-details-components/MechanicalWork";
 import CivilWork from "../Components/Product-details-components/CivilWork";
@@ -6,23 +9,45 @@ import Battery from "../Components/Product-details-components/Battery";
 import Inverter from "../Components/Product-details-components/Inverter";
 import SolarPanel from "../Components/Product-details-components/SolarPanel";
 import Services from "../Components/Product-details-components/Services";
-import { useParams, useNavigate } from "react-router-dom";
+import "../CSS/ProductComponentsInputs.css";
 
 const ProductDetailList = () => {
   const [components, setComponents] = useState([]);
-  const [services, setServices] = useState({
-    netMetering: false,
-    dcEarthing: false,
-    onlineMonitoring: false,
-    hseEquipment: false,
-    transportation: false,
-  });
+  const [services, setServices] = useState({});
   const [transportationDistance, setTransportationDistance] = useState("");
   const [afssWarrantyYears, setAfssWarrantyYears] = useState("");
   const [additionalNote, setAdditionalNote] = useState("");
+  const [packageData, setPackageData] = useState(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Fetch package details when the component mounts
+  useEffect(() => {
+    const fetchPackageDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        const data = response.data;
+        setPackageData(data);
+        setComponents(data.components || []);
+        setServices(data.service || {});
+        setTransportationDistance(data.service?.transportation_distance || "");
+        setAfssWarrantyYears(data.service?.afss_warranty_years || "");
+        setAdditionalNote(data.seller_note || "");
+      } catch (error) {
+        console.error("Error fetching package details:", error.response?.data);
+      }
+    };
+
+    if (id) fetchPackageDetails();
+  }, [id]);
 
   const handleSelectComponent = (component) => {
     const componentIndex = components.findIndex(
@@ -31,10 +56,8 @@ const ProductDetailList = () => {
 
     let updatedComponents;
     if (componentIndex === -1) {
-      // If component is not in the list, add it
       updatedComponents = [...components, component];
     } else {
-      // If component is already in the list, remove it
       updatedComponents = components.filter((comp) => comp.id !== component.id);
     }
 
@@ -89,10 +112,15 @@ const ProductDetailList = () => {
     }
   };
 
+  if (!packageData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="component-detail-page">
-      <h1>Components</h1>
+      <AddPackageForm mode="edit" packageData={packageData} packageId={id} />
 
+      <h1>Components</h1>
       <SolarPanel
         components={components}
         handleSelectComponent={handleSelectComponent}

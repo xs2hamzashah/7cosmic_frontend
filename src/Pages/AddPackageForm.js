@@ -1,14 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../CSS/AddPackageForm.css";
 import axios from "axios";
 
-const AddPackageForm = () => {
+const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
   const [formData, setFormData] = useState({
     price: "",
     size: "",
-    solution_type: "On-Grid", // Set a default value to match expected data format
+    solution_type: "On-Grid", // Default value
   });
+
   const navigate = useNavigate();
+
+  // Prefill form if in "edit" mode
+  useEffect(() => {
+    if (mode === "edit" && packageData) {
+      setFormData({
+        price: packageData.price || "",
+        size: packageData.size || "",
+        solution_type: packageData.solution_type || "On-Grid",
+      });
+    }
+  }, [mode, packageData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,36 +33,37 @@ const AddPackageForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/listings/solar-solutions/",
-        {
-          size: formData.size,
-          price: formData.price,
-          solution_type: formData.solution_type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
 
-      if (response.status === 201) {
+    try {
+      const url =
+        mode === "edit"
+          ? `http://127.0.0.1:8000/api/listings/solar-solutions/${packageId}/`
+          : "http://127.0.0.1:8000/api/listings/solar-solutions/";
+
+      const method = mode === "edit" ? "PATCH" : "POST";
+
+      const response = await axios({
+        url,
+        method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        data: formData,
+      });
+
+      if (response.status === 201 || response.status === 200) {
         navigate(`/product-detail-list/${response.data.id}`);
       }
     } catch (error) {
-      console.error("Error adding package:", error.response?.data);
-      if (error.response) {
-        console.error("Error response data:", error.response.data); // Log detailed error from the server
-        console.log("Data to send:", formData);
-      }
+      console.error("Error submitting package:", error.response?.data);
     }
   };
 
   return (
     <section className="adding-package">
-      <h1 className="main-text">Add New Package</h1>
+      <h1 className="main-text">
+        {mode === "edit" ? "Edit Package" : "Add New Package"}
+      </h1>
       <div className="form">
         <form onSubmit={handleSubmit}>
           <input

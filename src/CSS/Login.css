@@ -1,0 +1,69 @@
+.login-container {
+    width: 700px;
+    margin: 15rem auto;
+  }
+  
+  .login-form {
+    width: 600px;
+    margin: 0 auto;
+  }
+  
+  .login-form h2 {
+    font-family: "Oswald", sans-serif;
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff6f20;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .login-form p {
+    text-align: center;
+  }
+  
+  a {
+    text-transform: capitalize;
+    border-bottom: 1px solid #000;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .login-form input {
+    display: block;
+    width: 600px;
+    padding: 15px;
+    border: 2px solid #a7aaab;
+    outline: none;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 19px;
+  }
+  
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="text"]:focus {
+    border: 2px solid #ff6f20;
+    transition: border 0.1s;
+  }
+  
+  .login-form .btn {
+    background-color: #ff6f20;
+    border: none;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  .login-form .login-error {
+    width: 600px;
+    padding: 15px;
+    border: 2px solid #e02222;
+    color: #e02222;
+    outline: none;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 19px;
+  }
+  

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Chart from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
-import { useNavigate } from "react-router-dom";
+import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
+import { useNavigate, useParams } from "react-router-dom";
+import "../CSS/SellerAnalytics.css";
 
-const SellerAnalytics = ({ sellerId }) => {
+// Register necessary Chart.js elements
+Chart.register(ArcElement, Legend, Tooltip);
+
+const SellerAnalytics = () => {
+  const { id: sellerId } = useParams(); // Get seller ID from the URL
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
   const navigate = useNavigate();
@@ -71,17 +76,14 @@ const SellerAnalytics = ({ sellerId }) => {
     ],
   };
 
-  // Pie chart options with legend hover effects
   const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        onHover: (event, legendItem) => {
-          // Define hover behavior
+        onHover: (event) => {
           event.native.target.style.cursor = "pointer";
         },
-        onLeave: (event, legendItem) => {
-          // Define leave behavior
+        onLeave: (event) => {
           event.native.target.style.cursor = "default";
         },
       },

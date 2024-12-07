@@ -4,6 +4,7 @@ import ComponentDetail from "./ComponentDetail";
 import ServicesList from "./ServicesList";
 import ImageSlider from "./ImageSlider";
 import PhoneNumberPopup from "./PopUp";
+import '../CSS/ProductDetail.css';
 
 export default function ProductDetail() {
   const { id } = useParams();

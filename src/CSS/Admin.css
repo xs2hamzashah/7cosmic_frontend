@@ -1,0 +1,135 @@
+
+.stats-container {
+    margin: 20px 0;
+  }
+  
+  .stats-title {
+    color: #ff6f20;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .stats-box {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .stats-total {
+    background-color: #ff6f20;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    flex: 1;
+  }
+  
+  .stats-total h2 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .stats-cities {
+    display: flex;
+    gap: 15px;
+    flex: 3;
+  }
+  
+  .stats-city {
+    background-color: #fff;
+    border: 2px solid #ff6f20;
+    color: #ff6f20;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    flex: 1;
+  }
+  
+  .stats-city span {
+    font-size: 16px;
+    display: block;
+  }
+  
+  .stats-city p {
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  .seller-listing {
+    margin: 20px 0;
+  }
+  
+  .seller-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f3f3f3;
+  }
+  
+  .seller-table th {
+    background-color: #ff6f20;
+    color: white;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .seller-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .seller-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .seller-table th,
+  .seller-table td {
+    text-transform: capitalize;
+  }
+  
+  .admin-package-manager .package-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 5rem 0;
+  }
+  
+  .admin-package-manager .package-table th,
+  .admin-package-manager .package-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .admin-package-manager .package-table th {
+    background-color: #ff6f20;
+    color: white;
+  }
+  
+  .admin-package-manager .btn {
+    padding: 5px 10px;
+    margin: 0 2px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .admin-package-manager .edit-btn {
+    background-color: green;
+    color: white;
+  }
+  
+  .admin-package-manager .approve-btn {
+    background-color: orange;
+    color: white;
+  }
+  
+  .admin-package-manager .approve-btn.approved {
+    background-color: #28a745; /* green */
+    color: white;
+  }
+  
+  .admin-package-manager .delete-btn {
+    background-color: red;
+    color: white;
+  }
+  

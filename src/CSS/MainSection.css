@@ -1,0 +1,16 @@
+.main-section {
+  width: 900px;
+  margin: 10rem 0 4rem 7rem;
+}
+
+.main-section h1 {
+  font-size: 59px;
+  font-weight: bold;
+  color: #ff6f20;
+}
+
+.main-section p {
+  margin-top: 1rem;
+  font-size: 29px;
+  color: #818181;
+}
