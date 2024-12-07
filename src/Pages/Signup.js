@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../CSS/SignUp.css";
+import API_BASE_URL from "../config";
+
 
 function SignupForm() {
   const [formData, setFormData] = useState({

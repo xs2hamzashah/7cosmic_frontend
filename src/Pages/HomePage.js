@@ -3,6 +3,7 @@ import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import PackagesList from "../Components/PackagesList";
 import CalculatorButtons from "../Components/CalculatorButtons";
+import API_BASE_URL from "../config";
 
 export default function HomePage() {
   const [packages, setPackages] = useState([]);
