@@ -14,7 +14,7 @@ export default function HomePage() {
     const fetchPackages = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/listings/solar-solutions/"
+          `${API_BASE_URL}/api/listings/solar-solutions/`
         );
         const data = await response.json();
         setPackages(data); // Store all packages

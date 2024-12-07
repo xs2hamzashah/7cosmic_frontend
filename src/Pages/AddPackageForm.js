@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../CSS/AddPackageForm.css";
+import API_BASE_URL from "../config"; 
 import axios from "axios";
 
 const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
@@ -37,8 +38,8 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
     try {
       const url =
         mode === "edit"
-          ? `http://127.0.0.1:8000/api/listings/solar-solutions/${packageId}/`
-          : "http://127.0.0.1:8000/api/listings/solar-solutions/";
+          ? `${API_BASE_URL}/api/listings/solar-solutions/${packageId}/`
+          : `${API_BASE_URL}/api/listings/solar-solutions/`;
 
       const method = mode === "edit" ? "PATCH" : "POST";
 

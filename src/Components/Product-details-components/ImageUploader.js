@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
+import API_BASE_URL from "../../config"; 
 
 const ImageUploader = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const ImageUploader = () => {
         formData.append("is_display_image", index === selectedIndex);
 
         return axios.post(
-          `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/upload_media/`,
+          `${API_BASE_URL}/api/listings/solar-solutions/${id}/upload_media/`,
           formData,
           {
             headers: {
@@ -100,7 +101,9 @@ const ImageUploader = () => {
                 flex: "0 0 auto",
                 cursor: "pointer",
                 border:
-                  index === selectedIndex ? "2px solid #FF6F20" : "1px solid gray",
+                  index === selectedIndex
+                    ? "2px solid #FF6F20"
+                    : "1px solid gray",
                 padding: "5px",
                 borderRadius: "4px",
               }}

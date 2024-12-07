@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../../config"; 
 
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        "http://127.0.0.1:8000/api/listings/components/?component_type=PV%20Module",
+        `${API_BASE_URL}/api/listings/components/?component_type=PV%20Module`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,7 +60,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       }
 
       const postResponse = await fetch(
-        "http://127.0.0.1:8000/api/listings/components/",
+        `${API_BASE_URL}/api/listings/components/`,
         {
           method: "POST",
           headers: {

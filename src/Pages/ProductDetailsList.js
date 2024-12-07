@@ -9,6 +9,7 @@ import Battery from "../Components/Product-details-components/Battery";
 import Inverter from "../Components/Product-details-components/Inverter";
 import SolarPanel from "../Components/Product-details-components/SolarPanel";
 import Services from "../Components/Product-details-components/Services";
+import API_BASE_URL from "../config"; 
 import "../CSS/ProductComponentsInputs.css";
 
 const ProductDetailList = () => {
@@ -27,7 +28,7 @@ const ProductDetailList = () => {
     const fetchPackageDetails = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`,
+          `${API_BASE_URL}/api/listings/solar-solutions/${id}/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -90,7 +91,7 @@ const ProductDetailList = () => {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`,
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/`,
         {
           method: "PATCH",
           headers: {

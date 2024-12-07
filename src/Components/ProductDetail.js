@@ -4,7 +4,8 @@ import ComponentDetail from "./ComponentDetail";
 import ServicesList from "./ServicesList";
 import ImageSlider from "./ImageSlider";
 import PhoneNumberPopup from "./PopUp";
-import '../CSS/ProductDetail.css';
+import API_BASE_URL from "../config";
+import "../CSS/ProductDetail.css";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -18,7 +19,7 @@ export default function ProductDetail() {
     const fetchPackageData = async () => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`
+          `${API_BASE_URL}/api/listings/solar-solutions/${id}/`
         );
         if (!response.ok) throw new Error("Failed to fetch package data");
 

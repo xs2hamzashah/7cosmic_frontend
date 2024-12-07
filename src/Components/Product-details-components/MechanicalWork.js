@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../../config"; 
 
 const MechanicalWork = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/listings/components/?component_type=Mechanical%20Work",
+        `${API_BASE_URL}/api/listings/components/?component_type=Mechanical%20Work`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,7 +61,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
       }
 
       const postResponse = await fetch(
-        "http://127.0.0.1:8000/api/listings/components/",
+        `${API_BASE_URL}/api/listings/components/`,
         {
           method: "POST",
           headers: {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
 import { useNavigate, useParams } from "react-router-dom";
+import API_BASE_URL from "../config"; 
 import "../CSS/SellerAnalytics.css";
 
 // Register necessary Chart.js elements
@@ -18,7 +19,7 @@ const SellerAnalytics = () => {
       try {
         const token = localStorage.getItem("accessToken");
         const response = await fetch(
-          `http://127.0.0.1:8000/api/listings/analytics/seller_analytics/?seller_id=${sellerId}`,
+          `${API_BASE_URL}/api/listings/analytics/seller_analytics/?seller_id=${sellerId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -126,7 +127,7 @@ const SellerAnalytics = () => {
               product.images.find((img) => img.is_display_image)?.image ||
               product.images[0]?.image;
             const displayImage = displayImagePath
-              ? `http://127.0.0.1:8000${displayImagePath}`
+              ? `${API_BASE_URL}${displayImagePath}`
               : null;
 
             return (

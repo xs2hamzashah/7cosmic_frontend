@@ -3,6 +3,7 @@ import StatsComponent from "./Components/StatsComponent";
 import SellerListing from "./Components/SellerListing";
 import AdminPackageManager from "./Components/AdminPackageManager";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "./config"; 
 import "./CSS/Admin.css";
 
 const Dashboard = () => {
@@ -28,7 +29,8 @@ const Dashboard = () => {
 
         // Fetch admin analytics data with Authorization header
         const response = await fetch(
-          "http://127.0.0.1:8000/api/listings/analytics/admin_analytics/",
+          `${API_BASE_URL}/api/listings/analytics/admin_analytics/`,
+          // "http://127.0.0.1:8000/api/listings/analytics/admin_analytics/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -118,7 +120,8 @@ const Dashboard = () => {
       if (!token) throw new Error("No access token found. Please log in.");
 
       // API URL
-      const url = `http://127.0.0.1:8000/api/operations/approvals/${id}/approve/`;
+      const url = `${API_BASE_URL}/api/operations/approvals/${id}/approve/`;
+      // const url = `http://127.0.0.1:8000/api/operations/approvals/${id}/approve/`;
 
       // Payload
       const payload = {
@@ -171,7 +174,8 @@ const Dashboard = () => {
 
       // Send DELETE request to the API
       const response = await fetch(
-        `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`,
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/`,
+        // `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`,
         {
           method: "DELETE",
           headers: {

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../config";
 import "../CSS/Login.css";
 
 // Create Axios Instance
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/", // Set the base URL
+  baseURL: `${API_BASE_URL}/api/`, // Set the base URL
 });
 
 // Add Interceptor to Attach Authorization Token
@@ -66,7 +67,7 @@ function Login() {
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/accounts/profiles/forgot_password/",
+        `${API_BASE_URL}/api/accounts/profiles/forgot_password/`,
         { email }
       );
       setForgotMessage("Password reset instructions sent to your email.");

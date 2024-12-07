@@ -36,7 +36,7 @@ function SignupForm() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/operations/otp/send_otp/",
+        `${API_BASE_URL}/api/operations/otp/send_otp/`,
         {
           method: "POST",
           headers: {
@@ -66,7 +66,7 @@ function SignupForm() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/operations/otp/confirm_otp/",
+        `${API_BASE_URL}/api/operations/otp/confirm_otp/`,
         {
           method: "POST",
           headers: {
@@ -114,16 +114,13 @@ function SignupForm() {
     };
 
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/accounts/profiles/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(signupData),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/accounts/profiles/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupData),
+      });
       if (response.ok) {
         alert("Account created successfully!");
         navigate("/login"); // Navigate to the dashboard
