@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ComponentDetail from "./ComponentDetail";
 import ServicesList from "./ServicesList";
 import ImageSlider from "./ImageSlider";
-import PhoneNumberPopup from "./PopUp";
+import PhoneNumberPopup from "./PhoneNumberPopUp";
 import API_BASE_URL from "../config";
 import "../CSS/ProductDetail.css";
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../CSS/SignUp.css";
 import API_BASE_URL from "../config";
-
+import { compassOutline } from "ionicons/icons";
 
 function SignupForm() {
   const [formData, setFormData] = useState({
@@ -19,6 +19,7 @@ function SignupForm() {
   const [timer, setTimer] = useState(59);
   const [otpVerified, setOtpVerified] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showTimer, setShowTimer] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,7 +48,15 @@ function SignupForm() {
           body: JSON.stringify({ phone_number: formData.phoneNumber }),
         }
       );
+
       if (response.ok) {
+        const responseData = await response.json();
+        console.log("OTP Response Data:", responseData);
+
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          console.log("OTP Message:", responseData[0]);
+        }
+        setShowTimer(true); // Show the timer
         startTimer();
         alert("OTP sent successfully!");
       } else {
@@ -74,11 +83,16 @@ function SignupForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ phone_number: formData.phoneNumber, otp }),
+          body: JSON.stringify({
+            phone_number: formData.phoneNumber,
+            otp_code: otp,
+          }),
         }
       );
+
       if (response.ok) {
         setOtpVerified(true);
+        setShowTimer(false); // Hide the timer
         alert("OTP verified successfully!");
       } else {
         const errorData = await response.json();
@@ -129,6 +143,7 @@ function SignupForm() {
       } else {
         const errorData = await response.json();
         console.error("Failed to create account", errorData);
+        console.log(signupData.user, signupData.company);
         alert(`Error: ${errorData.message || "Check your input fields"}`);
       }
     } catch (error) {
@@ -244,15 +259,22 @@ function SignupForm() {
         </div>
 
         <div className="otp-timer">
-          <p>
-            Time remaining:{" "}
-            {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "Expired"}
-          </p>
-          {timer === 0 && (
-            <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
-              Resend OTP
-            </a>
+          {showTimer && (
+            <div>
+              <p>
+                Time remaining:{" "}
+                {timer > 0
+                  ? `00:${timer.toString().padStart(2, "0")}`
+                  : "Expired"}
+              </p>
+              {timer === 0 && (
+                <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
+                  Resend OTP
+                </a>
+              )}
+            </div>
           )}
+
           <button type="submit">Create</button>
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}

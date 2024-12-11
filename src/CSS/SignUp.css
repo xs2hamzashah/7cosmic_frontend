@@ -32,6 +32,10 @@
   position: relative;
 }
 
+.otp {
+  width: 290px !important;
+}
+
 .inputs-section input {
   display: block;
   width: 450px;
@@ -45,10 +49,6 @@
 
 input:focus {
   border: 2px solid #ff6f20;
-}
-
-.otp {
-  width: 290px;
 }
 
 .ghost-otp {

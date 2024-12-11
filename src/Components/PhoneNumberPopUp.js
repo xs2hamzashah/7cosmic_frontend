@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../config";
 
 const PhoneNumberPopup = ({ isOpen, onClose }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [timer, setTimer] = useState(60);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let interval;
@@ -24,23 +27,71 @@ const PhoneNumberPopup = ({ isOpen, onClose }) => {
     setOtp(e.target.value);
   };
 
-  const handleSendOtp = () => {
-    // Simulate sending OTP
-    console.log("Sending OTP to:", phoneNumber);
-    setIsOtpSent(true);
-    setTimer(60); // Reset the timer
+  const handleSendOtp = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      // API call to send OTP
+      const response = await fetch(
+        `${API_BASE_URL}/api/operations/otp/send_otp/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone_number: phoneNumber }),
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to send OTP");
+      }
+
+      const responseData = await response.json();
+      console.log("OTP Response Data:", responseData);
+
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        console.log("OTP Message:", responseData[0]);
+      }
+      console.log("OTP sent successfully");
+      setIsOtpSent(true);
+      setTimer(60); // Reset the timer
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleVerifyOtp = () => {
-    // Simulate OTP verification
-    if (otp === "1234") {
-      console.log("OTP Verified!");
+  const handleVerifyOtp = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      // API call to verify OTP
+      const response = await fetch(
+        `${API_BASE_URL}/api/operations/otp/confirm_otp/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone_number: phoneNumber, otp_code: otp }),
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Invalid OTP");
+      }
+
+      console.log("OTP Verified Successfully!");
       setPhoneNumber("");
       setOtp("");
       setIsOtpSent(false);
-      onClose();
-    } else {
-      alert("Invalid OTP. Please try again.");
+      onClose(); // Close the popup
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,7 +116,7 @@ const PhoneNumberPopup = ({ isOpen, onClose }) => {
         <p onClick={onClose} className="close-button">
           X
         </p>
-        <h2>Enter Your Phone Number</h2>
+        <h2>{isOtpSent ? "Verify OTP" : "Enter Your Phone Number"}</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="tel"
@@ -84,7 +135,7 @@ const PhoneNumberPopup = ({ isOpen, onClose }) => {
                 placeholder="Enter OTP"
                 required
               />
-              <div className="otp-timer">
+              <div>
                 <p>
                   {timer > 0
                     ? `Time remaining: ${String(timer).padStart(2, "0")}s`
@@ -98,8 +149,9 @@ const PhoneNumberPopup = ({ isOpen, onClose }) => {
               </div>
             </>
           )}
-          <button type="submit">
-            {isOtpSent ? "Verify OTP" : "Send OTP"}
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" disabled={loading}>
+            {loading ? "Processing..." : isOtpSent ? "Verify OTP" : "Send OTP"}
           </button>
         </form>
       </div>
