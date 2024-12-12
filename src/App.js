@@ -11,6 +11,7 @@ import SellerAnalytics from "./Components/SellerAnalytics";
 import Signup from "./Pages/Signup";
 import AdminDashboard from "./AdminDashboard";
 import ResetPassword from "./Pages/ResetPassword";
+import EditPackage from "./Pages/EditPackages";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
         <Route
           path="/product-detail-list/:id"
           element={<ProductDetailList />}
+        />
+        <Route
+          path="/edit-product/:id"
+          element={<EditPackage />}
         />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/product-image-upload/:id" element={<ImageUploader />} />

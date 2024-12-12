@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import AddPackageForm from "./AddPackageForm";
 import ElectricalWork from "../Components/Product-details-components/ElectricalWork";
 import MechanicalWork from "../Components/Product-details-components/MechanicalWork";
 import CivilWork from "../Components/Product-details-components/CivilWork";
@@ -9,7 +8,7 @@ import Battery from "../Components/Product-details-components/Battery";
 import Inverter from "../Components/Product-details-components/Inverter";
 import SolarPanel from "../Components/Product-details-components/SolarPanel";
 import Services from "../Components/Product-details-components/Services";
-import API_BASE_URL from "../config"; 
+import API_BASE_URL from "../config";
 import "../CSS/ProductComponentsInputs.css";
 
 const ProductDetailList = () => {
@@ -23,7 +22,6 @@ const ProductDetailList = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Fetch package details when the component mounts
   useEffect(() => {
     const fetchPackageDetails = async () => {
       try {
@@ -113,14 +111,12 @@ const ProductDetailList = () => {
     }
   };
 
-  if (!packageData) {
+  if (!packageData && id) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="component-detail-page">
-      <AddPackageForm mode="edit" packageData={packageData} packageId={id} />
-
       <h1>Components</h1>
       <SolarPanel
         components={components}

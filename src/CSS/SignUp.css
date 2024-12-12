@@ -48,7 +48,7 @@ input:focus {
 }
 
 .otp {
-  width: 290px;
+  width: 290px !important;
 }
 
 .ghost-otp {

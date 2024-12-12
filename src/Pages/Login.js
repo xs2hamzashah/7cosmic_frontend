@@ -64,10 +64,11 @@ function Login() {
     }
   };
 
+  // ============== handle forget password ================ //
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/accounts/profiles/forgot_password/`,
+        "http://127.0.0.1:8000/api/accounts/profiles/forgot_password/",
         { email }
       );
       setForgotMessage("Password reset instructions sent to your email.");

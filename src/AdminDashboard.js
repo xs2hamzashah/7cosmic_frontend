@@ -3,7 +3,7 @@ import StatsComponent from "./Components/StatsComponent";
 import SellerListing from "./Components/SellerListing";
 import AdminPackageManager from "./Components/AdminPackageManager";
 import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "./config"; 
+import API_BASE_URL from "./config";
 import "./CSS/Admin.css";
 
 const Dashboard = () => {
@@ -20,17 +20,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Retrieve token from localStorage
         const token = localStorage.getItem("accessToken");
 
         if (!token) {
           throw new Error("No access token found. Please log in.");
         }
 
-        // Fetch admin analytics data with Authorization header
         const response = await fetch(
           `${API_BASE_URL}/api/listings/analytics/admin_analytics/`,
-          // "http://127.0.0.1:8000/api/listings/analytics/admin_analytics/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,7 +42,6 @@ const Dashboard = () => {
         const data = await response.json();
         const report = data.report;
 
-        // Aggregate data for stats
         const sellersByCity = {
           islamabad: 0,
           lahore: 0,
@@ -60,7 +56,6 @@ const Dashboard = () => {
           total: 0,
         };
 
-        // Prepare seller listing data
         const sellers = report.map((seller, index) => ({
           id: index + 1,
           companyName: seller.seller_name,
@@ -77,7 +72,6 @@ const Dashboard = () => {
               : "N/A",
         }));
 
-        // Prepare package data for AdminPackageManager
         const packages = report.flatMap((seller) =>
           seller.products.map((product) => ({
             id: product.id,
@@ -86,11 +80,10 @@ const Dashboard = () => {
             price: product.price,
             solutionType: product.solution_type,
             buyerInteractionCount: product.buyer_interaction_count,
-            isApproved: product.is_approved, // Example logic for approval
+            isApproved: product.is_approved,
           }))
         );
 
-        // Update state
         setStatsData({
           sellers: sellersByCity,
           buyers: buyersByCity,
@@ -106,12 +99,8 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // const handleEdit = (id) => {
-  //   console.log("Edit package:", id);
-  // };
-
   const handleEdit = (id) => {
-    navigate(`/product-detail-list/${id}`);
+    navigate(`/edit-product/${id}`);
   };
 
   const handleApprove = async (id) => {
@@ -119,11 +108,8 @@ const Dashboard = () => {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("No access token found. Please log in.");
 
-      // API URL
       const url = `${API_BASE_URL}/api/operations/approvals/${id}/approve/`;
-      // const url = `http://127.0.0.1:8000/api/operations/approvals/${id}/approve/`;
 
-      // Payload
       const payload = {
         admin_verified: true,
         discrepancy: "string",
@@ -131,9 +117,8 @@ const Dashboard = () => {
         email_notification_sent: true,
       };
 
-      // Send POST request
       const response = await fetch(url, {
-        method: "POST", // Try POST instead of PATCH
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -142,14 +127,19 @@ const Dashboard = () => {
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to approve package. HTTP status: ${response.status}`
-        );
+        throw new Error(`Failed to approve package. HTTP status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log("Package approved successfully:", data);
       alert("Package approved successfully!");
+
+      // Update the package data to reflect the approval
+      setPackageData((prevPackages) =>
+        prevPackages.map((pkg) =>
+          pkg.id === id ? { ...pkg, isApproved: true } : pkg
+        )
+      );
     } catch (error) {
       console.error("Error approving package:", error);
       alert(error.message);
@@ -164,18 +154,13 @@ const Dashboard = () => {
         throw new Error("No access token found. Please log in.");
       }
 
-      // Confirm delete action with the user
-      const isConfirmed = window.confirm(
-        "Are you sure you want to delete this package?"
-      );
+      const isConfirmed = window.confirm("Are you sure you want to delete this package?");
       if (!isConfirmed) {
         return;
       }
 
-      // Send DELETE request to the API
       const response = await fetch(
         `${API_BASE_URL}/api/listings/solar-solutions/${id}/`,
-        // `http://127.0.0.1:8000/api/listings/solar-solutions/${id}/`,
         {
           method: "DELETE",
           headers: {
@@ -185,15 +170,10 @@ const Dashboard = () => {
       );
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to delete package. HTTP status: ${response.status}`
-        );
+        throw new Error(`Failed to delete package. HTTP status: ${response.status}`);
       }
 
-      // Remove the deleted package from the state
-      setPackageData((prevPackages) =>
-        prevPackages.filter((pkg) => pkg.id !== id)
-      );
+      setPackageData((prevPackages) => prevPackages.filter((pkg) => pkg.id !== id));
 
       alert("Package deleted successfully!");
     } catch (error) {
