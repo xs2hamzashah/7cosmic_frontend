@@ -34,9 +34,12 @@ function Login() {
     try {
       const response = await api.post("auth/login/", { email, password });
       const { access, refresh } = response.data;
+
+      // Store tokens in local storage
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
+      // Check for admin privileges
       try {
         const adminResponse = await api.get(
           "/listings/analytics/admin_analytics/"
@@ -45,21 +48,33 @@ function Login() {
           navigate("/admin");
           return;
         }
-      } catch {}
+      } catch {
+        // Admin route not accessible, proceed to check for seller
+      }
 
+      // Check for seller privileges
       try {
         const sellerResponse = await api.get(
           "/listings/analytics/seller_analytics/"
         );
-        if (sellerResponse.data) {
+        if (sellerResponse.data && sellerResponse.data.seller_id) {
           const sellerId = sellerResponse.data.seller_id;
+
+          // Store seller ID in local storage for future use
+          localStorage.setItem("sellerId", sellerId);
+
+          // Navigate to seller analytics page
           navigate(`/seller-analytics/${sellerId}`);
           return;
         }
-      } catch {}
+      } catch {
+        // Seller route not accessible, proceed to show error
+      }
 
+      // If neither admin nor seller access is valid
       setError("You do not have permission to access this data.");
     } catch (error) {
+      // Handle login failure
       setError(error.response?.data?.detail || "Invalid email or password");
     }
   };

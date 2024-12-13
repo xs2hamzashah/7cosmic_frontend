@@ -10,7 +10,10 @@ export default function HomePage() {
   const [filteredPackages, setFilteredPackages] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Fetch all packages initially
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // Number of items per page
+
   useEffect(() => {
     const fetchPackages = async () => {
       try {
@@ -29,28 +32,20 @@ export default function HomePage() {
   }, []);
 
   const priceRangeMap = {
-    below_1M: "1.00", // Database value for "below 1M"
-    below_2M: "2.00", // Database value for "below 2M"
-    below_3M: "3.00", // Database value for "below 3M"
-    above_3M: "3.01", // Value greater than 3M in the database
+    below_1M: "1.00",
+    below_2M: "2.00",
+    below_3M: "3.00",
+    above_3M: "3.01",
   };
 
   const handleSearch = (searchParams) => {
-    const { city, size = "", price_range, query } = searchParams; // Default to empty string if size is undefined
+    const { city, size = "", price_range, query } = searchParams;
 
     const results = packages.filter((pkg) => {
       const matchesCity = city ? pkg.city === city : true;
       const matchesSize = size ? pkg.size == Number(size) : true;
 
-      // Debugging logs
-      console.log(
-        `pkg.size: ${pkg.size}, size: ${size}, matchesSize: ${matchesSize}`
-      );
-
-      // Get the corresponding value for the selected price range
       const selectedPriceRange = priceRangeMap[price_range];
-
-      // Price comparison logic
       const matchesPrice = price_range
         ? price_range === "above_3M"
           ? parseFloat(pkg.price) > parseFloat(priceRangeMap["below_3M"] || 0)
@@ -65,7 +60,32 @@ export default function HomePage() {
     });
 
     setFilteredPackages(results);
-    setIsSearching(true); // Set searching state to true
+    setIsSearching(true);
+    setCurrentPage(1); // Reset to the first page when searching
+  };
+
+  // Calculate the items to display for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPackages = isSearching
+    ? filteredPackages.slice(startIndex, endIndex)
+    : packages.slice(startIndex, endIndex);
+
+  // Calculate total pages
+  const totalItems = isSearching ? filteredPackages.length : packages.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Pagination handlers
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
   };
 
   return (
@@ -78,12 +98,21 @@ export default function HomePage() {
       <section className="card-section">
         <h1>Featured Listing</h1>
         <PackagesList
-          packages={
-            isSearching
-              ? filteredPackages.filter((pkg) => pkg != null) // Filter out null/undefined packages
-              : packages
-          }
+          packages={paginatedPackages.filter((pkg) => pkg != null)}
         />
+
+        {/* Pagination Controls */}
+        <div className="pagination">
+          <button onClick={goToPreviousPage} disabled={currentPage === 1}>
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+          <p>
+            Page {currentPage} of {totalPages}
+          </p>
+          <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
       </section>
     </section>
   );
