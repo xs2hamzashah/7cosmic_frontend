@@ -1,167 +1,165 @@
-
 .detail {
-    display: flex;
-    margin-top: 5rem;
-  }
-  
-  .detail-box {
-    background-color: #f3f3f3;
-    margin: 20px;
-    width: 600px;
-    height: 600px;
-  }
-  
-  .detail-imgs .detail-box img {
-    width: 600px;
-    height: 600px;
-  }
-  
-  .detail .text {
-    width: 500px;
-    margin: 50px 0 0 70px;
-  }
-  
-  .detail .text h2 {
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    color: #ff6f20;
-    letter-spacing: 1px;
-  }
-  
-  .price-tag {
-    color: #000;
-    font-weight: 700;
-    line-height: 3;
-  }
-  
-  h3 {
-    font-size: 14px;
-  }
-  
-  .boxes {
-    display: flex;
-    margin: 20px 0px;
-  }
-  
-  .detail .text p {
-    font-size: 19px;
-    margin-bottom: 10px;
-  }
-  
-  .seller-note {
-    margin-left: 30px;
-    font-size: 17px;
-  }
-  
-  .detail p span {
-    font-weight: 600;
-    color: #ff6f20;
-  }
-  
-  .detail .text ul li {
-    font-size: 19px;
-    line-height: 1.5;
-    margin-left: 25px;
-  }
-  
-  .detail .service-list {
-    margin: 40px;
-  }
-  
-  .detail .service-list h3 {
-    font-size: 19px;
-    padding: 10px 0;
-    color: #ff6f20;
-  }
-  
-  .detail .service-list ul {
-    list-style-type: none;
-    line-height: 1.5;
-    margin-left: 10px;
-  }
-  
-  .service-list p {
-    margin: 20px 0;
-  }
-  
-  .component-detail h3 {
-    font-size: 21px;
-    color: #ff6f20;
-  }
-  
-  .components-list-detail {
-    list-style: none;
-    margin-top: 10px;
-  }
-  
-  .component-list {
-    max-height: 150px; /* Initial half-open height */
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-  
-  .component-list.expanded {
-    max-height: none; /* Fully expanded height */
-  }
-  
-  .service-list p span {
-    font-weight: 600;
-    color: #ff6f20;
-  }
-  
-  .detail-btn {
-    width: 500px;
-    padding: 10px;
-    margin: 20px 10px;
-    font-size: 21px;
-    text-transform: uppercase;
-    font-weight: 500;
-    background: none;
-    border: 1px solid #000;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .center-text {
-    text-align: center;
-    margin: 30px 0;
-    display: flex;
-    align-items: center;
-    color: orange;
-    font-size: 1.5em;
-    font-weight: bold;
-    text-transform: uppercase;
-    position: relative;
-  }
-  
-  .center-text::before,
-  .center-text::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background-color: orange;
-    margin: 0 10px;
-  }
-  
-  .expand-btn {
-    width: 100%;
-    background-color: #ff6f20;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    margin: 30px 0;
-    padding-top: 5px;
-    cursor: pointer;
-    font-size: 30px;
-  }
-  
- /* ============================================ */
- /* ================== Pop up ================== */
- /* ============================================ */
+  display: flex;
+  margin-top: 5rem;
+}
 
-  
+.detail-box {
+  background-color: #f3f3f3;
+  margin: 20px;
+  width: 600px;
+  height: 600px;
+}
+
+.detail-imgs .detail-box img {
+  width: 600px;
+  height: 600px;
+}
+
+.detail .text {
+  width: 500px;
+  margin: 50px 0 0 70px;
+}
+
+.detail .text h2 {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  color: #ff6f20;
+  letter-spacing: 1px;
+}
+
+.price-tag {
+  color: #000;
+  font-weight: 700;
+  line-height: 3;
+}
+
+h3 {
+  font-size: 14px;
+}
+
+.boxes {
+  display: flex;
+  margin: 20px 0px;
+}
+
+.detail .text p {
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+
+.seller-note {
+  margin-left: 30px;
+  font-size: 17px;
+}
+
+.detail p span {
+  font-weight: 600;
+  color: #ff6f20;
+}
+
+.detail .text ul li {
+  font-size: 19px;
+  line-height: 1.5;
+  margin-left: 25px;
+}
+
+.detail .service-list {
+  margin: 40px;
+}
+
+.detail .service-list h3 {
+  font-size: 19px;
+  padding: 10px 0;
+  color: #ff6f20;
+}
+
+.detail .service-list ul {
+  list-style-type: none;
+  line-height: 1.5;
+  margin-left: 10px;
+}
+
+.service-list p {
+  margin: 20px 0;
+}
+
+.component-detail h3 {
+  font-size: 21px;
+  color: #ff6f20;
+}
+
+.components-list-detail {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.component-list {
+  max-height: 150px; /* Initial half-open height */
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.component-list.expanded {
+  max-height: none; /* Fully expanded height */
+}
+
+.service-list p span {
+  font-weight: 600;
+  color: #ff6f20;
+}
+
+.detail-btn {
+  width: 500px;
+  padding: 10px;
+  margin: 20px 10px;
+  font-size: 21px;
+  text-transform: uppercase;
+  font-weight: 500;
+  background: none;
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.center-text {
+  text-align: center;
+  margin: 30px 0;
+  display: flex;
+  align-items: center;
+  color: orange;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.center-text::before,
+.center-text::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: orange;
+  margin: 0 10px;
+}
+
+.expand-btn {
+  width: 100%;
+  background-color: #ff6f20;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin: 30px 0;
+  padding-top: 5px;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+/* ============================================ */
+/* ================== Pop up ================== */
+/* ============================================ */
+
 /* PhoneNumberPopup.css */
 .popup-overlay {
   position: fixed;
@@ -193,7 +191,7 @@
   border-radius: 4px;
 }
 
-.popup-content button {
+.popup-content {
   padding: 10px 15px;
   border: none;
   width: 100%;

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import API_BASE_URL from "../config";
 import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
+import SubscriptionPopup from "../Components/SubscriptionPopup";
 
 // Register necessary Chart.js elements
 Chart.register(ArcElement, Legend, Tooltip);
@@ -13,6 +14,8 @@ const SellerAnalytics = () => {
   const { id: sellerId } = useParams(); // Get seller ID from the URL
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false); // Track subscription status
+  const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +43,9 @@ const SellerAnalytics = () => {
           0
         );
         setTotalBuyers(buyersCount);
+
+        // Check subscription status (mocked here, replace with API response if available)
+        setIsSubscribed(data.is_subscribed || false); // Assuming `is_subscribed` is part of the API response
       } catch (error) {
         console.error("Error fetching seller analytics:", error);
       }
@@ -49,6 +55,20 @@ const SellerAnalytics = () => {
   }, [sellerId]);
 
   if (!sellerData) return <p>Loading...</p>;
+
+  const handleSubscribe = () => {
+    // Logic for subscribing (e.g., API call to handle payment)
+    setIsSubscribed(true);
+    setShowSubscriptionPopup(false);
+  };
+
+  const handleAddPackage = () => {
+    if (isSubscribed) {
+      navigate("/add-product/:id");
+    } else {
+      setShowSubscriptionPopup(true);
+    }
+  };
 
   // Prepare data for Chart.js (Pie Chart)
   const chartData = {
@@ -151,14 +171,18 @@ const SellerAnalytics = () => {
             })}
           </ul>
 
-          <button
-            className="add-new-package"
-            onClick={() => navigate("/add-product/:id")}
-          >
-            Add New Package
+          <button className="add-new-package" onClick={handleAddPackage}>
+            {isSubscribed ? "Add New Package" : "Subscribe"}
           </button>
         </div>
       </div>
+
+      {showSubscriptionPopup && (
+        <SubscriptionPopup
+          onClose={() => setShowSubscriptionPopup(false)}
+          onSubscribe={handleSubscribe}
+        />
+      )}
     </>
   );
 };

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { clipboardOutline, logOutOutline, personOutline } from "ionicons/icons";
 import "../CSS/Navbar.css";
 
 export default function Navbar({ onSearch }) {
@@ -108,7 +110,7 @@ export default function Navbar({ onSearch }) {
             onClick={() => navigate("/login")}
             style={{ cursor: "pointer" }}
           >
-            <ion-icon name="person-outline"></ion-icon>
+            <IonIcon icon={personOutline} />
           </p>
         ) : (
           <>
@@ -124,14 +126,14 @@ export default function Navbar({ onSearch }) {
               }}
               style={{ cursor: "pointer" }}
             >
-              <ion-icon name="clipboard-outline"></ion-icon>
+              <IonIcon icon={clipboardOutline} />
             </p>
             <p
               className="log-out"
               onClick={handleLogout}
               style={{ cursor: "pointer" }}
             >
-              <ion-icon name="log-out-outline"></ion-icon>
+              <IonIcon icon={logOutOutline} />
             </p>
           </>
         )}
