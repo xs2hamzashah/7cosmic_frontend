@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
 import { useNavigate, useParams } from "react-router-dom";
-import API_BASE_URL from "../config"; 
+import API_BASE_URL from "../config";
 import "../CSS/SellerAnalytics.css";
+import Navbar from "../Components/Navbar";
 
 // Register necessary Chart.js elements
 Chart.register(ArcElement, Legend, Tooltip);
@@ -92,70 +93,73 @@ const SellerAnalytics = () => {
   };
 
   return (
-    <div className="seller-dashboard">
-      <h2 className="welcome-text">Welcome Back, {sellerData.seller_name}</h2>
+    <>
+      <Navbar />
+      <div className="seller-dashboard">
+        <h2 className="welcome-text">Welcome Back, {sellerData.seller_name}</h2>
 
-      <div className="sells-detail">
-        <div className="box-1">
-          <h3>Total buyers</h3>
-          <p>{totalBuyers}</p>
+        <div className="sells-detail">
+          <div className="box-1">
+            <h3>Total buyers</h3>
+            <p>{totalBuyers}</p>
+          </div>
+          <div className="graph">
+            <Pie data={chartData} options={chartOptions} />
+          </div>
         </div>
-        <div className="graph">
-          <Pie data={chartData} options={chartOptions} />
-        </div>
-      </div>
 
-      <div className="whatsapp-info">
-        <h2>Buyers per package list</h2>
-        <ul>
-          {sellerData.products.map((product) => (
-            <li key={product.id} className="whatsapp-item">
-              <p>
-                {product.display_name}:{" "}
-                <span>{product.buyer_whatsapp_numbers.length} Buyers</span>
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="packages-cards">
-        <h2>Packages List</h2>
-        <ul>
-          {sellerData.products.map((product) => {
-            const displayImagePath =
-              product.images.find((img) => img.is_display_image)?.image ||
-              product.images[0]?.image;
-            const displayImage = displayImagePath
-              ? `${API_BASE_URL}${displayImagePath}`
-              : null;
-
-            return (
-              <li key={product.id} className="package-card">
-                <div className="img">
-                  {displayImage ? (
-                    <img src={displayImage} alt={product.display_name} />
-                  ) : (
-                    <p>No Image Available</p>
-                  )}
-                </div>
-                <div className="package-card-text">
-                  <h3>{product.display_name}</h3>
-                  <p>Price: ${product.price}</p>
-                </div>
+        <div className="whatsapp-info">
+          <h2>Buyers per package list</h2>
+          <ul>
+            {sellerData.products.map((product) => (
+              <li key={product.id} className="whatsapp-item">
+                <p>
+                  {product.display_name}:{" "}
+                  <span>{product.buyer_whatsapp_numbers.length} Buyers</span>
+                </p>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        </div>
 
-        <button
-          className="add-new-package"
-          onClick={() => navigate("/add-product/:id")}
-        >
-          Add New Package
-        </button>
+        <div className="packages-cards">
+          <h2>Packages List</h2>
+          <ul>
+            {sellerData.products.map((product) => {
+              const displayImagePath =
+                product.images.find((img) => img.is_display_image)?.image ||
+                product.images[0]?.image;
+              const displayImage = displayImagePath
+                ? `${API_BASE_URL}${displayImagePath}`
+                : null;
+
+              return (
+                <li key={product.id} className="package-card">
+                  <div className="img">
+                    {displayImage ? (
+                      <img src={displayImage} alt={product.display_name} />
+                    ) : (
+                      <p>No Image Available</p>
+                    )}
+                  </div>
+                  <div className="package-card-text">
+                    <h3>{product.display_name}</h3>
+                    <p>Price: ${product.price}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          <button
+            className="add-new-package"
+            onClick={() => navigate("/add-product/:id")}
+          >
+            Add New Package
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

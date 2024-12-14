@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-import API_BASE_URL from "../../config"; 
+import API_BASE_URL from "../../config";
 
 const ImageUploader = () => {
   const { id } = useParams();
@@ -15,7 +15,6 @@ const ImageUploader = () => {
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     setSelectedIndex(null);
   };
-  
 
   // Upload all images to the server
   const handleUpload = async () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../CSS/AddPackageForm.css";
-import API_BASE_URL from "../config"; 
+import API_BASE_URL from "../config";
 import axios from "axios";
 
 const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
@@ -53,7 +53,13 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
       });
 
       if (response.status === 201 || response.status === 200) {
-        navigate(`/product-detail-list/${response.data.id}`);
+        if (mode === "edit") {
+          // Redirect to the same product detail page after editing
+          navigate(`/product-detail-list/${packageId}`);
+        } else {
+          // Redirect to the product detail page of the new package
+          navigate(`/product-detail-list/${response.data.id}`);
+        }
       }
     } catch (error) {
       console.error("Error submitting package:", error.response?.data);

@@ -50,6 +50,10 @@
 input:focus {
   border: 2px solid #ff6f20;
 }
+<<<<<<< HEAD
+.otp {
+  width: 290px !important;
+}
 
 .ghost-otp {
   width: 140px;
