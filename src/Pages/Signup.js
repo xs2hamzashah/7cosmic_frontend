@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "../CSS/SignUp.css";
 import API_BASE_URL from "../config";
 
-
 function SignupForm() {
   const [formData, setFormData] = useState({
     email: "",
@@ -155,7 +154,7 @@ function SignupForm() {
     <section className="signup-section">
       <h1>Create Business Account</h1>
       <p>
-        Already have an account?{" "}
+        Already have an account?
         <a onClick={handleNavigateToLogin} style={{ cursor: "pointer" }}>
           Log in
         </a>

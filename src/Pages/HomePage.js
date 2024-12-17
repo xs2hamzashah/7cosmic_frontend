@@ -92,9 +92,13 @@ export default function HomePage() {
     <section>
       <Navbar onSearch={handleSearch} />
       {!isSearching && <HeroSection />}
+
+      {/* Calculator */}
       <div className="calculator">
-        <CalculatorButtons />
+        <button className="ghost">Solar Need Calculator</button>
       </div>
+
+      {/* Card Section */}
       <section className="card-section">
         <h1>Featured Listing</h1>
         <PackagesList

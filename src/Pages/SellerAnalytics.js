@@ -6,6 +6,7 @@ import API_BASE_URL from "../config";
 import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
 import SubscriptionPopup from "../Components/SubscriptionPopup";
+import CalculatorButtons from "../Components/CalculatorButtons";
 
 // Register necessary Chart.js elements
 Chart.register(ArcElement, Legend, Tooltip);
@@ -128,6 +129,10 @@ const SellerAnalytics = () => {
           </div>
         </div>
 
+        <div className="calculator">
+          <CalculatorButtons />
+        </div>
+
         <div className="whatsapp-info">
           <h2>Buyers per package list</h2>
           <ul>
@@ -143,33 +148,35 @@ const SellerAnalytics = () => {
         </div>
 
         <div className="packages-cards">
-          <h2>Packages List</h2>
-          <ul>
-            {sellerData.products.map((product) => {
-              const displayImagePath =
-                product.images.find((img) => img.is_display_image)?.image ||
-                product.images[0]?.image;
-              const displayImage = displayImagePath
-                ? `${API_BASE_URL}${displayImagePath}`
-                : null;
+          {sellerData.products.map((product) => {
+            const displayImagePath =
+              product.images.find((img) => img.is_display_image)?.image ||
+              product.images[0]?.image;
+            const displayImage = displayImagePath
+              ? `${API_BASE_URL}${displayImagePath}`
+              : null;
 
-              return (
-                <li key={product.id} className="package-card">
-                  <div className="img">
-                    {displayImage ? (
-                      <img src={displayImage} alt={product.display_name} />
-                    ) : (
-                      <p>No Image Available</p>
-                    )}
-                  </div>
-                  <div className="package-card-text">
-                    <h3>{product.display_name}</h3>
-                    <p>Price: ${product.price}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+            return (
+              <>
+                <h2>Packages List</h2>
+                <ul>
+                  <li key={product.id} className="package-card">
+                    <div className="img">
+                      {displayImage ? (
+                        <img src={displayImage} alt={product.display_name} />
+                      ) : (
+                        <p>No Image Available</p>
+                      )}
+                    </div>
+                    <div className="package-card-text">
+                      <h3>{product.display_name}</h3>
+                      <p>Price: ${product.price}</p>
+                    </div>
+                  </li>
+                </ul>
+              </>
+            );
+          })}
 
           <button className="add-new-package" onClick={handleAddPackage}>
             {isSubscribed ? "Add New Package" : "Subscribe"}
