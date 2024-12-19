@@ -1,4 +1,4 @@
-.popup-overlay {
+.popup-subscription-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 
-.popup-content {
+.popup-subscription-content {
   background: linear-gradient(135deg, #ff6f20, #ff9057);
   color: #fff;
   padding: 2rem;

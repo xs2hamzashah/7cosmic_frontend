@@ -94,7 +94,11 @@ export default function ProductDetail() {
             )}
           </button>
         </div>
-        <PhoneNumberPopup isOpen={isPopupOpen} onClose={handleClosePopup} />
+        <PhoneNumberPopup
+          isOpen={isPopupOpen}
+          onClose={handleClosePopup}
+          id={id}
+        />
       </div>
     </div>
   );

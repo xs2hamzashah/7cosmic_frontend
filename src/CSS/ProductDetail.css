@@ -161,7 +161,7 @@ h3 {
 /* ============================================ */
 
 /* PhoneNumberPopup.css */
-.popup-overlay {
+.popup-phone-number-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -174,7 +174,7 @@ h3 {
   z-index: 1000;
 }
 
-.popup-content {
+.popup-phone-number-content {
   background: white;
   padding: 80px;
   border-radius: 3px;
@@ -183,7 +183,7 @@ h3 {
   position: relative;
 }
 
-.popup-content input {
+.popup-phone-number-content input {
   width: 100%;
   padding: 10px;
   margin: 20px 0 10px 0;
@@ -191,23 +191,42 @@ h3 {
   border-radius: 4px;
 }
 
-.popup-content {
+.popup-phone-number-content {
   padding: 10px 15px;
   border: none;
-  width: 100%;
-  background-color: #ff6f20;
-  color: white;
+  color: black;
+  width: 400px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.popup-phone-number-content div {
+  margin-top: 20px;
+}
+
+.product-otp-timer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.popup-phone-number-content button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #ff6f20;
+  border: none;
+  color: #fff;
+  border-radius: 5px;
 }
 
 .close-button {
   position: absolute;
   padding: 10px;
-  font-size: 25px;
+  font-size: 15px;
   font-weight: 900;
   color: #333;
-  right: 10px;
-  top: 10px;
+  right: 0px;
+  top: 0px;
   cursor: pointer;
 }
