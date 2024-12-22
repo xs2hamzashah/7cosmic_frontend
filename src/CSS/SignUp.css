@@ -22,7 +22,7 @@
 
 .inputs-section {
   width: 900px;
-  margin: 3rem 7rem;
+  margin: 3rem auto;
   display: flex;
   justify-content: space-between;
 }
@@ -32,7 +32,8 @@
   position: relative;
 }
 
-.inputs-section input {
+.inputs-section input,
+.inputs-section select {
   display: block;
   width: 450px;
   padding: 15px;
@@ -42,6 +43,10 @@
   outline: none;
   border: 2px solid #858c8e;
 }
+
+/* .input-box {
+  margin: 50px 0;
+} */
 
 input:focus {
   border: 2px solid #ff6f20;
@@ -101,4 +106,10 @@ input:focus {
   padding: 15px;
 
   border: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 11px;
+  margin-left: 10px;
 }

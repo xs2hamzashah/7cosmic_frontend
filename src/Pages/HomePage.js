@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { IonIcon } from "@ionic/react";
+import { arrowBackOutline } from "ionicons/icons";
 import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import PackagesList from "../Components/PackagesList";
-import CalculatorButtons from "../Components/CalculatorButtons";
 import API_BASE_URL from "../config";
 
 export default function HomePage() {
   const [packages, setPackages] = useState([]);
   const [filteredPackages, setFilteredPackages] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-
-  // Pagination states
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6; // Number of items per page
+  const [isFilteredView, setIsFilteredView] = useState(false);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -22,7 +19,6 @@ export default function HomePage() {
         );
         const data = await response.json();
         setPackages(data); // Store all packages
-        setFilteredPackages(data); // Initially set filtered packages to all
       } catch (error) {
         console.error("Error fetching packages:", error);
       }
@@ -60,64 +56,39 @@ export default function HomePage() {
     });
 
     setFilteredPackages(results);
-    setIsSearching(true);
-    setCurrentPage(1); // Reset to the first page when searching
+    setIsFilteredView(true); // Switch to filtered view
   };
 
-  // Calculate the items to display for the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedPackages = isSearching
-    ? filteredPackages.slice(startIndex, endIndex)
-    : packages.slice(startIndex, endIndex);
-
-  // Calculate total pages
-  const totalItems = isSearching ? filteredPackages.length : packages.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  // Pagination handlers
-  const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }
+  const goBackToHomePage = () => {
+    setIsFilteredView(false); // Switch back to homepage view
   };
 
   return (
     <section>
       <Navbar onSearch={handleSearch} />
-      {!isSearching && <HeroSection />}
 
-      {/* Calculator */}
-      <div className="calculator">
-        <button className="ghost">Solar Need Calculator</button>
-      </div>
-
-      {/* Card Section */}
-      <section className="card-section">
-        <h1>Featured Listing</h1>
-        <PackagesList
-          packages={paginatedPackages.filter((pkg) => pkg != null)}
-        />
-
-        {/* Pagination Controls */}
-        <div className="pagination">
-          <button onClick={goToPreviousPage} disabled={currentPage === 1}>
-            <ion-icon name="chevron-back-outline"></ion-icon>
+      {/* Conditional Rendering */}
+      {isFilteredView ? (
+        <section className="filtered-section">
+          <h1>Search Results</h1>
+          <button onClick={goBackToHomePage} className="back-button">
+            <IonIcon icon={arrowBackOutline} className="back-icon" />
+            Back to Home
           </button>
-          <p>
-            Page {currentPage} of {totalPages}
-          </p>
-          <button onClick={goToNextPage} disabled={currentPage === totalPages}>
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </button>
-        </div>
-      </section>
+          <PackagesList packages={filteredPackages} />
+        </section>
+      ) : (
+        <>
+          <HeroSection />
+          <div className="calculator">
+            <button className="ghost">Solar Need Calculator</button>
+          </div>
+          <section className="card-section">
+            <h1>Featured Listing</h1>
+            <PackagesList packages={packages} />
+          </section>
+        </>
+      )}
     </section>
   );
 }

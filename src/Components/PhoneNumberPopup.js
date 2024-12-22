@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../config";
 
 const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -27,7 +28,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
   const handleSendOtp = async () => {
     try {
       const response = await fetch(
-        "https://cosmic-server7.onrender.com/api/operations/otp/send_otp/",
+        `${API_BASE_URL}/api/operations/otp/send_otp/`,
         {
           method: "POST",
           headers: {
@@ -61,7 +62,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
 
     try {
       const response = await fetch(
-        "https://cosmic-server7.onrender.com/api/operations/otp/confirm_otp/",
+        `${API_BASE_URL}/api/operations/otp/confirm_otp/`,
         {
           method: "POST",
           headers: {

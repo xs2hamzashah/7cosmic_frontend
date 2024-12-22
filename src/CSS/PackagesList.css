@@ -1,9 +1,5 @@
-.card-section h1 {
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 32px;
-  font-weight: 300;
-  color: #ff6f20;
+.card-section {
+  margin-top: 4rem;
 }
 
 .card-section h1 {
@@ -12,8 +8,8 @@
   display: flex;
   align-items: center;
   color: #ff6f20;
-  font-size: 32px;
-  font-weight: 300;
+  font-size: 20px;
+  font-weight: 500;
   text-transform: uppercase;
   position: relative;
 }
@@ -71,42 +67,49 @@
   font-weight: 600;
 }
 
-/* .pagination {
-  width: 300px;
-  display: flex;
-  margin: 3rem auto;
+.filtered-section {
+  margin-top: 4rem;
 }
 
-.pagination button {
-  padding: 15px 15px 0 15px;
-  color: #ff6f20;
-  border: none;
-  background-color: none;
-  cursor: pointer;
-  font-size: 41px;
-}
-
-.pagination p {
-  margin-top: 25px;
-} */
-
-.pagination {
+/* Back Button Styling */
+.back-button {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 20px;
-}
-
-.pagination button {
-  margin: 0 10px;
-  padding: 5px 15px 2px 15px;
-  font-size: 21px;
+  gap: 0.5rem;
+  background-color: #ff6f20;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 1rem;
+  margin: 2rem 0;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: color 0.3s ease-in-out;
 }
 
-.pagination button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+/* Icon Animation */
+.back-icon {
+  font-size: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.back-button:hover .back-icon {
+  animation: moveArrow 0.6s ease-in-out 1;
+}
+
+/* Keyframes for Arrow Movement */
+@keyframes moveArrow {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5px); /* Move slightly backward */
+  }
+  100% {
+    transform: translateX(0); /* Return to the original position */
+  }
 }
 
 /* ============================================ */
@@ -149,3 +152,7 @@
 .slider-button-next {
   right: 10px;
 }
+
+/* ===================================================================== */
+/* ======================== CARD RESPONSIVENESS ======================== */
+/* ===================================================================== */
