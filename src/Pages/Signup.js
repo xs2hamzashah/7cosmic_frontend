@@ -277,7 +277,7 @@ function SignupForm() {
                 className="ghost-otp"
                 style={{
                   marginBottom:
-                    errors.phoneNumber || errors.otp ? "25px" : "0px",
+                    errors.phoneNumber || errors.otp ? "25px" : "10px",
                 }}
                 onClick={handleVerifyOtp}
               >

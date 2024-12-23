@@ -3,13 +3,6 @@
   margin-top: 5rem;
 }
 
-.detail-box {
-  background-color: #f3f3f3;
-  margin: 20px;
-  width: 600px;
-  height: 600px;
-}
-
 .detail-imgs .detail-box img {
   width: 600px;
   height: 600px;
@@ -229,4 +222,124 @@ h3 {
   right: 0px;
   top: 0px;
   cursor: pointer;
+}
+
+/* Responsive Design with Media Queries */
+
+@media (max-width: 1280px) {
+  .detail {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .detail-imgs {
+    order: 2;
+  }
+
+  .detail .text .detail-main-text {
+    order: 1;
+    margin: 20px 0;
+  }
+
+  .detail .service-list {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail {
+    margin-top: 2rem;
+  }
+
+  .detail-box {
+    margin: 10px;
+  }
+
+  .detail .text {
+    margin: 10px;
+  }
+
+  .detail .text h2 {
+    font-size: 20px;
+  }
+
+  .price-tag {
+    font-size: 16px;
+  }
+
+  .detail-btn {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .expand-btn {
+    font-size: 20px;
+  }
+
+  .popup-phone-number-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .popup-phone-number-content input {
+    padding: 8px;
+  }
+
+  .popup-phone-number-content button {
+    font-size: 16px;
+  }
+
+  .close-button {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 600px) {
+  .detail {
+    max-width: 300px;
+    padding: 3rem;
+  }
+
+  .detail .text {
+    width: 250px;
+    /* background-color: #000; */
+  }
+  .detail .text h2 {
+    font-size: 18px;
+  }
+
+  .price-tag {
+    font-size: 14px;
+  }
+
+  .detail-btn {
+    width: 250px;
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  .expand-btn {
+    font-size: 18px;
+  }
+
+  .detail-imgs .detail-box img {
+    width: 300px;
+    height: 400px;
+    overflow: hidden;
+  }
+
+  .popup-phone-number-content {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .popup-phone-number-content button {
+    font-size: 14px;
+  }
+
+  .close-button {
+    font-size: 10px;
+    padding: 4px;
+  }
 }
