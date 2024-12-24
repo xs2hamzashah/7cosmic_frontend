@@ -10,7 +10,8 @@ const CompanyNameInput = ({ value, onChange }) => {
 
   // Debounce function to delay API call
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    // Prevent API call if the searchTerm is "Other"
+    if (searchTerm.trim() === "" || searchTerm === "Other") {
       setSuggestions([]);
       return;
     }
@@ -26,7 +27,7 @@ const CompanyNameInput = ({ value, onChange }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/accounts/api/company-names/?search=${query}`
+        `https://api.7solar.pk/api/accounts/api/company-names/?search=${query}`
       );
       setSuggestions(response.data.company_names || []);
     } catch (error) {
@@ -47,14 +48,14 @@ const CompanyNameInput = ({ value, onChange }) => {
     // Assign "Other" if the name isn't in the suggestions
     if (!suggestions.includes(searchTerm)) {
       setSelectedCompany("Other");
-      setSearchTerm("Other");
+      setSearchTerm("Other"); // This will now stop the API call
     } else {
       setSelectedCompany(searchTerm);
     }
   };
 
   return (
-    <div style={{ position: "relative", width: "300px" }}>
+    <div style={{ position: "relative" }}>
       <input
         id="companyName"
         type="text"

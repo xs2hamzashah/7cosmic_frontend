@@ -155,7 +155,7 @@ const ProductDetailList = () => {
       />
 
       <button className="comp-sending-btn" onClick={updateServer}>
-        Submit All
+        Next
       </button>
     </div>
   );

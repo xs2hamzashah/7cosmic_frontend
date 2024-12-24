@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { caretUpOutline, caretDownOutline } from "ionicons/icons";
 import ComponentDetail from "./ComponentDetail";
 import ServicesList from "./ServicesList";
 import ImageSlider from "./ImageSlider";
 import PhoneNumberPopup from "./PhoneNumberPopup";
+import Navbar from "./Navbar";
 import API_BASE_URL from "../config";
 import "../CSS/ProductDetail.css";
-import Navbar from "./Navbar";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -88,9 +90,9 @@ export default function ProductDetail() {
 
           <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
             {expanded ? (
-              <ion-icon name="caret-up-outline"></ion-icon>
+              <IonIcon icon={caretUpOutline} />
             ) : (
-              <ion-icon name="caret-down-outline"></ion-icon>
+              <IonIcon icon={caretDownOutline} />
             )}
           </button>
         </div>

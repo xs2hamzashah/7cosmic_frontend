@@ -262,7 +262,7 @@ function SignupForm() {
             <div className="side-otp-buttons">
               <button
                 type="button"
-                className="ghost-otp"
+                className="ghost-otp send-otp"
                 style={{
                   marginBottom:
                     errors.phoneNumber || errors.otp ? "43px" : "10px",
@@ -274,7 +274,7 @@ function SignupForm() {
               </button>
               <button
                 type="button"
-                className="ghost-otp"
+                className="ghost-otp verify-otp"
                 style={{
                   marginBottom:
                     errors.phoneNumber || errors.otp ? "25px" : "10px",

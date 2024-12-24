@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { arrowForwardOutline } from "ionicons/icons";
 import "../CSS/AddPackageForm.css";
 import API_BASE_URL from "../config";
 import axios from "axios";
@@ -10,6 +12,7 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
     size: "",
     solution_type: "On-Grid", // Default value
   });
+  const [validationError, setValidationError] = useState(""); // For displaying validation errors
 
   const navigate = useNavigate();
 
@@ -32,8 +35,22 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
     }));
   };
 
+  const validateFields = () => {
+    if (!formData.price.trim() || !formData.size.trim()) {
+      setValidationError("Both price and size fields must be filled.");
+      return false;
+    }
+    setValidationError(""); // Clear error if fields are valid
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Perform validation before making the API request
+    if (!validateFields()) {
+      return;
+    }
 
     try {
       const url =
@@ -95,11 +112,15 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
             <option value="On-Grid">On-Grid</option>
             <option value="Hybrid">Hybrid</option>
           </select>
-          <button type="submit">
-            <ion-icon name="arrow-forward-outline"></ion-icon>
-          </button>
+
+          {mode !== "edit" && ( // Conditionally render the submit button
+            <button type="submit">
+              <IonIcon icon={arrowForwardOutline} />
+            </button>
+          )}
         </form>
       </div>
+      {validationError && <p className="error">{validationError}</p>}
     </section>
   );
 };

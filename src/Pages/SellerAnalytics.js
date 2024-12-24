@@ -15,7 +15,7 @@ const SellerAnalytics = () => {
   const { id: sellerId } = useParams(); // Get seller ID from the URL
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
-  const [isSubscribed, setIsSubscribed] = useState(false); // Track subscription status
+  const [isSubscribed, setIsSubscribed] = useState(true); // Track subscription status
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const navigate = useNavigate();
 
@@ -64,11 +64,13 @@ const SellerAnalytics = () => {
   };
 
   const handleAddPackage = () => {
-    if (isSubscribed) {
-      navigate("/add-product/:id");
-    } else {
-      setShowSubscriptionPopup(true);
-    }
+    navigate("/add-product/:id");
+
+    // if (isSubscribed) {
+    //   navigate("/add-product/:id");
+    // } else {
+    //   setShowSubscriptionPopup(true);
+    // }
   };
 
   // Prepare data for Chart.js (Pie Chart)
@@ -179,7 +181,8 @@ const SellerAnalytics = () => {
           })}
 
           <button className="add-new-package" onClick={handleAddPackage}>
-            {isSubscribed ? "Add New Package" : "Subscribe"}
+            {/* {isSubscribed ? "Add New Package" : "Subscribe"} */}
+            Add New Package
           </button>
         </div>
       </div>
