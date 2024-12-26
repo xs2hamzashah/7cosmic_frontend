@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import {
+  searchOutline,
+  clipboardOutline,
+  logOutOutline,
+  personOutline,
+} from "ionicons/icons";
 import "../CSS/Navbar.css";
+import SearchBox from "./SearchBox";
 
 export default function Navbar({ onSearch }) {
   const [city, setCity] = useState("");
@@ -8,6 +16,7 @@ export default function Navbar({ onSearch }) {
   const [priceRange, setPriceRange] = useState("");
   const [inputText, setInputText] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Tracks login status
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,50 +63,22 @@ export default function Navbar({ onSearch }) {
         logo
       </h2>
 
+      {/* Search icon for smaller screens */}
+      {location.pathname === "/" && (
+        <IonIcon
+          icon={searchOutline}
+          className="search-icon"
+          onClick={() => setIsSearchVisible(!isSearchVisible)}
+        />
+      )}
+
       {/* Render the search box only if the user is on the homepage */}
       {location.pathname === "/" && (
-        <div className="search-box">
-          <form onSubmit={handleSearch}>
-            <select value={city} onChange={(e) => setCity(e.target.value)}>
-              <option value="">City</option>
-              <option value="ISB">Islamabad</option>
-              <option value="KAR">Karachi</option>
-              <option value="LHR">Lahore</option>
-            </select>
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Search..."
-              className="search-bar"
-            />
-            <select
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-              className="middle-select"
-            >
-              <option value="">System size</option>
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
-
-            <select
-              value={priceRange}
-              onChange={(e) => setPriceRange(e.target.value)}
-            >
-              <option value="">Price range</option>
-              <option value="below_1M">Below 1M</option>
-              <option value="below_2M">Below 2M</option>
-              <option value="below_3M">Below 3M</option>
-              <option value="above_3M">Above 3M</option>
-            </select>
-
-            <button className="search-btn" type="submit">
-              Search
-            </button>
-          </form>
+        <div className={`search-box ${isSearchVisible ? "visible" : ""}`}>
+          <SearchBox
+            onSearch={onSearch}
+            onClose={() => setIsSearchVisible(false)}
+          />
         </div>
       )}
 
@@ -108,7 +89,7 @@ export default function Navbar({ onSearch }) {
             onClick={() => navigate("/login")}
             style={{ cursor: "pointer" }}
           >
-            <ion-icon name="person-outline"></ion-icon>
+            <IonIcon icon={personOutline} />
           </p>
         ) : (
           <>
@@ -124,14 +105,14 @@ export default function Navbar({ onSearch }) {
               }}
               style={{ cursor: "pointer" }}
             >
-              <ion-icon name="clipboard-outline"></ion-icon>
+              <IonIcon icon={clipboardOutline} />
             </p>
             <p
               className="log-out"
               onClick={handleLogout}
               style={{ cursor: "pointer" }}
             >
-              <ion-icon name="log-out-outline"></ion-icon>
+              <IonIcon icon={logOutOutline} />
             </p>
           </>
         )}

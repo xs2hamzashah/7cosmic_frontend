@@ -25,61 +25,76 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
   const [forgotMessage, setForgotMessage] = useState(""); // For forgot password feedback
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
     try {
-      const response = await api.post("auth/login/", { email, password });
+      // Determine the role based on email and password
+      let role = "seller"; // Default role
+      if (email === "admin@example.com" && password === "useradmin") {
+        role = "admin";
+      }
+
+      // Send login request with email, password, and role
+      const response = await api.post("auth/login/", { email, password, role });
       const { access, refresh } = response.data;
 
       // Store tokens in local storage
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
-      // Check for admin privileges
-      try {
-        const adminResponse = await api.get(
-          "/listings/analytics/admin_analytics/"
-        );
-        if (adminResponse.data.report && adminResponse.data.report.length > 0) {
-          navigate("/admin");
+      // Navigate to the correct dashboard based on the role
+      if (role === "admin") {
+        try {
+          // Verify admin access
+          const adminResponse = await api.get(
+            "/listings/analytics/admin_analytics/"
+          );
+          if (adminResponse.data) {
+            navigate("/admin");
+            return;
+          }
+        } catch (error) {
+          setError("Admin access failed.");
           return;
         }
-      } catch {
-        // Admin route not accessible, proceed to check for seller
-      }
+      } else {
+        try {
+          // Verify seller access
+          const sellerResponse = await api.get(
+            "/listings/analytics/seller_analytics/"
+          );
+          if (sellerResponse.data && sellerResponse.data.seller_id) {
+            const sellerId = sellerResponse.data.seller_id;
 
-      // Check for seller privileges
-      try {
-        const sellerResponse = await api.get(
-          "/listings/analytics/seller_analytics/"
-        );
-        if (sellerResponse.data && sellerResponse.data.seller_id) {
-          const sellerId = sellerResponse.data.seller_id;
+            // Store seller ID in local storage for future use
+            localStorage.setItem("sellerId", sellerId);
 
-          // Store seller ID in local storage for future use
-          localStorage.setItem("sellerId", sellerId);
-
-          // Navigate to seller analytics page
-          navigate(`/seller-analytics/${sellerId}`);
+            // Navigate to seller analytics page
+            navigate(`/seller-analytics/${sellerId}`);
+            return;
+          }
+        } catch (error) {
+          setError("Seller access failed.");
           return;
         }
-      } catch {
-        // Seller route not accessible, proceed to show error
       }
 
-      // If neither admin nor seller access is valid
+      // If neither role works, show error
       setError("You do not have permission to access this data.");
     } catch (error) {
       // Handle login failure
       setError(error.response?.data?.detail || "Invalid email or password");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
-  // ============== handle forget password ================ //
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
@@ -132,7 +147,17 @@ function Login() {
           >
             Forgot your password?
           </a>
-          <input className="btn" type="submit" value="Sign In" />
+          <button className="btn" type="submit" disabled={loading}>
+            {loading ? (
+              <span className="loading-dots">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            ) : (
+              "Sign In"
+            )}
+          </button>
         </form>
         {error && <p className="login-error">{error}</p>}
         {forgotMessage && <p className="forgot-message">{forgotMessage}</p>}

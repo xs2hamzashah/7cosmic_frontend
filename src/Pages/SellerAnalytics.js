@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import API_BASE_URL from "../config";
 import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
+import SubscriptionPopup from "../Components/SubscriptionPopup";
+import CalculatorButtons from "../Components/CalculatorButtons";
 
 // Register necessary Chart.js elements
 Chart.register(ArcElement, Legend, Tooltip);
@@ -13,6 +15,8 @@ const SellerAnalytics = () => {
   const { id: sellerId } = useParams(); // Get seller ID from the URL
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(true); // Track subscription status
+  const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +44,9 @@ const SellerAnalytics = () => {
           0
         );
         setTotalBuyers(buyersCount);
+
+        // Check subscription status (mocked here, replace with API response if available)
+        setIsSubscribed(data.is_subscribed || false); // Assuming `is_subscribed` is part of the API response
       } catch (error) {
         console.error("Error fetching seller analytics:", error);
       }
@@ -49,6 +56,22 @@ const SellerAnalytics = () => {
   }, [sellerId]);
 
   if (!sellerData) return <p>Loading...</p>;
+
+  const handleSubscribe = () => {
+    // Logic for subscribing (e.g., API call to handle payment)
+    setIsSubscribed(true);
+    setShowSubscriptionPopup(false);
+  };
+
+  const handleAddPackage = () => {
+    navigate("/add-product/:id");
+
+    // if (isSubscribed) {
+    //   navigate("/add-product/:id");
+    // } else {
+    //   setShowSubscriptionPopup(true);
+    // }
+  };
 
   // Prepare data for Chart.js (Pie Chart)
   const chartData = {
@@ -108,6 +131,10 @@ const SellerAnalytics = () => {
           </div>
         </div>
 
+        <div className="calculator">
+          <CalculatorButtons />
+        </div>
+
         <div className="whatsapp-info">
           <h2>Buyers per package list</h2>
           <ul>
@@ -123,42 +150,49 @@ const SellerAnalytics = () => {
         </div>
 
         <div className="packages-cards">
-          <h2>Packages List</h2>
-          <ul>
-            {sellerData.products.map((product) => {
-              const displayImagePath =
-                product.images.find((img) => img.is_display_image)?.image ||
-                product.images[0]?.image;
-              const displayImage = displayImagePath
-                ? `${API_BASE_URL}${displayImagePath}`
-                : null;
+          {sellerData.products.map((product) => {
+            const displayImagePath =
+              product.images.find((img) => img.is_display_image)?.image ||
+              product.images[0]?.image;
+            const displayImage = displayImagePath
+              ? `${API_BASE_URL}${displayImagePath}`
+              : null;
 
-              return (
-                <li key={product.id} className="package-card">
-                  <div className="img">
-                    {displayImage ? (
-                      <img src={displayImage} alt={product.display_name} />
-                    ) : (
-                      <p>No Image Available</p>
-                    )}
-                  </div>
-                  <div className="package-card-text">
-                    <h3>{product.display_name}</h3>
-                    <p>Price: ${product.price}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+            return (
+              <>
+                <h2>Packages List</h2>
+                <ul>
+                  <li key={product.id} className="package-card">
+                    <div className="img">
+                      {displayImage ? (
+                        <img src={displayImage} alt={product.display_name} />
+                      ) : (
+                        <p>No Image Available</p>
+                      )}
+                    </div>
+                    <div className="package-card-text">
+                      <h3>{product.display_name}</h3>
+                      <p>Price: ${product.price}</p>
+                    </div>
+                  </li>
+                </ul>
+              </>
+            );
+          })}
 
-          <button
-            className="add-new-package"
-            onClick={() => navigate("/add-product/:id")}
-          >
+          <button className="add-new-package" onClick={handleAddPackage}>
+            {/* {isSubscribed ? "Add New Package" : "Subscribe"} */}
             Add New Package
           </button>
         </div>
       </div>
+
+      {showSubscriptionPopup && (
+        <SubscriptionPopup
+          onClose={() => setShowSubscriptionPopup(false)}
+          onSubscribe={handleSubscribe}
+        />
+      )}
     </>
   );
 };

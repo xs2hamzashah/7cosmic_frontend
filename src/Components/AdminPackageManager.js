@@ -18,23 +18,23 @@ const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
         <tbody>
           {packages.map((pkg) => (
             <tr key={pkg.id}>
-              <td>{pkg.displayName}</td>
+              <td>{pkg.display_name}</td>
               <td>{pkg.size}</td>
               <td>{parseFloat(pkg.price).toLocaleString()}</td>
-              <td>{pkg.solutionType}</td>
-              <td>{pkg.buyerInteractionCount}</td>
-              <td>{pkg.isApproved ? "Approved" : "Pending Approval"}</td>
+              <td>{pkg.solution_type}</td>
+              <td>{pkg.buyer_interaction_count}</td>
+              <td>{pkg.is_approved ? "Approved" : "Pending Approval"}</td>
               <td>
                 <button className="btn edit-btn" onClick={() => onEdit(pkg.id)}>
                   Edit
                 </button>
                 <button
                   className={`btn approve-btn ${
-                    pkg.isApproved ? "approved" : ""
+                    pkg.is_approved ? "approved" : ""
                   }`}
                   onClick={() => onApprove(pkg.id)}
                 >
-                  {pkg.isApproved ? "Approved" : "Approve"}
+                  {pkg.is_approved ? "Approved" : "Approve"}
                 </button>
                 <button
                   className="btn delete-btn"

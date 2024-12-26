@@ -39,7 +39,7 @@ const CalculatorButtons = () => {
       >
         Solar Cost Calculator
       </button>
-      <button className="ghost">Solar Need Calculator</button>
+      {/* <button className="ghost">Solar Need Calculator</button> */}
 
       {/* Popup for Solar Cost Calculator */}
       {showSolarCostPopup && (

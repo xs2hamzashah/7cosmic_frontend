@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { caretUpOutline, caretDownOutline } from "ionicons/icons";
 import ComponentDetail from "./ComponentDetail";
 import ServicesList from "./ServicesList";
 import ImageSlider from "./ImageSlider";
-import PhoneNumberPopup from "./PhoneNumberPopUp";
+import PhoneNumberPopup from "./PhoneNumberPopup";
+import Navbar from "./Navbar";
 import API_BASE_URL from "../config";
 import "../CSS/ProductDetail.css";
 
@@ -47,51 +50,58 @@ export default function ProductDetail() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="detail">
-      <div className="detail-imgs">
-        <ImageSlider packageData={packageData} />
+    <div>
+      <Navbar />
+      <div className="detail">
+        <div className="detail-imgs">
+          <ImageSlider packageData={packageData} />
 
-        <ServicesList serviceData={packageData.service} />
+          <ServicesList serviceData={packageData.service} />
 
-        {packageData.seller_note ? (
-          <p className="seller-note">
-            <span>Note:</span> {packageData.seller_note}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="text">
-        <h2>{packageData.display_name}</h2>
-        <p>
-          Price: <span>{packageData.price}M</span>
-        </p>
-        <p>
-          Size: <span>{packageData.size}</span>
-        </p>
-        <p>
-          Type: <span>{packageData.solution_type}</span>
-        </p>
-
-        <button className="detail-btn" onClick={handleOpenPopup}>
-          Whatsapp
-        </button>
-
-        <h2 className="center-text">Components</h2>
-        <div className={`component-list ${expanded ? "expanded" : ""}`}>
-          {packageData.components.map((component) => (
-            <ComponentDetail key={component.id} component={component} />
-          ))}
+          {packageData.seller_note ? (
+            <p className="seller-note">
+              <span>Note:</span> {packageData.seller_note}
+            </p>
+          ) : null}
         </div>
 
-        <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
-          {expanded ? (
-            <ion-icon name="caret-up-outline"></ion-icon>
-          ) : (
-            <ion-icon name="caret-down-outline"></ion-icon>
-          )}
-        </button>
+        <div className="text">
+          <h2>{packageData.display_name}</h2>
+          <p>
+            Price: <span>{packageData.price}M</span>
+          </p>
+          <p>
+            Size: <span>{packageData.size}</span>
+          </p>
+          <p>
+            Type: <span>{packageData.solution_type}</span>
+          </p>
+
+          <button className="detail-btn" onClick={handleOpenPopup}>
+            Whatsapp
+          </button>
+
+          <h2 className="center-text">Components</h2>
+          <div className={`component-list ${expanded ? "expanded" : ""}`}>
+            {packageData.components.map((component) => (
+              <ComponentDetail key={component.id} component={component} />
+            ))}
+          </div>
+
+          <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
+            {expanded ? (
+              <IonIcon icon={caretUpOutline} />
+            ) : (
+              <IonIcon icon={caretDownOutline} />
+            )}
+          </button>
+        </div>
+        <PhoneNumberPopup
+          isOpen={isPopupOpen}
+          onClose={handleClosePopup}
+          id={id}
+        />
       </div>
-      <PhoneNumberPopup isOpen={isPopupOpen} onClose={handleClosePopup} />
     </div>
   );
 }
