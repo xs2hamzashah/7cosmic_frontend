@@ -22,6 +22,7 @@ function SignupForm() {
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -38,6 +39,7 @@ function SignupForm() {
       return;
     }
 
+    setLoading(true); // Set loading to true
     try {
       const response = await fetch(
         `${API_BASE_URL}/api/operations/otp/send_otp/`,
@@ -63,6 +65,8 @@ function SignupForm() {
     } catch (error) {
       console.error("Error sending OTP:", error);
       setErrorMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -72,6 +76,7 @@ function SignupForm() {
       return;
     }
 
+    setLoading(true); // Set loading to true
     const payload = {
       phone_number: formData.phoneNumber,
       otp_code: otp,
@@ -99,6 +104,8 @@ function SignupForm() {
     } catch (error) {
       console.error("Error verifying OTP:", error);
       setErrorMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -149,6 +156,7 @@ function SignupForm() {
       return;
     }
 
+    setLoading(true); // Set loading to true
     const signupData = {
       user: {
         email: formData.email,
@@ -186,6 +194,8 @@ function SignupForm() {
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong, please try again.");
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -343,7 +353,9 @@ function SignupForm() {
               )}
             </div>
           )}
-          <button type="submit">Create</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Processing..." : "Create"}
+          </button>
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 

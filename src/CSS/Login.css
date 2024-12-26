@@ -49,15 +49,28 @@ input[type="text"]:focus {
   border: 2px solid #ff6f20;
   transition: border 0.1s;
 }
-
 .login-form .btn {
   background-color: #ff6f20;
-  border: none;
+  border: 2px solid #ff6f20; /* Adds a clean border */
+  border-radius: 5px; /* Creates a pill-shaped button */
   color: #fff;
   text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-size: 14px; /* Slightly smaller font size */
+  font-weight: 500; /* Lighter weight for a sleeker look */
+  letter-spacing: 0.5px; /* Subtle letter spacing */
+  padding: 15px 20px; /* Smaller padding for a compact design */
+  margin: 15px 0;
   width: 100%;
+  display: block;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  /* width: auto; Auto width for a dynamic button size */
+}
+
+.login-form .btn:hover {
+  background-color: transparent; /* Transparent background on hover */
+  color: #ff6f20; /* Text color matches border */
+  border-color: #ff6f20; /* Keeps the border consistent */
 }
 
 .login-form .login-error {
@@ -70,6 +83,28 @@ input[type="text"]:focus {
   border-radius: 10px;
   margin: 20px 0;
   font-size: 16px;
+}
+
+.loading-dots span {
+  display: inline-block;
+  font-weight: 800;
+  animation: blink 1.4s infinite;
+}
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {

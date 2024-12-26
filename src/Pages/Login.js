@@ -25,11 +25,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
   const [forgotMessage, setForgotMessage] = useState(""); // For forgot password feedback
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
     try {
       // Determine the role based on email and password
@@ -88,10 +90,11 @@ function Login() {
     } catch (error) {
       // Handle login failure
       setError(error.response?.data?.detail || "Invalid email or password");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
-  // ============== handle forget password ================ //
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
@@ -144,7 +147,17 @@ function Login() {
           >
             Forgot your password?
           </a>
-          <input className="btn" type="submit" value="Sign In" />
+          <button className="btn" type="submit" disabled={loading}>
+            {loading ? (
+              <span className="loading-dots">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            ) : (
+              "Sign In"
+            )}
+          </button>
         </form>
         {error && <p className="login-error">{error}</p>}
         {forgotMessage && <p className="forgot-message">{forgotMessage}</p>}

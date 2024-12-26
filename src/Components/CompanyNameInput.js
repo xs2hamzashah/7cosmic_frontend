@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../config";
 import axios from "axios";
 
 const CompanyNameInput = ({ value, onChange }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState("");
 
   // Debounce function to delay API call
   useEffect(() => {
-    // Prevent API call if the searchTerm is "Other"
-    if (searchTerm.trim() === "" || searchTerm === "Other") {
+    if (searchTerm.trim() === "") {
       setSuggestions([]);
       return;
     }
@@ -40,17 +37,16 @@ const CompanyNameInput = ({ value, onChange }) => {
 
   const handleSuggestionClick = (company) => {
     setSearchTerm(company);
-    setSelectedCompany(company);
+    onChange(company); // Notify parent about the selected company
     setSuggestions([]);
   };
 
-  const handleCustomName = () => {
-    // Assign "Other" if the name isn't in the suggestions
+  const handleBlur = () => {
+    // Check if the search term is in the suggestions list
     if (!suggestions.includes(searchTerm)) {
-      setSelectedCompany("Other");
-      setSearchTerm("Other"); // This will now stop the API call
+      onChange("Other"); // Assign "Other" internally
     } else {
-      setSelectedCompany(searchTerm);
+      onChange(searchTerm); // Assign the selected company
     }
   };
 
@@ -61,12 +57,12 @@ const CompanyNameInput = ({ value, onChange }) => {
         type="text"
         value={searchTerm}
         onChange={(e) => {
-          setSearchTerm(e.target.value);
-          onChange(e.target.value); // Update formData in SignupForm as the user types
+          const newSearchTerm = e.target.value;
+          setSearchTerm(newSearchTerm);
+          setSuggestions([]); // Clear suggestions while typing
         }}
-        onBlur={handleCustomName} // Handle onBlur for unmatched names
+        onBlur={handleBlur} // Trigger the "Other" logic on blur
         placeholder="Company name"
-        // style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
       />
       {loading && <div>Loading...</div>}
       {suggestions.length > 0 && (
@@ -101,7 +97,6 @@ const CompanyNameInput = ({ value, onChange }) => {
           ))}
         </ul>
       )}
-      {/* {selectedCompany && <div>Selected Company: {selectedCompany}</div>} */}
     </div>
   );
 };
