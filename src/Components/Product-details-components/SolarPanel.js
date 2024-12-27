@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../../config"; 
+import { IonIcon } from "@ionic/react";
+import { removeOutline, addOutline } from "ionicons/icons";
+import API_BASE_URL from "../../config";
 
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -113,7 +115,11 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       <div className="component-head">
         <h2>Solar Panel</h2>
         <button className="button" onClick={toggleSection}>
-          <ion-icon name={isOpen ? "remove-outline" : "add-outline"}></ion-icon>
+          <IonIcon
+            icon={isOpen ? removeOutline : addOutline}
+            className="toggle-icon"
+            onClick={() => setIsOpen(!isOpen)}
+          />
         </button>
       </div>
 
