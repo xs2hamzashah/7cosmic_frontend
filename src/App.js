@@ -32,3 +32,7 @@ function App() {
 }
 
 export default App;
+
+// DOMAIN: 7-solar-calculators-production.up.railway.app
+
+// ⁠ /tools/solar-cost-calculator/10-kilo-watt-solar-cost?systemType=${data.systemType}&batteryType=tubular&voltageType=lv&structureType=iron_standard ⁠;
