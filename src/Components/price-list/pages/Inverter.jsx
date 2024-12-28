@@ -126,6 +126,9 @@ function Inverter() {
                     <TabsList className="h-20 flex flex-col gap-y-2 border-1 rounded-[8px] w-full bg-orange-primary bg-opacity-10">
                       <TabsTrigger
                         value={"onGrid"}
+                        onClick={() =>
+                          setSelectedSystemType(systemTypeEnum.onGrid)
+                        }
                         className="w-full data-[state=active]:bg-orange-primary data-[state=active]:text-neutral-50 rounded-[4px] flex-1"
                       >
                         <p className="flex gap-x-2 items-center">
@@ -134,6 +137,9 @@ function Inverter() {
                       </TabsTrigger>
 
                       <TabsTrigger
+                        onClick={() =>
+                          setSelectedSystemType(systemTypeEnum.hybrid)
+                        }
                         value={"hybrid"}
                         className="w-full data-[state=active]:bg-orange-primary data-[state=active]:text-neutral-50 rounded-[4px] flex-1"
                       >
@@ -203,7 +209,7 @@ function Inverter() {
           isEdit={isEdit.bool}
           currentId={isEdit.id}
           setIsEdit={setIsEdit}
-          systemType={systemTypeEnum.onGrid}
+          systemType={selectedSystemType}
           closeForm={() => setIsFormOpen(false)}
         />
       </DialogContent>
