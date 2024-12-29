@@ -116,7 +116,7 @@ const SellerAnalytics = () => {
   };
 
   return (
-    <>
+    <section id="body">
       <Navbar />
       <div className="seller-dashboard">
         <h2 className="welcome-text">Welcome Back, {sellerData.seller_name}</h2>
@@ -193,7 +193,7 @@ const SellerAnalytics = () => {
           onSubscribe={handleSubscribe}
         />
       )}
-    </>
+    </section>
   );
 };
 

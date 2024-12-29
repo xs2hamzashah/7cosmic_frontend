@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import "../CSS/Calculator.css";
+import { useNavigate } from "react-router-dom";
 
 const CalculatorButtons = () => {
-  const [showSolarCostPopup, setShowSolarCostPopup] = useState(false);
+  // implment functionality to redirect to the calculator page
+  const navigation = useNavigate();
   const [numberInput, setNumberInput] = useState("");
   const [calculatorType, setCalculatorType] = useState("");
+  const [showSolarCostPopup, setShowSolarCostPopup] = useState(false);
 
   // Function to handle the calculation and redirection
   const handleCalculate = () => {
@@ -34,11 +37,21 @@ const CalculatorButtons = () => {
       {/* Buttons */}
       <button
         className="btn"
-        onClick={() => setShowSolarCostPopup(true)}
         style={{ marginRight: "10px" }}
+        onClick={() => setShowSolarCostPopup(true)}
       >
         Solar Cost Calculator
       </button>
+
+      {/* TODO:// need to add seller price list */}
+      <button
+        className="btn"
+        style={{ marginRight: "10px" }}
+        onClick={() => navigation("/seller/price-list")}
+      >
+        Inventory Management
+      </button>
+
       {/* <button className="ghost">Solar Need Calculator</button> */}
 
       {/* Popup for Solar Cost Calculator */}

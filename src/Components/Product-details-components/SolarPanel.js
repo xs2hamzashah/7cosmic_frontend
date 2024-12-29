@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../../config";
+import { usePanelsQuery } from "../../service/priceList/panel";
+
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
 import API_BASE_URL from "../../config";
+
 
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +16,29 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
   const [capacity, setCapacity] = useState("");
   const [warranty, setWarranty] = useState("");
   const [quantity, setQuantity] = useState("");
+
+  const { data } = usePanelsQuery({ page: 1 });
+
+  console.log("🚀 ~ SolarPanel ~ data:", data);
+
+  // <td>{solar.subtype}</td>
+  // <td>{solar.brand}</td>
+  // <td>{solar.details}</td>
+  // <td>{solar.capacity}</td>
+  // <td>{solar.warranty}</td>
+  // <td>{solar.quantity}</td>
+
+  const _solarData = Array.isArray(data?.results)
+    ? data.results.map((item) => ({
+        id: item.id,
+        brand: item.brand_name,
+        details: item.specification,
+        quantity: item.quantity,
+        capacity: item.capacity,
+      }))
+    : [];
+
+  console.log("🚀 ~ SolarPanel ~ _solarData:", _solarData);
 
   const highlightedIds = components.map((component) => component.id);
 
@@ -114,6 +141,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
     <div className="roller">
       <div className="component-head">
         <h2>Solar Panel</h2>
+
         <button className="button" onClick={toggleSection}>
           <IonIcon
             icon={isOpen ? removeOutline : addOutline}
@@ -170,7 +198,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
           <table>
             <thead>
               <tr>
-                <th>Solar Type</th>
+                {/* <th>Solar Type</th> */}
                 <th>Brand</th>
                 <th>Specification</th>
                 <th>Capacity</th>
@@ -179,8 +207,8 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
               </tr>
             </thead>
             <tbody>
-              {solarData.length > 0 ? (
-                solarData.map((solar) => (
+              {_solarData.length > 0 ? (
+                _solarData.map((solar) => (
                   <tr
                     key={solar.id}
                     onClick={() => handleSelectComponent(solar)}
@@ -191,7 +219,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                       }), // Change color if id matches
                     }}
                   >
-                    <td>{solar.subtype}</td>
+                    {/* <td>{solar.subtype}</td> */}
                     <td>{solar.brand}</td>
                     <td>{solar.details}</td>
                     <td>{solar.capacity}</td>

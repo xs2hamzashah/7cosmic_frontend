@@ -116,7 +116,7 @@ const ProductDetailList = () => {
   }
 
   return (
-    <div className="component-detail-page">
+    <div id="body" className="component-detail-page">
       <h1>Components</h1>
       <SolarPanel
         components={components}

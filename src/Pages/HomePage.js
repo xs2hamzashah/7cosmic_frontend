@@ -62,7 +62,7 @@ export default function HomePage() {
   };
 
   return (
-    <section>
+    <section id="body">
       <Navbar onSearch={handleSearch} />
 
       {loading ? (

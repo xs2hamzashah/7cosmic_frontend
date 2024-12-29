@@ -316,7 +316,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div id="body">
       <StatsComponent
         title="Sellers"
         {...statsData.sellers}

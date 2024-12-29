@@ -84,7 +84,7 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
   };
 
   return (
-    <section className="adding-package">
+    <section id="body" className="adding-package">
       <h1 className="main-text">
         {mode === "edit" ? "Edit Package" : "Add New Package"}
       </h1>
