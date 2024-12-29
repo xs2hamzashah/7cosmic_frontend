@@ -2,6 +2,9 @@ import { Fragment } from "react";
 import { Accordion } from "../core/accordion/Accordion";
 import Panel from "../Components/price-list/pages/Panel";
 import Inverter from "../Components/price-list/pages/Inverter";
+import Battery from "../Components/price-list/pages/Battery";
+import ElectricWork from "../Components/price-list/pages/Electric";
+import MechanicalWork from "../Components/price-list/pages/MechanicalWork";
 
 export function PriceList() {
   // const data = await getData();
@@ -16,9 +19,10 @@ export function PriceList() {
       <Accordion type="single" collapsible>
         <Panel />
         <Inverter />
-        {/* <Battery />
+        <Battery />
         <ElectricWork />
-        <Mechanical />
+        <MechanicalWork />
+        {/* 
         <CivilWork />
         <NetMetering />
         <AfterSalesService />

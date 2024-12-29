@@ -3,9 +3,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../core/accordion/Accordion";
-// import { DataTable } from "@/core/dataTable/DataTable";
 
-import { Divider } from "@nextui-org/react";
 import { Edit, Loader2, Plus, Trash, X } from "lucide-react";
 import * as yup from "yup";
 

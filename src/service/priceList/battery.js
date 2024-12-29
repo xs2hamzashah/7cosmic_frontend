@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
+const apiEndPoints = `/battery`;
 const TOKEN = localStorage.getItem("accessToken");
-export const panelPriceService = createApi({
-  reducerPath: "panel-price",
+
+export const batteryPriceService = createApi({
+  reducerPath: "battery-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     headers: {
@@ -11,65 +13,66 @@ export const panelPriceService = createApi({
       Authorization: `Bearer ${TOKEN}`,
     },
   }),
-  tagTypes: ["panel-price"],
+  tagTypes: ["battery-price"],
   endpoints: ({ mutation, query }) => ({
-    createPanel: mutation({
+    create: mutation({
       query: (data) => {
         return {
-          url: "/panel/",
+          url: `${apiEndPoints}`,
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["battery-price"],
     }),
-    editPanel: mutation({
+    edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `/battery/${id}`,
           method: "PUT",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["battery-price"],
     }),
-    deletePanel: mutation({
+    delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}`,
           method: "DELETE",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["battery-price"],
     }),
-    panels: query({
-      query: ({ page = 1, limit = 10 }) => {
+    all: query({
+      query: () => {
         return {
-          url: `/panel/my_panels/?page=${page}`,
+          url: `/battery/my_batteries/`,
           method: "GET",
         };
       },
-      providesTags: ["panel-price"],
+      providesTags: ["battery-price"],
       transformResponse: (value) => {
-        return value.results;
+        return value.batteries;
       },
     }),
-    panel: query({
+    single: query({
       query: ({ id }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}`,
           method: "GET",
         };
       },
-      providesTags: ["panel-price"],
+      providesTags: ["battery-price"],
     }),
   }),
 });
 
 export const {
-  useCreatePanelMutation,
-  usePanelsQuery,
-  useEditPanelMutation,
-  useDeletePanelMutation,
-} = panelPriceService;
+  useCreateMutation,
+  useDeleteMutation,
+  useEditMutation,
+  useAllQuery,
+  useSingleQuery,
+} = batteryPriceService;

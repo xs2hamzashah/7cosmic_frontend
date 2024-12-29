@@ -1,92 +1,69 @@
-import {
-  FetchArgs,
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
-
-import { API_URL } from "@/api/api";
-import {
-  IMechanicalWork,
-  IMechanicalWorkResponse,
-} from "@/ts/types/service/types";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { API_URL } from "../../api/request";
 
 const apiEndPoints = `/mechanical-work`;
+
+const TOKEN = localStorage.getItem("accessToken");
 
 export const mechanicalWorkPriceService = createApi({
   reducerPath: "mechanical-work-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    },
   }),
   tagTypes: ["mechanical-work"],
   endpoints: ({ mutation, query }) => ({
-    create: mutation<IMechanicalWorkResponse, Omit<IMechanicalWork, "id">>({
+    create: mutation({
       query: (data) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
           url: `${apiEndPoints}`,
           method: "POST",
           body: data,
-        } as FetchArgs;
+        };
       },
       invalidatesTags: ["mechanical-work"],
     }),
-    edit: mutation<IMechanicalWorkResponse, IMechanicalWork>({
+    edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
           url: `${apiEndPoints}/${id}`,
           method: "PUT",
           body: data,
-        } as FetchArgs;
+        };
       },
       invalidatesTags: ["mechanical-work"],
     }),
-    delete: mutation<IMechanicalWorkResponse, { id: string }>({
+    delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
           url: `${apiEndPoints}/${id}`,
           method: "DELETE",
           body: data,
-        } as FetchArgs;
+        };
       },
       invalidatesTags: ["mechanical-work"],
     }),
-    all: query<IMechanicalWork[], { id: string }>({
+    all: query({
       query: () => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
           url: `${apiEndPoints}`,
           method: "GET",
-        } as FetchArgs;
+        };
       },
       providesTags: ["mechanical-work"],
-      transformResponse: (value: any) => {
+      transformResponse: (value) => {
         return value.mechanical_works;
       },
     }),
-    single: query<IMechanicalWork, { id: string }>({
+    single: query({
       query: ({ id }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
           url: `${apiEndPoints}/${id}`,
           method: "GET",
-        } as FetchArgs;
+        };
       },
       providesTags: ["mechanical-work"],
     }),

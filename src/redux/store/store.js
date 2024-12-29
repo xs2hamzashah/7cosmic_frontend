@@ -31,6 +31,9 @@ import {
 import storage from "redux-persist/lib/storage";
 import { panelPriceService } from "../../service/priceList/panel";
 import { inverterPriceService } from "../../service/priceList/inverter";
+import { batteryPriceService } from "../../service/priceList/battery";
+import { electricWorkPriceService } from "../../service/priceList/electricWork";
+import { mechanicalWorkPriceService } from "../../service/priceList/mechanicalWork";
 
 const persistConfig = {
   key: "root",
@@ -41,9 +44,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   [panelPriceService.reducerPath]: panelPriceService.reducer,
   [inverterPriceService.reducerPath]: inverterPriceService.reducer,
-  // [batteryPriceService.reducerPath]: batteryPriceService.reducer,
-  // [electricWorkPriceService.reducerPath]: electricWorkPriceService.reducer,
-  // [mechanicalWorkPriceService.reducerPath]: mechanicalWorkPriceService.reducer,
+  [batteryPriceService.reducerPath]: batteryPriceService.reducer,
+  [electricWorkPriceService.reducerPath]: electricWorkPriceService.reducer,
+  [mechanicalWorkPriceService.reducerPath]: mechanicalWorkPriceService.reducer,
   // [civilWorkPriceService.reducerPath]: civilWorkPriceService.reducer,
   // [netMeteringPriceService.reducerPath]: netMeteringPriceService.reducer,
   // [afterSalesServicePriceService.reducerPath]: afterSalesServicePriceService.reducer,
@@ -69,9 +72,9 @@ export const store = configureStore({
     }).concat([
       panelPriceService.middleware,
       inverterPriceService.middleware,
-      //   batteryPriceService.middleware,
-      //   electricWorkPriceService.middleware,
-      //   mechanicalWorkPriceService.middleware,
+      batteryPriceService.middleware,
+      electricWorkPriceService.middleware,
+      mechanicalWorkPriceService.middleware,
       //   civilWorkPriceService.middleware,
       //   netMeteringPriceService.middleware,
       //   afterSalesServicePriceService.middleware,
