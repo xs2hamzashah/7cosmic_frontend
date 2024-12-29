@@ -98,7 +98,7 @@ function Login() {
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/accounts/profiles/forgot_password/",
+        `${API_BASE_URL}/api/accounts/profiles/forgot_password/`,
         { email }
       );
       setForgotMessage("Password reset instructions sent to your email.");

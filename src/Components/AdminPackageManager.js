@@ -1,6 +1,19 @@
+import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
 
 const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const handleCardClick = (id) => {
+    console.log('Card clicked with ID:', id);  // Check if this logs
+    navigate(`/admin-product-detail/${id}`);
+  };
+
+  const stopPropagation = (e) => {
+    e.stopPropagation(); // Prevents the event from bubbling up to the row's onClick
+  };
+
   return (
     <div className="admin-package-manager">
       <table className="package-table">
@@ -17,7 +30,7 @@ const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
         </thead>
         <tbody>
           {packages.map((pkg) => (
-            <tr key={pkg.id}>
+            <tr onClick={() => handleCardClick(pkg.id)} key={pkg.id}>
               <td>{pkg.display_name}</td>
               <td>{pkg.size}</td>
               <td>{parseFloat(pkg.price).toLocaleString()}</td>
@@ -25,20 +38,32 @@ const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
               <td>{pkg.buyer_interaction_count}</td>
               <td>{pkg.is_approved ? "Approved" : "Pending Approval"}</td>
               <td>
-                <button className="btn edit-btn" onClick={() => onEdit(pkg.id)}>
+                <button
+                  className="btn edit-btn"
+                  onClick={(e) => {
+                    stopPropagation(e);
+                    onEdit(pkg.id);
+                  }}
+                >
                   Edit
                 </button>
                 <button
                   className={`btn approve-btn ${
                     pkg.is_approved ? "approved" : ""
                   }`}
-                  onClick={() => onApprove(pkg.id)}
+                  onClick={(e) => {
+                    stopPropagation(e);
+                    onApprove(pkg.id);
+                  }}
                 >
                   {pkg.is_approved ? "Approved" : "Approve"}
                 </button>
                 <button
                   className="btn delete-btn"
-                  onClick={() => onDelete(pkg.id)}
+                  onClick={(e) => {
+                    stopPropagation(e);
+                    onDelete(pkg.id);
+                  }}
                 >
                   Delete
                 </button>

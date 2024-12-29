@@ -11,6 +11,7 @@ import Signup from "./Pages/Signup";
 import AdminDashboard from "./AdminDashboard";
 import ResetPassword from "./Pages/ResetPassword";
 import EditPackage from "./Pages/EditPackages";
+import AdminProductDetail from "./Components/AdminProductDetail";
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/admin-product-detail/:id"
+          element={<AdminProductDetail />}
+        />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/add-product/:id" element={<AddPackageForm />} />
