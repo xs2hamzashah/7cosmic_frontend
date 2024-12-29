@@ -1,28 +1,28 @@
+import { Input } from "../../../core/input/Input";
+import { Button } from "../../../core/button/Button";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../../core/accordion/Accordion";
-
-import { Edit, Loader2, Pencil, Plus, Trash, X } from "lucide-react";
-import * as yup from "yup";
-
-import { useToasts } from "react-toast-notifications";
-// import { getPanelColDef } from "../column/panelColDef";
-import { Fragment, useEffect, useState } from "react";
-import { Input } from "../../../core/input/Input";
-import {
-  useDeletePanelMutation,
-  useCreatePanelMutation,
-  useEditPanelMutation,
-  usePanelsQuery,
-} from "../../../service/priceList/panel";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "../../../core/button/Button";
-import { getPanelColDef } from "../column/PanelColDef";
 import { DataTable } from "../../../core/data-table/DataTable";
 
+import { Divider } from "@nextui-org/react";
+
+import * as yup from "yup";
+import { useToasts } from "react-toast-notifications";
+import { Fragment, useEffect, useState } from "react";
+import {
+  useDeleteMutation,
+  useAllQuery,
+  useCreateMutation,
+  useEditMutation,
+} from "../../../service/priceList/bms";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import { Loader2, Pencil, Plus } from "lucide-react";
+import { getBmsColDef } from "../column/bmsColDef";
 import {
   Dialog,
   DialogContent,
@@ -35,13 +35,13 @@ const schema = yup
   .object({
     brand_name: yup.string().required(),
     specification: yup.string().required(),
-    capacity: yup.number().positive().integer().required(),
     unit: yup.string().required(),
     price: yup.number().positive().integer().required(),
+    capacity: yup.number().positive().integer().required(),
   })
   .required();
 
-function Panel({setIsLoading}) {
+function BatteryManagement({ setIsLoading }) {
   // ----------------- states -------------------------------->
   const { addToast } = useToasts();
   const [isEdit, setIsEdit] = useState(false);
@@ -51,22 +51,25 @@ function Panel({setIsLoading}) {
 
   // ----------------- redux toolkit query --------------------------->
 
-  const [editPanel, editStatus] = useEditPanelMutation();
-  const [createPanel, createStatus] = useCreatePanelMutation();
-  const [deleteItem, deleteItemStatus] = useDeletePanelMutation();
-  const { data, isLoading, isError, error } = usePanelsQuery({ page: 1 });
-  const panels = data?.results;
+  const [deleteItem, deleteItemStatus] = useDeleteMutation();
+  const [editPanel, editStatus] = useEditMutation();
+  const [createPanel, createStatus] = useCreateMutation();
+  const { data, isLoading, isError, error } = useAllQuery();
+  const records = data?.results;
 
   // ----------------- react-form-hook -------------------------------->
   const {
     register,
+    handleSubmit,
     reset,
     setValue,
-    handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: {},
     resolver: yupResolver(schema),
   });
+
+  const onError = () => {};
 
   const onSubmit = async (data) => {
     const action = isEdit && currentItemId ? editPanel : createPanel;
@@ -80,7 +83,7 @@ function Panel({setIsLoading}) {
         setCurrentItemId(""),
         setIsFormOpen(false),
         addToast(
-          isEdit ? "Panel Edited Successfully" : "Panel Added Successfully",
+          isEdit ? "BMS Edited Successfully" : "BMS Added Successfully",
           {
             appearance: "success",
             autoDismiss: true,
@@ -90,45 +93,11 @@ function Panel({setIsLoading}) {
     }
   };
 
-  // const onSubmit = async (data) => {
-  //   if (isEdit && currentItemId) {
-  //     const _data = { ...data, id: currentItemId };
-  //     const response = await editPanel(_data);
-
-  //     if ("data" in response) {
-  //       reset();
-  //       addToast(response.data.message, {
-  //         appearance: "success",
-  //         autoDismiss: true,
-  //       });
-  //       setIsEdit(false);
-  //       setCurrentItemId("");
-  //     } else {
-  //       // console.log(response.error);
-  //     }
-  //   } else {
-  //     const response = await createPanel(data);
-
-  //     if (isPanelResponse(response)) {
-  //       if (response.data.success) {
-  //         reset();
-  //         addToast(response.data.message, {
-  //           appearance: "success",
-  //           autoDismiss: true,
-  //         });
-  //       }
-  //     } else {
-  //       // console.log(response.error);
-  //     }
-  //   }
-  // };
-
-  const onError = () => {};
   // ----------------- functions ----------------------------->
 
   const onPriceListEditHandler = async (id) => {
     const [_result] = await Promise.all([
-      panels?.filter((fil) => fil.id === id)[0],
+      records?.filter((fil) => fil.id === id)[0],
       setIsEdit(true),
       setCurrentItemId(id),
       setIsFormOpen(true),
@@ -178,16 +147,15 @@ function Panel({setIsLoading}) {
     ]);
   };
 
-  // ----------------- useEffect ----------------------------->
-
+  // ----------------- useEffect -------------------------------->
   useEffect(() => {
     setIsLoading(isLoading);
   }, [isLoading]);
   // ----------------- render -------------------------------->
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading</div>;
+  // }
 
   if (isError) {
     // addToast(JSON.stringify(error), { appearance: "error" });
@@ -195,15 +163,15 @@ function Panel({setIsLoading}) {
   }
 
   return (
-    <div className="min-w-full">
+    <Fragment>
       <AccordionItem
-        value="panel"
-        className=" bg-white border border-orange-primary dark:bg-dark-surface-mixed-200 mb-4 border-b-0 rounded-[8px] shadow-[0px]"
+        value="bms"
+        className=" border border-orange-primary mb-4 border-b-0 rounded-[8px]"
       >
         <AccordionTrigger className="shadow-md border-bottom-0 dark:bg-dark-surface-mixed-300 rounded-[8px] px-4 text-decoration-none">
-          Panel
+          BMS
         </AccordionTrigger>
-        <AccordionContent className="p-4 bg-neutral-50 rounded-[8px] dark:bg-dark-surface-mixed-200">
+        <AccordionContent className="p-4 bg-slate-50 rounded-[8px]">
           <Button
             onClick={() => setIsFormOpen(true)}
             className="mb-3 bg-orange-primary text-stone-50"
@@ -211,13 +179,13 @@ function Panel({setIsLoading}) {
             Add
           </Button>
 
-          {panels && (
+          {records && (
             <DataTable
-              data={panels}
-              columns={getPanelColDef({
-                onPanelEdit: onPriceListEditHandler,
-                onPanelDelete: onPriceListDeleteHandler,
+              columns={getBmsColDef({
+                onEdit: onPriceListEditHandler,
+                onDelete: onPriceListDeleteHandler,
               })}
+              data={records}
             />
           )}
         </AccordionContent>
@@ -228,7 +196,9 @@ function Panel({setIsLoading}) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>{isEdit.bool ? "Edit" : "Create"} Panel</DialogTitle>
+            <DialogTitle>
+              {isEdit.bool ? "Edit" : "Create"} Net Metering
+            </DialogTitle>
             <DialogDescription></DialogDescription>
 
             <form
@@ -238,7 +208,7 @@ function Panel({setIsLoading}) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="Brand Name i:e JA , Jinko, Longi, etc"
+                placeholder="Brand Name"
                 {...register("brand_name")}
                 type="text"
               />
@@ -292,12 +262,16 @@ function Panel({setIsLoading}) {
                   >
                     {editStatus.isLoading ? (
                       <Fragment>
-                        <Loader2 size={14} className="animate-spin" />
+                        <span>
+                          <Loader2 size={14} className="animate-spin" />
+                        </span>
                         <span>Loading...</span>
                       </Fragment>
                     ) : (
                       <Fragment>
-                        <Pencil size={14} />
+                        <span>
+                          <Pencil size={14} />
+                        </span>
                         <span> Edit</span>
                       </Fragment>
                     )}
@@ -364,12 +338,8 @@ function Panel({setIsLoading}) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </div>
+    </Fragment>
   );
 }
 
-export default Panel;
-
-function isPanelResponse(obj) {
-  return "data" in obj;
-}
+export default BatteryManagement;

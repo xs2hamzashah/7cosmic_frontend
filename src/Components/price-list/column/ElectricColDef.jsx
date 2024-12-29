@@ -18,11 +18,7 @@ export const getElectricWorkColDef = ({ onEdit, onDelete }) => {
       header: () => <div className="text-center capitalize">Id</div>,
       cell: ({ row }) => {
         const id = row.getValue("id");
-        return (
-          <div className="text-center font-medium">
-            {id.substring(0, id.length / 2) + "..."}
-          </div>
-        );
+        return <div className="text-center font-medium">{id + "..."}</div>;
       },
     },
 
@@ -86,7 +82,7 @@ export const getElectricWorkColDef = ({ onEdit, onDelete }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-dark-surface-mixed-300 border-none shadow-lg rounded-[4px] "
+              className="bg-dark-surface-mixed-300 border-none shadow-lg rounded-[4px] bg-white"
             >
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
 

@@ -2,22 +2,23 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
 const apiEndPoints = `/after-sales-service`;
+const TOKEN = localStorage.getItem("accessToken");
 
-export const afterSalesServicePriceService = createApi({
+export const afterSalesPricingApi = createApi({
   reducerPath: "after-sales-service-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    },
   }),
   tagTypes: ["after-sales-service"],
   endpoints: ({ mutation, query }) => ({
     create: mutation({
       query: (data) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: `${apiEndPoints}`,
+          url: `${apiEndPoints}/`,
           method: "POST",
           body: data,
         };
@@ -27,11 +28,7 @@ export const afterSalesServicePriceService = createApi({
     edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "PUT",
           body: data,
         };
@@ -41,11 +38,7 @@ export const afterSalesServicePriceService = createApi({
     delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
         };
@@ -55,27 +48,19 @@ export const afterSalesServicePriceService = createApi({
     all: query({
       query: () => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: apiEndPoints,
+          url: `${apiEndPoints}/my_after_sales_services/`,
           method: "GET",
         };
       },
       providesTags: ["after-sales-service"],
       transformResponse: (value) => {
-        return value.records;
+        return value;
       },
     }),
     single: query({
       query: ({ id }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "GET",
         };
       },
@@ -90,4 +75,4 @@ export const {
   useEditMutation,
   useAllQuery,
   useSingleQuery,
-} = afterSalesServicePriceService;
+} = afterSalesPricingApi;

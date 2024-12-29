@@ -18,7 +18,7 @@ export const batteryPriceService = createApi({
     create: mutation({
       query: (data) => {
         return {
-          url: `${apiEndPoints}`,
+          url: `${apiEndPoints}/`,
           method: "POST",
           body: data,
         };
@@ -28,7 +28,7 @@ export const batteryPriceService = createApi({
     edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/battery/${id}`,
+          url: `/battery/${id}/`,
           method: "PUT",
           body: data,
         };
@@ -38,7 +38,7 @@ export const batteryPriceService = createApi({
     delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
         };
@@ -54,13 +54,13 @@ export const batteryPriceService = createApi({
       },
       providesTags: ["battery-price"],
       transformResponse: (value) => {
-        return value.batteries;
+        return value;
       },
     }),
     single: query({
       query: ({ id }) => {
         return {
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "GET",
         };
       },

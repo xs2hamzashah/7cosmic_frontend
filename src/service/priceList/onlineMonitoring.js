@@ -3,87 +3,75 @@ import {
   createApi,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
-
-import { API_URL } from "@/api/api";
-import { ICommon, CommonResponse } from "@/ts/types/service/types";
+import { API_URL } from "../../api/request";
 
 const apiEndPoints = `/online-monitoring`;
 
-export const onlineMonitoringServicePriceService = createApi({
+const TOKEN = localStorage.getItem("accessToken");
+
+export const onlinePricingService = createApi({
   reducerPath: "online-monitoring-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    },
   }),
   tagTypes: ["online-monitoring"],
   endpoints: ({ mutation, query }) => ({
-    create: mutation<CommonResponse, Omit<ICommon, "id">>({
+    create: mutation({
       query: (data) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
           url: `${apiEndPoints}`,
           method: "POST",
           body: data,
-        } as FetchArgs;
+        };
       },
       invalidatesTags: ["online-monitoring"],
     }),
-    edit: mutation<CommonResponse, ICommon>({
+    edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "PUT",
           body: data,
-        } as FetchArgs;
+        };
       },
       invalidatesTags: ["online-monitoring"],
     }),
-    delete: mutation<CommonResponse, { id: string }>({
+    delete: mutation({
       query: ({ id, ...data }) => {
         return {
           headers: {
             "Content-type": "application/json",
             // "Authorization": `Bearer ${token}`
           },
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
-        } as FetchArgs;
+        };
       },
       invalidatesTags: ["online-monitoring"],
     }),
-    all: query<ICommon[], { id: string }>({
+    all: query({
       query: () => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: apiEndPoints,
+          url: `${apiEndPoints}/my_online_monitorings/`,
           method: "GET",
-        } as FetchArgs;
+        };
       },
       providesTags: ["online-monitoring"],
-      transformResponse: (value: any) => {
-        return value.records;
+      transformResponse: (value) => {
+        return value;
       },
     }),
-    single: query<ICommon, { id: string }>({
+    single: query({
       query: ({ id }) => {
         return {
-          headers: {
-            "Content-type": "application/json",
-            // "Authorization": `Bearer ${token}`
-          },
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "GET",
-        } as FetchArgs;
+        };
       },
       providesTags: ["online-monitoring"],
     }),
@@ -96,4 +84,4 @@ export const {
   useEditMutation,
   useAllQuery,
   useSingleQuery,
-} = onlineMonitoringServicePriceService;
+} = onlinePricingService;

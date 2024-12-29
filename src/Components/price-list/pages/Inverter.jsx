@@ -16,7 +16,7 @@ import {
   useDeleteMutation,
 } from "../../../service/priceList/inverter";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 import InverterForm from "../form/InverterForm";
 import { DataTable } from "../../../core/data-table/DataTable";
@@ -38,10 +38,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../../core/dropdownMenu/DropDownMenu";
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+
 import { Filter, FilterIcon, MoreHorizontal } from "lucide-react";
 
-function Inverter() {
+function Inverter({ setIsLoading }) {
   // ----------------- states -------------------------------->
   const { addToast } = useToasts();
   const [selectedSystemType, setSelectedSystemType] = useState(
@@ -60,11 +60,8 @@ function Inverter() {
     error,
   } = useAllQuery({ id: "" });
 
-  console.log("🚀 ~ Inverter ~ inverters:", inverters);
-
   // ----------------- functions ----------------------------->
   const addNewPress = () => {
-    console.log("🚀 ~ addNewPress ~ addNewPress");
     setIsFormOpen(true);
   };
 
@@ -83,6 +80,10 @@ function Inverter() {
     }
   };
 
+  // ----------------- useEffect -------------------------------->
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
   // ----------------- render -------------------------------->
 
   if (isLoading) {
@@ -96,16 +97,16 @@ function Inverter() {
 
   return (
     <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-      <div className="min-w-full bg-red-600">
+      <div className="min-w-full">
         <AccordionItem
           value="inventory"
-          className=" bg-white dark:bg-dark-surface-mixed-200 mb-4 border-b-0 rounded-[8px] shadow-[0px]"
+          className=" bg-white border border-orange-primary  mb-4 border-b-0 rounded-[8px] shadow-[0px]"
         >
           <AccordionTrigger className="shadow-md border-bottom-0 dark:bg-dark-surface-mixed-300 rounded-[8px] px-4 text-decoration-none">
             Inverter
           </AccordionTrigger>
           {/*  */}
-          <AccordionContent className="p-4 bg-slate-50 rounded-[8px] dark:bg-dark-surface-mixed-200">
+          <AccordionContent className="p-4 bg-neutral-50 rounded-[8px] 0">
             <Tabs defaultValue={"onGrid"} className="w-full">
               <div className="flex items-center justify-between gap-x-4 mb-6">
                 <DropdownMenu>

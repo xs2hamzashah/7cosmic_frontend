@@ -50,7 +50,7 @@ export default function ProductDetail() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
+    <div id="body">
       <Navbar />
       <div className="detail">
         <div className="detail-imgs">

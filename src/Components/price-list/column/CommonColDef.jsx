@@ -1,4 +1,5 @@
 "use client";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../../../core/button/Button";
 import {
   DropdownMenu,
@@ -8,11 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "../../../core/dropdownMenu/DropDownMenu";
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import moment from "moment";
 
-export const getMechanicalWorkColDef = ({ onEdit, onDelete }) => {
-  const mechanicalDefCols = [
+export const getCommonColDef = ({ onEdit, onDelete }) => {
+  const commonDefCols = [
     {
       accessorKey: "id",
       header: () => <div className="text-center capitalize">Id</div>,
@@ -31,12 +31,10 @@ export const getMechanicalWorkColDef = ({ onEdit, onDelete }) => {
       },
     },
     {
-      accessorKey: "structure_type",
-      header: () => (
-        <div className="text-center capitalize">Structure Type</div>
-      ),
+      accessorKey: "capacity",
+      header: () => <div className="text-center capitalize">Capacity</div>,
       cell: ({ row }) => {
-        const value = row.getValue("structure_type");
+        const value = row.getValue("capacity");
         return <div className="text-center font-medium">{value}</div>;
       },
     },
@@ -45,8 +43,8 @@ export const getMechanicalWorkColDef = ({ onEdit, onDelete }) => {
       accessorKey: "unit",
       header: () => <div className="text-center capitalize">unit</div>,
       cell: ({ row }) => {
-        const value = row.getValue("unit");
-        return <div className="text-center font-medium">{value}</div>;
+        const capacity = row.getValue("unit");
+        return <div className="text-center font-medium">{capacity}</div>;
       },
     },
     {
@@ -120,5 +118,5 @@ export const getMechanicalWorkColDef = ({ onEdit, onDelete }) => {
     },
   ];
 
-  return mechanicalDefCols;
+  return commonDefCols;
 };

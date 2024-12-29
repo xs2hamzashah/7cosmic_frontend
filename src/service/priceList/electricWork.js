@@ -39,7 +39,7 @@ export const electricWorkPriceService = createApi({
     delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
         };
@@ -55,7 +55,7 @@ export const electricWorkPriceService = createApi({
       },
       providesTags: ["electric-work"],
       transformResponse: (value) => {
-        return value.electric_works;
+        return value;
       },
     }),
     single: query({

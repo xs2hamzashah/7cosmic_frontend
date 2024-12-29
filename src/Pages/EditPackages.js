@@ -54,7 +54,7 @@ const EditPackage = () => {
   if (!packageData) return <div>Loading...</div>;
 
   return (
-    <div className="edit-package-page">
+    <div id="body" className="edit-package-page">
       {/* AddPackageForm appears at the top for editing */}
       <AddPackageForm
         mode="edit"

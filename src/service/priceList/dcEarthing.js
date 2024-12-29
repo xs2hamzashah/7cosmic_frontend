@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
+const apiEndPoints = `/dc-earthing`;
 
 const TOKEN = localStorage.getItem("accessToken");
-export const panelPriceService = createApi({
-  reducerPath: "panel-price",
+
+export const dcEarthingPriceApi = createApi({
+  reducerPath: "dc-earthing-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     headers: {
@@ -11,65 +13,66 @@ export const panelPriceService = createApi({
       Authorization: `Bearer ${TOKEN}`,
     },
   }),
-  tagTypes: ["panel-price"],
+  tagTypes: ["dc-earthing"],
   endpoints: ({ mutation, query }) => ({
-    createPanel: mutation({
+    create: mutation({
       query: (data) => {
         return {
-          url: "/panel/",
+          url: `${apiEndPoints}/`,
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["dc-earthing"],
     }),
-    editPanel: mutation({
+    edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}/`,
           method: "PUT",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["dc-earthing"],
     }),
-    deletePanel: mutation({
+    delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["dc-earthing"],
     }),
-    panels: query({
-      query: ({ page = 1, limit = 10 }) => {
+    all: query({
+      query: () => {
         return {
-          url: `/panel/my_panels/?page=${page}`,
+          url: `${apiEndPoints}/my_dc_earthings/`,
           method: "GET",
         };
       },
-      providesTags: ["panel-price"],
+      providesTags: ["dc-earthing"],
       transformResponse: (value) => {
         return value;
       },
     }),
-    panel: query({
+    single: query({
       query: ({ id }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}`,
           method: "GET",
         };
       },
-      providesTags: ["panel-price"],
+      providesTags: ["dc-earthing"],
     }),
   }),
 });
 
 export const {
-  useCreatePanelMutation,
-  usePanelsQuery,
-  useEditPanelMutation,
-  useDeletePanelMutation,
-} = panelPriceService;
+  useCreateMutation,
+  useDeleteMutation,
+  useEditMutation,
+  useAllQuery,
+  useSingleQuery,
+} = dcEarthingPriceApi;

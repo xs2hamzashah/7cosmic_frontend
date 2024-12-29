@@ -3,20 +3,18 @@ import {
   createApi,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { API_URL } from "../../api/request";
 
-import { API_URL } from "@/api/api";
-import { ICommon, CommonResponse } from "@/ts/types/service/types";
+const apiEndPoints = `/commission`;
 
-const apiEndPoints = `/net-marketing`;
-
-export const netMeteringPriceService = createApi({
-  reducerPath: "net-metering-price",
+export const commissionPriceService = createApi({
+  reducerPath: "commission-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
   }),
-  tagTypes: ["net-metering"],
+  tagTypes: ["commission"],
   endpoints: ({ mutation, query }) => ({
-    create: mutation<CommonResponse, Omit<ICommon, "id">>({
+    create: mutation({
       query: (data) => {
         return {
           headers: {
@@ -26,11 +24,11 @@ export const netMeteringPriceService = createApi({
           url: `${apiEndPoints}`,
           method: "POST",
           body: data,
-        } as FetchArgs;
+        };
       },
-      invalidatesTags: ["net-metering"],
+      invalidatesTags: ["commission"],
     }),
-    edit: mutation<CommonResponse, ICommon>({
+    edit: mutation({
       query: ({ id, ...data }) => {
         return {
           headers: {
@@ -40,11 +38,11 @@ export const netMeteringPriceService = createApi({
           url: `${apiEndPoints}/${id}`,
           method: "PUT",
           body: data,
-        } as FetchArgs;
+        };
       },
-      invalidatesTags: ["net-metering"],
+      invalidatesTags: ["commission"],
     }),
-    delete: mutation<CommonResponse, { id: string }>({
+    delete: mutation({
       query: ({ id, ...data }) => {
         return {
           headers: {
@@ -54,27 +52,27 @@ export const netMeteringPriceService = createApi({
           url: `${apiEndPoints}/${id}`,
           method: "DELETE",
           body: data,
-        } as FetchArgs;
+        };
       },
-      invalidatesTags: ["net-metering"],
+      invalidatesTags: ["commission"],
     }),
-    all: query<ICommon[], { id: string }>({
+    all: query({
       query: () => {
         return {
           headers: {
             "Content-type": "application/json",
             // "Authorization": `Bearer ${token}`
           },
-          url: apiEndPoints,
+          url: `${apiEndPoints}`,
           method: "GET",
-        } as FetchArgs;
+        };
       },
-      providesTags: ["net-metering"],
-      transformResponse: (value: any) => {
+      providesTags: ["commission"],
+      transformResponse: (value) => {
         return value.records;
       },
     }),
-    single: query<ICommon, { id: string }>({
+    single: query({
       query: ({ id }) => {
         return {
           headers: {
@@ -83,9 +81,9 @@ export const netMeteringPriceService = createApi({
           },
           url: `${apiEndPoints}/${id}`,
           method: "GET",
-        } as FetchArgs;
+        };
       },
-      providesTags: ["net-metering"],
+      providesTags: ["commission"],
     }),
   }),
 });
@@ -96,4 +94,4 @@ export const {
   useEditMutation,
   useAllQuery,
   useSingleQuery,
-} = netMeteringPriceService;
+} = commissionPriceService;

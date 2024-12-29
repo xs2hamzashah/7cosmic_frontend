@@ -60,7 +60,7 @@ const ImageUploader = () => {
   };
 
   return (
-    <div className="image-uploader">
+    <div id="body" className="image-uploader">
       <h2>Upload Images</h2>
       <div className="image-uploader-btn">
         <input

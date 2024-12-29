@@ -19,7 +19,7 @@ export const mechanicalWorkPriceService = createApi({
     create: mutation({
       query: (data) => {
         return {
-          url: `${apiEndPoints}`,
+          url: `${apiEndPoints}/`,
           method: "POST",
           body: data,
         };
@@ -29,7 +29,7 @@ export const mechanicalWorkPriceService = createApi({
     edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "PUT",
           body: data,
         };
@@ -39,7 +39,7 @@ export const mechanicalWorkPriceService = createApi({
     delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `${apiEndPoints}/${id}`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
         };
@@ -55,7 +55,7 @@ export const mechanicalWorkPriceService = createApi({
       },
       providesTags: ["mechanical-work"],
       transformResponse: (value) => {
-        return value.mechanical_works;
+        return value;
       },
     }),
     single: query({

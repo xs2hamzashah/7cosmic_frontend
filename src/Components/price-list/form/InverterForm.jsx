@@ -37,7 +37,6 @@ const schema = yup
   .required();
 
 function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
-  console.log("🚀 ~ InverterForm ~ systemType:", systemType);
   const [edit, editStatus] = useEditMutation();
   const { addToast } = useToasts();
   const [create, createStatus] = useCreateMutation();
@@ -76,7 +75,12 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
         }
       } else {
         const response = await create(data);
-
+        if ("error" in response) {
+          addToast(Object.values(response.error.data).join(", "), {
+            appearance: "error",
+            autoDismiss: true,
+          });
+        }
         if ("data" in response) {
           if (response.data.success) {
             reset();
@@ -202,16 +206,12 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
             >
               {createStatus.isLoading ? (
                 <Fragment>
-                  <span>
-                    <Loader2 size={14} className="animate-spin" />
-                  </span>
+                  <Loader2 size={14} className="animate-spin" />
                   <span>Loading...</span>
                 </Fragment>
               ) : (
                 <Fragment>
-                  <span>
-                    <Plus size={14} />
-                  </span>
+                  <Plus size={14} />
                   <span>Add</span>
                 </Fragment>
               )}

@@ -1,22 +1,4 @@
-// import { afterSalesServicePriceService } from "@/service/priceList/afterSalesService";
-// import { batteryPriceService } from "@/service/priceList/battery";
-// import { bmsServicePriceService } from "@/service/priceList/bms";
-// import { civilWorkPriceService } from "@/service/priceList/civilWork";
-// import { commissionPriceService } from "@/service/priceList/commission";
-// import { dcEarthingServicePriceService } from "@/service/priceList/dcEarthing";
-// import { electricWorkPriceService } from "@/service/priceList/electricWork";
-// import { hseEquipmentServicePriceService } from "@/service/priceList/hseEquipment";
-// import { inverterPriceService } from "@/service/priceList/inverter";
-// import { mechanicalWorkPriceService } from "@/service/priceList/mechanicalWork";
-// import { netMeteringPriceService } from "@/service/priceList/netMetering";
-// import { onlineMonitoringServicePriceService } from "@/service/priceList/onlineMonitoring";
-// import { panelPriceService } from "@/service/priceList/panel";
-// import { profitPriceService } from "@/service/priceList/profit";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-
-// Slices
-
-// redux-persist
 import {
   persistStore,
   persistReducer,
@@ -34,6 +16,13 @@ import { inverterPriceService } from "../../service/priceList/inverter";
 import { batteryPriceService } from "../../service/priceList/battery";
 import { electricWorkPriceService } from "../../service/priceList/electricWork";
 import { mechanicalWorkPriceService } from "../../service/priceList/mechanicalWork";
+import { civilWorkPriceService } from "../../service/priceList/civilWork";
+import { netMeteringPriceService } from "../../service/priceList/netMetering";
+import { afterSalesPricingApi } from "../../service/priceList/afterSalesService";
+import { HealthAndSafetyApi } from "../../service/priceList/HealthAndSafetyApi";
+import { dcEarthingPriceApi } from "../../service/priceList/dcEarthing";
+import { onlinePricingService } from "../../service/priceList/onlineMonitoring";
+import { bmsPriceApiService } from "../../service/priceList/bms";
 
 const persistConfig = {
   key: "root",
@@ -47,13 +36,14 @@ const rootReducer = combineReducers({
   [batteryPriceService.reducerPath]: batteryPriceService.reducer,
   [electricWorkPriceService.reducerPath]: electricWorkPriceService.reducer,
   [mechanicalWorkPriceService.reducerPath]: mechanicalWorkPriceService.reducer,
-  // [civilWorkPriceService.reducerPath]: civilWorkPriceService.reducer,
-  // [netMeteringPriceService.reducerPath]: netMeteringPriceService.reducer,
-  // [afterSalesServicePriceService.reducerPath]: afterSalesServicePriceService.reducer,
-  // [hseEquipmentServicePriceService.reducerPath]: hseEquipmentServicePriceService.reducer,
-  // [dcEarthingServicePriceService.reducerPath]: dcEarthingServicePriceService.reducer,
-  // [onlineMonitoringServicePriceService.reducerPath]: onlineMonitoringServicePriceService.reducer,
-  // [bmsServicePriceService.reducerPath]: bmsServicePriceService.reducer,
+  [civilWorkPriceService.reducerPath]: civilWorkPriceService.reducer,
+  [netMeteringPriceService.reducerPath]: netMeteringPriceService.reducer,
+  [afterSalesPricingApi.reducerPath]: afterSalesPricingApi.reducer,
+  [HealthAndSafetyApi.reducerPath]: HealthAndSafetyApi.reducer,
+  [dcEarthingPriceApi.reducerPath]: dcEarthingPriceApi.reducer,
+  [onlinePricingService.reducerPath]: onlinePricingService.reducer,
+  [bmsPriceApiService.reducerPath]: bmsPriceApiService.reducer,
+
   // [profitPriceService.reducerPath]: profitPriceService.reducer,
   // [commissionPriceService.reducerPath]: commissionPriceService.reducer,
 
@@ -75,15 +65,15 @@ export const store = configureStore({
       batteryPriceService.middleware,
       electricWorkPriceService.middleware,
       mechanicalWorkPriceService.middleware,
-      //   civilWorkPriceService.middleware,
-      //   netMeteringPriceService.middleware,
-      //   afterSalesServicePriceService.middleware,
-      //   hseEquipmentServicePriceService.middleware,
-      //   dcEarthingServicePriceService.middleware,
-      //   onlineMonitoringServicePriceService.middleware,
-      //   bmsServicePriceService.middleware,
-      //   profitPriceService.middleware,
-      //   commissionPriceService.middleware,
+      civilWorkPriceService.middleware,
+      netMeteringPriceService.middleware,
+      afterSalesPricingApi.middleware,
+      HealthAndSafetyApi.middleware,
+      dcEarthingPriceApi.middleware,
+      onlinePricingService.middleware,
+      bmsPriceApiService.middleware,
+      // profitPriceService.middleware,
+      // commissionPriceService.middleware,
     ]),
   devTools: process.env.NODE_ENV !== "production",
 });

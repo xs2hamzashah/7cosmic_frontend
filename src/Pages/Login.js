@@ -114,7 +114,7 @@ function Login() {
   };
 
   return (
-    <section className="login-container">
+    <section id="body" className="login-container">
       <div className="login-form">
         <h2>Business Login</h2>
         <p>

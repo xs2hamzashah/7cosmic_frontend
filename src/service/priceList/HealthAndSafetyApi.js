@@ -1,9 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  FetchArgs,
+  createApi,
+  fetchBaseQuery,
+} from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
+const apiEndPoints = `/hse-equipment`;
+
 const TOKEN = localStorage.getItem("accessToken");
-export const panelPriceService = createApi({
-  reducerPath: "panel-price",
+
+export const HealthAndSafetyApi = createApi({
+  reducerPath: "hse-equipment-price",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     headers: {
@@ -11,65 +18,66 @@ export const panelPriceService = createApi({
       Authorization: `Bearer ${TOKEN}`,
     },
   }),
-  tagTypes: ["panel-price"],
+  tagTypes: ["hse-equipment"],
   endpoints: ({ mutation, query }) => ({
-    createPanel: mutation({
+    create: mutation({
       query: (data) => {
         return {
-          url: "/panel/",
+          url: `${apiEndPoints}/`,
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["hse-equipment"],
     }),
-    editPanel: mutation({
+    edit: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}/`,
           method: "PUT",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["hse-equipment"],
     }),
-    deletePanel: mutation({
+    delete: mutation({
       query: ({ id, ...data }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}/`,
           method: "DELETE",
           body: data,
         };
       },
-      invalidatesTags: ["panel-price"],
+      invalidatesTags: ["hse-equipment"],
     }),
-    panels: query({
-      query: ({ page = 1, limit = 10 }) => {
+    all: query({
+      query: () => {
         return {
-          url: `/panel/my_panels/?page=${page}`,
+          url: apiEndPoints,
           method: "GET",
         };
       },
-      providesTags: ["panel-price"],
+      providesTags: ["hse-equipment"],
       transformResponse: (value) => {
         return value;
       },
     }),
-    panel: query({
+    single: query({
       query: ({ id }) => {
         return {
-          url: `/panel/${id}/`,
+          url: `${apiEndPoints}/${id}/`,
           method: "GET",
         };
       },
-      providesTags: ["panel-price"],
+      providesTags: ["hse-equipment"],
     }),
   }),
 });
 
 export const {
-  useCreatePanelMutation,
-  usePanelsQuery,
-  useEditPanelMutation,
-  useDeletePanelMutation,
-} = panelPriceService;
+  useCreateMutation,
+  useDeleteMutation,
+  useEditMutation,
+  useAllQuery,
+  useSingleQuery,
+} = HealthAndSafetyApi;
