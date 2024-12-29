@@ -36,7 +36,7 @@ export default function HomePage() {
         ...(city && { city }),
         ...(size && { size }),
         ...(price_range && { price: price_range }),
-        ...(query && { search: query }),
+        ...(query && { display_name: query }),
       }).toString();
 
       const response = await fetch(

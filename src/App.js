@@ -52,6 +52,7 @@ function App() {
         </BrowserRouter>
       </ToastProvider>
     </Provider>
+
   );
 }
 

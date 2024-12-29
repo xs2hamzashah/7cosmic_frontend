@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { IonIcon } from "@ionic/react";
+import { removeOutline, addOutline } from "ionicons/icons";
 import API_BASE_URL from "../../config";
 
 const ElectricalWork = ({ components, handleSelectComponent }) => {
@@ -101,7 +103,11 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
       <div className="component-head">
         <h2>Electrical Work</h2>
         <button className="button" onClick={toggleSection}>
-          <ion-icon name={isOpen ? "remove-outline" : "add-outline"}></ion-icon>
+          <IonIcon
+            icon={isOpen ? removeOutline : addOutline}
+            className="toggle-icon"
+            onClick={() => setIsOpen(!isOpen)}
+          />
         </button>
       </div>
 
