@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../../config";
 import { usePanelsQuery } from "../../service/priceList/panel";
 
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
 import API_BASE_URL from "../../config";
-
 
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
