@@ -4,7 +4,7 @@ import { usePanelsQuery } from "../../service/priceList/panel";
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
 import API_BASE_URL from "../../config";
-
+// issue solved
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [solarData, setSolarData] = useState([]);
