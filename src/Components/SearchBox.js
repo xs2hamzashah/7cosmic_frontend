@@ -28,7 +28,7 @@ const SearchBox = ({ onSearch, onClose }) => {
         onChange={(e) => setCity(e.target.value)}
         className="search-select"
       >
-        <option value="">All Cities</option>
+        <option value="">City</option>
         <option value="ISB">Islamabad</option>
         <option value="KAR">Karachi</option>
         <option value="LHR">Lahore</option>
@@ -45,7 +45,7 @@ const SearchBox = ({ onSearch, onClose }) => {
         onChange={(e) => setSize(e.target.value)}
         className="search-select"
       >
-        <option value="">Any size</option>
+        <option value="">System size</option>
         <option value="5">5</option>
         <option value="10">10</option>
         <option value="15">15</option>
@@ -56,7 +56,7 @@ const SearchBox = ({ onSearch, onClose }) => {
         onChange={(e) => setPriceRange(e.target.value)}
         className="search-select"
       >
-        <option value="">Any range</option>
+        <option value="">Price range</option>
         <option value="below_1M">Below 1M</option>
         <option value="below_2M">Below 2M</option>
         <option value="below_3M">Below 3M</option>

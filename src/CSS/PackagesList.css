@@ -23,61 +23,23 @@
   margin: 0 10px;
 }
 
-/* Container that centers the card list */
-.packages-list {
-  margin: 4rem auto;
-  display: flex;
-  justify-content: center; /* Center the .cards container horizontally */
-  padding: 0 20px; /* Optional padding for small screens */
-  box-sizing: border-box; /* Ensure padding doesn't affect width */
-}
-
-/* Flex container for the cards */
 .cards {
+  max-width: 1100px;
+  cursor: pointer;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Align cards to the left */
-  gap: 20px; /* Space between cards */
-  max-width: 940px; /* 3 * 300px + 2 * 20px gaps */
-  width: 100%; /* Full width for responsiveness */
-  box-sizing: border-box; /* Include padding and border in width */
+  justify-content: space-around;
+  margin: 4rem auto;
 }
 
-/* Individual card styling */
 .card {
   width: 300px;
-  height: 400px;
-  box-sizing: border-box; /* Prevent padding from affecting size */
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-}
-
-/* Responsive adjustments */
-
-/* Medium screens (up to 940px): 2 cards per row */
-@media (max-width: 940px) {
-  .cards {
-    max-width: 640px; /* 2 * 300px + 1 * 20px gaps */
-  }
-}
-
-/* Small screens (up to 640px): 1 card per row */
-@media (max-width: 740px) {
-  .cards {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .card {
-    width: 100%; /* Make card full width of the container */
-  }
+  margin: 30px 0;
 }
 
 .card img {
   display: block;
-  width: 250px;
+  width: 300px;
   height: 250px;
 }
 

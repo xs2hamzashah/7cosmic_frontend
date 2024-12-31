@@ -1,7 +1,7 @@
 .login-container {
   width: 90%;
   max-width: 700px;
-  margin: 11rem auto;
+  margin: 15rem auto;
 }
 
 .login-form {
@@ -104,12 +104,6 @@ input[type="text"]:focus {
   }
   50% {
     opacity: 1;
-  }
-}
-
-@media (max-width: 1200px) {
-  .login-container {
-    margin: 9rem auto;
   }
 }
 

@@ -89,7 +89,6 @@
   width: 100%;
   border-collapse: collapse;
   margin: 5rem 0;
-  cursor: pointer;
 }
 
 .admin-package-manager .package-table th,
