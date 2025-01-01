@@ -82,43 +82,45 @@ export default function Navbar({ onSearch }) {
         </div>
       )}
 
-      <div className="icon-section">
-        {!isLoggedIn ? (
-          <p
-            className="profile-icon"
-            onClick={() => navigate("/login")}
-            style={{ cursor: "pointer" }}
-          >
-            <IonIcon icon={personOutline} />
-          </p>
-        ) : (
-          <>
-            {!location.pathname.startsWith("/seller-analytics") && (
-              <p
-                className="clipboard"
-                onClick={() => {
-                  const sellerId = localStorage.getItem("sellerId");
-                  if (sellerId) {
-                    navigate(`/seller-analytics/${sellerId}`);
-                  } else {
-                    console.error("Seller ID is missing.");
-                  }
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <IonIcon icon={clipboardOutline} />
-              </p>
-            )}
+      {!location.pathname.startsWith("/product-detail") && (
+        <div className="icon-section">
+          {!isLoggedIn ? (
             <p
-              className="log-out"
-              onClick={handleLogout}
+              className="profile-icon"
+              onClick={() => navigate("/login")}
               style={{ cursor: "pointer" }}
             >
-              <IonIcon icon={logOutOutline} />
+              <IonIcon icon={personOutline} />
             </p>
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              {!location.pathname.startsWith("/seller-analytics") && (
+                <p
+                  className="clipboard"
+                  onClick={() => {
+                    const sellerId = localStorage.getItem("sellerId");
+                    if (sellerId) {
+                      navigate(`/seller-analytics/${sellerId}`);
+                    } else {
+                      console.error("Seller ID is missing.");
+                    }
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <IonIcon icon={clipboardOutline} />
+                </p>
+              )}
+              <p
+                className="log-out"
+                onClick={handleLogout}
+                style={{ cursor: "pointer" }}
+              >
+                <IonIcon icon={logOutOutline} />
+              </p>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

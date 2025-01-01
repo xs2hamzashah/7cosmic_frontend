@@ -47,6 +47,7 @@
 .card {
   width: 300px;
   height: 400px;
+  cursor: pointer;
   box-sizing: border-box; /* Prevent padding from affecting size */
   display: flex;
   flex-direction: column;

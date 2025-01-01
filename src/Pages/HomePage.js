@@ -4,6 +4,7 @@ import { arrowBackOutline } from "ionicons/icons";
 import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import PackagesList from "../Components/PackagesList";
+import API_BASE_URL from "../config";
 
 export default function HomePage() {
   const [packages, setPackages] = useState([]);
@@ -14,7 +15,7 @@ export default function HomePage() {
   const fetchPackages = async () => {
     try {
       const response = await fetch(
-        "https://cosmic-server7.onrender.com/api/listings/solar-solutions/"
+        `${API_BASE_URL}/api/listings/solar-solutions/`
       );
       const data = await response.json();
       setPackages(data); // Store all packages
@@ -40,7 +41,7 @@ export default function HomePage() {
       }).toString();
 
       const response = await fetch(
-        `https://cosmic-server7.onrender.com/api/listings/solar-solutions/?${queryString}`
+        `${API_BASE_URL}/api/listings/solar-solutions/?${queryString}`
       );
 
       if (!response.ok) {
@@ -62,7 +63,7 @@ export default function HomePage() {
   };
 
   return (
-    <section id="body">
+    <section>
       <Navbar onSearch={handleSearch} />
 
       {loading ? (
