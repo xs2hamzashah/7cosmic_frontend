@@ -52,7 +52,7 @@ input[type="text"]:focus {
 .login-form .btn {
   background-color: #ff6f20;
   border: 2px solid #ff6f20; /* Adds a clean border */
-  border-radius: 5px; /* Creates a pill-shaped button */
+  border-radius: 10px; /* Creates a pill-shaped button */
   color: #fff;
   text-transform: uppercase;
   font-size: 14px; /* Slightly smaller font size */

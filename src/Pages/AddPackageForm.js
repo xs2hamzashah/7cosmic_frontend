@@ -29,6 +29,15 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Restrict `price` and `size` to positive integers
+    if (
+      (name === "price" || name === "size") &&
+      (isNaN(value) || value.includes(".") || value < 0)
+    ) {
+      return; // Ignore invalid input
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -36,11 +45,33 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
   };
 
   const validateFields = () => {
-    if (!formData.price.trim() || !formData.size.trim()) {
+    const { price, size } = formData;
+
+    // Ensure all fields are filled
+    if (!price.trim() || !size.trim()) {
       setValidationError("Both price and size fields must be filled.");
       return false;
     }
-    setValidationError(""); // Clear error if fields are valid
+
+    // Price-specific validations
+    const priceValue = parseInt(price, 10);
+    if (priceValue < 100000) {
+      setValidationError("Price must be at least 1 lac (100,000).");
+      return false;
+    }
+    if (priceValue % 1000 !== 0) {
+      setValidationError("Price must be a multiple of 1000.");
+      return false;
+    }
+
+    // Size-specific validations
+    const sizeValue = parseInt(size, 10);
+    if (sizeValue < 3) {
+      setValidationError("Package Size must be at least 3 kW.");
+      return false;
+    }
+
+    setValidationError(""); // Clear error if all fields are valid
     return true;
   };
 
@@ -92,14 +123,14 @@ const AddPackageForm = ({ mode = "add", packageData = {}, packageId }) => {
         <form onSubmit={handleSubmit}>
           <input
             type="number"
-            placeholder="Price"
+            placeholder="Price (PKR)"
             name="price"
             value={formData.price}
             onChange={handleChange}
           />
           <input
             type="number"
-            placeholder="Size"
+            placeholder="Package Size (kW)"
             name="size"
             value={formData.size}
             onChange={handleChange}

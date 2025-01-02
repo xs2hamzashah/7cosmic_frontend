@@ -43,8 +43,8 @@
   display: block;
   width: 100%; /* Full width of its container */
   padding: 15px;
-  font-size: 19px;
-  border-radius: 5px;
+  font-size: 16px;
+  border-radius: 10px;
   margin: 10px 0;
   outline: none;
   border: 2px solid #858c8e;
@@ -73,18 +73,18 @@ input:focus {
   padding: 10px;
   margin: 5px 5px 5px 0 !important;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
 }
 
 .ghost-otp {
   width: 140px;
-  padding: 17px;
+  padding: 15px;
   margin-bottom: 3px;
   background: none;
   border: 2px solid #ff6f20;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 14px;
   color: #ff6f20;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
@@ -130,10 +130,10 @@ input:focus {
 
 .otp-timer button {
   width: 80%; /* Center and make button responsive */
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: #ff6f20;
   color: #fff;
-  font-size: 21px;
+  font-size: 16px;
   font-weight: 500;
   text-transform: uppercase;
   padding: 15px;
@@ -179,7 +179,7 @@ input:focus {
     padding: 10px;
     margin: 5px 5px 5px 0 !important;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 16px;
   }
 
@@ -189,7 +189,7 @@ input:focus {
     margin-bottom: 3px;
     background: none;
     border: 2px solid #ff6f20;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 16px;
     color: #ff6f20;
     cursor: pointer;
