@@ -50,7 +50,7 @@ const SearchBox = ({ onSearch, onClose }) => {
         className="search-select"
       >
         <option value="" disabled selected>
-          Size
+          Size (kW)
         </option>
         <option value="any">Any size</option>
         <option value="5">5 (kW)</option>
@@ -65,7 +65,7 @@ const SearchBox = ({ onSearch, onClose }) => {
         className="search-select"
       >
         <option value="" disabled selected>
-          Range
+          Price (PKR)
         </option>
         <option value="any">Any range</option>
         <option value="below_1M">Below 10 Lac</option>
