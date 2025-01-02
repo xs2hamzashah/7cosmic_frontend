@@ -1,1 +1,1 @@
-export const API_URL = `https://api.7solar.pk`;
+export const API_URL = `https://api.7solar.pk/api/`;
