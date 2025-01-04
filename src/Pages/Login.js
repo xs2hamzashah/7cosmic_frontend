@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ProfileContext } from "../context/ProfileContext"; // Import ProfileContex
 import API_BASE_URL from "../config";
 import "../CSS/Login.css";
 
@@ -22,6 +23,7 @@ api.interceptors.request.use(
 );
 
 function Login() {
+  const { fetchProfileData } = useContext(ProfileContext); // Access fetchProfileData
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -31,67 +33,36 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
-      // Determine the role based on email and password
-      let role = "seller"; // Default role
+      let role = "seller";
       if (email === "admin@example.com" && password === "useradmin") {
         role = "admin";
       }
 
-      // Send login request with email, password, and role
       const response = await api.post("auth/login/", { email, password, role });
       const { access, refresh } = response.data;
 
-      // Store tokens in local storage
+      // Store tokens
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
-      // Navigate to the correct dashboard based on the role
+      // Fetch profile data after login
+      await fetchProfileData(); // Ensure profile data is fetched after login
+
+      // Navigate based on the role
       if (role === "admin") {
-        try {
-          // Verify admin access
-          const adminResponse = await api.get(
-            "/listings/analytics/admin_analytics/"
-          );
-          if (adminResponse.data) {
-            navigate("/admin");
-            return;
-          }
-        } catch (error) {
-          setError("Admin access failed.");
-          return;
-        }
+        navigate("/admin");
       } else {
-        try {
-          // Verify seller access
-          const sellerResponse = await api.get(
-            "/listings/analytics/seller_analytics/"
-          );
-          if (sellerResponse.data && sellerResponse.data.seller_id) {
-            const sellerId = sellerResponse.data.seller_id;
-
-            // Store seller ID in local storage for future use
-            localStorage.setItem("sellerId", sellerId);
-
-            // Navigate to seller analytics page
-            navigate(`/seller-analytics/${sellerId}`);
-            return;
-          }
-        } catch (error) {
-          setError("Seller access failed.");
-          return;
-        }
+        const sellerId = response.data.seller_id;
+        localStorage.setItem("sellerId", sellerId);
+        navigate(`/seller-analytics`);
       }
-
-      // If neither role works, show error
-      setError("You do not have permission to access this data.");
     } catch (error) {
-      // Handle login failure
       setError(error.response?.data?.detail || "Invalid email or password");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 

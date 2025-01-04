@@ -1,30 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../config";
 import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
 import SubscriptionPopup from "../Components/SubscriptionPopup";
 import CalculatorButtons from "../Components/CalculatorButtons";
+import { ProfileContext } from "../context/ProfileContext"; // Correct import
 
 // Register necessary Chart.js elements
 Chart.register(ArcElement, Legend, Tooltip);
 
 const SellerAnalytics = () => {
-  const { id: sellerId } = useParams(); // Get seller ID from the URL
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(true); // Track subscription status
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [sellerEmail, setSellerEmail] = useState("");
   const navigate = useNavigate();
 
+  const { profileData, loading: profileLoading } = useContext(ProfileContext); // Correctly access context
+
+  useEffect(() => {
+    if (profileData && profileData.company && profileData.company.name) {
+      // Set companyName only if profileData and profileData.company are available
+      setCompanyName(profileData.company.name);
+      setSellerEmail(profileData.user?.email || ""); // Optional: Check if email exists
+    } else {
+      // Optionally handle the case where profileData is unavailable
+      console.warn("Profile data or company information is unavailable.");
+    }
+  }, [profileData]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
         const response = await fetch(
-          `${API_BASE_URL}/api/listings/analytics/seller_analytics/?seller_id=${sellerId}`,
+          `${API_BASE_URL}/api/listings/analytics/seller_analytics/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,15 +59,14 @@ const SellerAnalytics = () => {
         );
         setTotalBuyers(buyersCount);
 
-        // Check subscription status (mocked here, replace with API response if available)
-        setIsSubscribed(data.is_subscribed || false); // Assuming `is_subscribed` is part of the API response
+        setIsSubscribed(data.is_subscribed || false);
       } catch (error) {
         console.error("Error fetching seller analytics:", error);
       }
     };
 
     fetchData();
-  }, [sellerId]);
+  }, []); // Removed sellerId dependency
 
   if (!sellerData) return <p>Loading...</p>;
 
@@ -117,7 +130,11 @@ const SellerAnalytics = () => {
 
   return (
     <section id="body">
-      <Navbar />
+      <Navbar
+        companyName={companyName}
+        sellerEmail={sellerEmail}
+        loading={profileLoading}
+      />
       <div className="seller-dashboard">
         <h2 className="welcome-text">Welcome Back, {sellerData.seller_name}</h2>
 

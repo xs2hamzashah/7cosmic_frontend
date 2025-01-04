@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IonIcon } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import PackagesList from "../Components/PackagesList";
+import { ProfileContext } from "../context/ProfileContext"; // Correct import
 import API_BASE_URL from "../config";
 
 export default function HomePage() {
   const [packages, setPackages] = useState([]);
   const [filteredPackages, setFilteredPackages] = useState([]);
   const [isFilteredView, setIsFilteredView] = useState(false);
-  const [loading, setLoading] = useState(false); // Track loading state
+  const [loading, setLoading] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [sellerEmail, setSellerEmail] = useState("");
+
+  const {
+    profileData,
+    loading: profileLoading,
+    fetchProfileData,
+  } = useContext(ProfileContext); // Correctly access context
 
   const fetchPackages = async () => {
     try {
@@ -62,20 +71,33 @@ export default function HomePage() {
     setIsFilteredView(false); // Switch back to homepage view
   };
 
+  // Debugging: Log profile data to the console
+  useEffect(() => {
+    if (profileData && profileData.company && profileData.user) {
+      setCompanyName(profileData.company.name); // Only set if profileData is available
+      setSellerEmail(profileData.user.email); // Only set if profileData is available
+    }
+  }, [profileData]);
+
   return (
     <section>
-      <Navbar onSearch={handleSearch} />
-
+      <Navbar
+        onSearch={handleSearch}
+        companyName={companyName}
+        sellerEmail={sellerEmail}
+        loading={profileLoading} // Pass loading status from context
+      />
+      {/* Render loading animation if profile is still being fetched */}
       {loading ? (
         <div className="loading-container">
-          <div className="loader"></div> {/* Loading animation */}
+          <div className="loader"></div>
         </div>
       ) : isFilteredView ? (
         <section className="filtered-section">
           <h1>Search Results</h1>
           <button onClick={goBackToHomePage} className="back-button">
             <IonIcon icon={arrowBackOutline} className="back-icon" /> Back to
-            Home
+            home
           </button>
           <PackagesList packages={filteredPackages} />
         </section>

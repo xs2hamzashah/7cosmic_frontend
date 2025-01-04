@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import {
@@ -6,40 +6,35 @@ import {
   clipboardOutline,
   logOutOutline,
   personOutline,
+  documentOutline,
+  callOutline,
+  starOutline,
+  closeOutline,
 } from "ionicons/icons";
 import "../CSS/Navbar.css";
 import SearchBox from "./SearchBox";
 
-export default function Navbar({ onSearch }) {
-  const [city, setCity] = useState("");
-  const [size, setSize] = useState("");
-  const [priceRange, setPriceRange] = useState("");
-  const [inputText, setInputText] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Tracks login status
+export default function Navbar({
+  onSearch,
+  companyName,
+  sellerEmail,
+  loading,
+}) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Controls dropdown visibility
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    const sellerId = localStorage.getItem("sellerId"); // Retrieve seller ID
+    const sellerId = localStorage.getItem("sellerId");
     if (token && sellerId) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
-  }, []); // Run only once on component mount
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const params = {
-      city,
-      size,
-      price_range: priceRange,
-      query: inputText,
-    };
-    onSearch(params);
-  };
+  }, []);
 
   const handleLogo = () => {
     if (location.pathname === "/") {
@@ -50,7 +45,6 @@ export default function Navbar({ onSearch }) {
   };
 
   const handleLogout = () => {
-    // Remove token and seller ID from localStorage
     localStorage.removeItem("accessToken");
     localStorage.removeItem("sellerId");
     setIsLoggedIn(false);
@@ -93,31 +87,125 @@ export default function Navbar({ onSearch }) {
               <IonIcon icon={personOutline} />
             </p>
           ) : (
-            <>
-              {!location.pathname.startsWith("/seller-analytics") && (
-                <p
-                  className="clipboard"
-                  onClick={() => {
-                    const sellerId = localStorage.getItem("sellerId");
-                    if (sellerId) {
-                      navigate(`/seller-analytics/${sellerId}`);
-                    } else {
-                      console.error("Seller ID is missing.");
-                    }
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <IonIcon icon={clipboardOutline} />
-                </p>
-              )}
-              <p
-                className="log-out"
-                onClick={handleLogout}
+            <div className="dropdown">
+              <IonIcon
+                icon={personOutline}
+                className="dropdown-toggle"
+                onClick={() => setIsDropdownVisible(!isDropdownVisible)}
                 style={{ cursor: "pointer" }}
-              >
-                <IonIcon icon={logOutOutline} />
-              </p>
-            </>
+              />
+              {loading ? (
+                <div className="loading-spinner"></div>
+              ) : (
+                <span>{companyName}</span>
+              )}
+              {isDropdownVisible && (
+                <div className="dropdown-menu">
+                  {/* Close Button */}
+                  <div
+                    className="dropdown-header"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <p
+                      className="dropdown-item-text"
+                      style={{
+                        fontSize: "18px",
+                        marginRight: "auto",
+                        margin: "20px",
+                      }}
+                    >
+                      {companyName}
+                    </p>
+                    <button
+                      className="close-button"
+                      onClick={() => setIsDropdownVisible(false)}
+                      style={{
+                        border: "none",
+                        background: "none",
+                        cursor: "pointer",
+                        padding: "4px",
+                        fontSize: "31px",
+                      }}
+                    >
+                      <IonIcon icon={closeOutline} />
+                    </button>
+                  </div>
+                  <p className="dropdown-item" style={{ fontSize: "16px" }}>
+                    {sellerEmail}
+                  </p>
+                  {/* Profile Link */}
+                  <p
+                    className="dropdown-item"
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsDropdownVisible(false);
+                    }}
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    <IonIcon icon={personOutline} /> Profile
+                  </p>
+                  {/* Dashboard Link */}
+                  {location.pathname !== "/seller-analytics" && (
+                    <p
+                      className="dropdown-item"
+                      onClick={() => {
+                        const sellerId = localStorage.getItem("sellerId");
+                        if (sellerId) {
+                          navigate(`/seller-analytics`);
+                        } else {
+                          console.error("Seller ID is missing.");
+                        }
+                        setIsDropdownVisible(false);
+                      }}
+                      style={{ cursor: "pointer", fontSize: "16px" }}
+                    >
+                      <IonIcon icon={clipboardOutline} /> Dashboard
+                    </p>
+                  )}
+                  {/* Subscription Link */}
+                  <p
+                    className="dropdown-item"
+                    onClick={() => {
+                      navigate("/subscription-page");
+                      setIsDropdownVisible(false);
+                    }}
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    <IonIcon icon={starOutline} /> Subscription
+                  </p>
+                  {/* Terms and Conditions */}
+                  <p
+                    className="dropdown-item"
+                    onClick={() => {
+                      navigate("/terms-and-conditions");
+                      setIsDropdownVisible(false);
+                    }}
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    <IonIcon icon={documentOutline} /> Terms and Conditions
+                  </p>
+                  {/* Contact Us */}
+                  <p
+                    className="dropdown-item"
+                    onClick={() => {
+                      navigate("/contact-us");
+                      setIsDropdownVisible(false);
+                    }}
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    <IonIcon icon={callOutline} /> Contact Us
+                  </p>
+                  {/* Logout */}
+                  <p
+                    className="dropdown-item"
+                    onClick={handleLogout}
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    <IonIcon icon={logOutOutline} /> Logout
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
