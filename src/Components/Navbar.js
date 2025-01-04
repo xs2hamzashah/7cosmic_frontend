@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import {
@@ -21,19 +21,29 @@ export default function Navbar({
   loading,
 }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Controls dropdown visibility
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const sellerId = localStorage.getItem("sellerId");
-    if (token && sellerId) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
+    setIsLoggedIn(!!(token && sellerId));
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleLogo = () => {
@@ -57,23 +67,20 @@ export default function Navbar({
         logo
       </h2>
 
-      {/* Search icon for smaller screens */}
       {location.pathname === "/" && (
-        <IonIcon
-          icon={searchOutline}
-          className="search-icon"
-          onClick={() => setIsSearchVisible(!isSearchVisible)}
-        />
-      )}
-
-      {/* Render the search box only if the user is on the homepage */}
-      {location.pathname === "/" && (
-        <div className={`search-box ${isSearchVisible ? "visible" : ""}`}>
-          <SearchBox
-            onSearch={onSearch}
-            onClose={() => setIsSearchVisible(false)}
+        <>
+          <IonIcon
+            icon={searchOutline}
+            className="search-icon"
+            onClick={() => setIsSearchVisible(!isSearchVisible)}
           />
-        </div>
+          <div className={`search-box ${isSearchVisible ? "visible" : ""}`}>
+            <SearchBox
+              onSearch={onSearch}
+              onClose={() => setIsSearchVisible(false)}
+            />
+          </div>
+        </>
       )}
 
       {!location.pathname.startsWith("/product-detail") && (
@@ -87,7 +94,7 @@ export default function Navbar({
               <IonIcon icon={personOutline} />
             </p>
           ) : (
-            <div className="dropdown">
+            <div className="dropdown" ref={dropdownRef}>
               <IonIcon
                 icon={personOutline}
                 className="dropdown-toggle"
@@ -97,11 +104,12 @@ export default function Navbar({
               {loading ? (
                 <div className="loading-spinner"></div>
               ) : (
-                <span>{companyName}</span>
+                <span style={{ fontSize: "18px", fontWeight: "bold" }}>
+                  {companyName}
+                </span>
               )}
               {isDropdownVisible && (
                 <div className="dropdown-menu">
-                  {/* Close Button */}
                   <div
                     className="dropdown-header"
                     style={{ display: "flex", alignItems: "center" }}
@@ -109,7 +117,7 @@ export default function Navbar({
                     <p
                       className="dropdown-item-text"
                       style={{
-                        fontSize: "18px",
+                        fontSize: "20px",
                         marginRight: "auto",
                         margin: "20px",
                       }}
@@ -133,7 +141,6 @@ export default function Navbar({
                   <p className="dropdown-item" style={{ fontSize: "16px" }}>
                     {sellerEmail}
                   </p>
-                  {/* Profile Link */}
                   <p
                     className="dropdown-item"
                     onClick={() => {
@@ -144,7 +151,6 @@ export default function Navbar({
                   >
                     <IonIcon icon={personOutline} /> Profile
                   </p>
-                  {/* Dashboard Link */}
                   {location.pathname !== "/seller-analytics" && (
                     <p
                       className="dropdown-item"
@@ -162,7 +168,6 @@ export default function Navbar({
                       <IonIcon icon={clipboardOutline} /> Dashboard
                     </p>
                   )}
-                  {/* Subscription Link */}
                   <p
                     className="dropdown-item"
                     onClick={() => {
@@ -173,7 +178,6 @@ export default function Navbar({
                   >
                     <IonIcon icon={starOutline} /> Subscription
                   </p>
-                  {/* Terms and Conditions */}
                   <p
                     className="dropdown-item"
                     onClick={() => {
@@ -184,7 +188,6 @@ export default function Navbar({
                   >
                     <IonIcon icon={documentOutline} /> Terms and Conditions
                   </p>
-                  {/* Contact Us */}
                   <p
                     className="dropdown-item"
                     onClick={() => {
@@ -195,7 +198,6 @@ export default function Navbar({
                   >
                     <IonIcon icon={callOutline} /> Contact Us
                   </p>
-                  {/* Logout */}
                   <p
                     className="dropdown-item"
                     onClick={handleLogout}
