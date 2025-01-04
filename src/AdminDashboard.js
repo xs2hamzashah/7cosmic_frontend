@@ -95,7 +95,7 @@ const Dashboard = () => {
         if (!token) throw new Error("No access token found. Please log in.");
 
         const response = await fetch(
-          `https://cosmic-server7.onrender.com/api/accounts/profiles/?role=seller`,
+          `${API_BASE_URL}/api/accounts/profiles/?role=seller`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("No access token found. Please log in.");
 
-      let apiUrl = `https://cosmic-server7.onrender.com/api/listings/analytics/admin_analytics/`;
+      let apiUrl = `${API_BASE_URL}/api/listings/analytics/admin_analytics/`;
 
       // Append city filter if it's not "all"
       if (type === "city" && filter !== "all") {
@@ -196,7 +196,7 @@ const Dashboard = () => {
 
       // Fetch packages associated with the seller's `id`
       const response = await fetch(
-        `https://cosmic-server7.onrender.com/api/listings/solar-solutions/?seller=${seller.id}`,
+        `${API_BASE_URL}/api/listings/solar-solutions/?seller=${seller.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

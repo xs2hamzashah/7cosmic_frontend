@@ -37,7 +37,7 @@ function Login() {
 
     try {
       let role = "seller";
-      if (email === "admin@example.com" && password === "useradmin") {
+      if (email === "ceo@7solar.com" && password === "useradmin") {
         role = "admin";
       }
 
