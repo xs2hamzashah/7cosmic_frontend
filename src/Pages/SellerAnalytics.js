@@ -172,7 +172,7 @@ const SellerAnalytics = () => {
                   {product.is_approved && (
                     <div
                       className="absolute bottom-5 left-36 px-2 py-1 rounded-md text-white text-sm font-medium"
-                      style={{ backgroundColor: "#ff6f20" }}
+                      style={{ backgroundColor: "#149921" }}
                     >
                       Approved
                     </div>
