@@ -67,17 +67,27 @@ nav {
   right: 10px;
 }
 
-.profile-icon,
+.profile-icon {
+  font-size: 30px;
+  background-color: #ff6f20;
+  width: 45px;
+  height: 45px;
+  padding:2px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  color: #fff;
+}
+
 .log-out,
 .dropdown-toggle {
   padding: 7px;
-  color: #fff;
+  /* color: #fff; */
   border-radius: 50%;
   border: 2px solid #ff6f20;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
-  color: #ff6f20;
+  /* color: #ff6f20; */
   align-items: center;
   justify-content: center;
   width: 20px;
@@ -306,7 +316,7 @@ nav {
     display: none;
   }
 
-  .profile-icon,
+  /* .profile-icon, */
   .log-out,
   .dropdown-toggle {
     width: 15px;

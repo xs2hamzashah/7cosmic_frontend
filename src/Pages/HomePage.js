@@ -27,7 +27,7 @@ export default function HomePage() {
         `${API_BASE_URL}/api/listings/solar-solutions/`
       );
       const data = await response.json();
-      setPackages(data); // Store all packages
+      setPackages(data.results); // Store all packages
     } catch (error) {
       console.error("Error fetching packages:", error);
     }

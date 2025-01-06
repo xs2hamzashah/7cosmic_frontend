@@ -7,32 +7,30 @@ import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
 import SubscriptionPopup from "../Components/SubscriptionPopup";
 import CalculatorButtons from "../Components/CalculatorButtons";
-import { ProfileContext } from "../context/ProfileContext"; // Correct import
+import { ProfileContext } from "../context/ProfileContext";
 
-// Register necessary Chart.js elements
 Chart.register(ArcElement, Legend, Tooltip);
 
 const SellerAnalytics = () => {
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
-  const [isSubscribed, setIsSubscribed] = useState(true); // Track subscription status
+  const [isSubscribed, setIsSubscribed] = useState(true);
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [sellerEmail, setSellerEmail] = useState("");
   const navigate = useNavigate();
 
-  const { profileData, loading: profileLoading } = useContext(ProfileContext); // Correctly access context
+  const { profileData, loading: profileLoading } = useContext(ProfileContext);
 
   useEffect(() => {
     if (profileData && profileData.company && profileData.company.name) {
-      // Set companyName only if profileData and profileData.company are available
       setCompanyName(profileData.company.name);
-      setSellerEmail(profileData.user?.email || ""); // Optional: Check if email exists
+      setSellerEmail(profileData.user?.email || "");
     } else {
-      // Optionally handle the case where profileData is unavailable
       console.warn("Profile data or company information is unavailable.");
     }
   }, [profileData]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -66,27 +64,19 @@ const SellerAnalytics = () => {
     };
 
     fetchData();
-  }, []); // Removed sellerId dependency
+  }, []);
 
   if (!sellerData) return <p>Loading...</p>;
 
   const handleSubscribe = () => {
-    // Logic for subscribing (e.g., API call to handle payment)
     setIsSubscribed(true);
     setShowSubscriptionPopup(false);
   };
 
   const handleAddPackage = () => {
     navigate("/add-product/:id");
-
-    // if (isSubscribed) {
-    //   navigate("/add-product/:id");
-    // } else {
-    //   setShowSubscriptionPopup(true);
-    // }
   };
 
-  // Prepare data for Chart.js (Pie Chart)
   const chartData = {
     labels: sellerData.products.map((product) => product.display_name),
     datasets: [
@@ -178,27 +168,32 @@ const SellerAnalytics = () => {
                 : null;
 
               return (
-                <>
-                  <li key={product.id} className="package-card">
-                    <div className="img">
-                      {displayImage ? (
-                        <img src={displayImage} alt={product.display_name} />
-                      ) : (
-                        <p>No Image Available</p>
-                      )}
+                <li key={product.id} className="package-card relative">
+                  {product.is_approved && (
+                    <div
+                      className="absolute bottom-5 left-36 px-2 py-1 rounded-md text-white text-sm font-medium"
+                      style={{ backgroundColor: "#ff6f20" }}
+                    >
+                      Approved
                     </div>
-                    <div className="package-card-text">
-                      <h3>{product.display_name}</h3>
-                      <p>Price: ${product.price}</p>
-                    </div>
-                  </li>
-                </>
+                  )}
+                  <div className="img">
+                    {displayImage ? (
+                      <img src={displayImage} alt={product.display_name} />
+                    ) : (
+                      <p>No Image Available</p>
+                    )}
+                  </div>
+                  <div className="package-card-text">
+                    <h3>{product.display_name}</h3>
+                    <p>Price: ${product.price}</p>
+                  </div>
+                </li>
               );
             })}
           </ul>
 
           <button className="add-new-package" onClick={handleAddPackage}>
-            {/* {isSubscribed ? "Add New Package" : "Subscribe"} */}
             Add New Package
           </button>
         </div>

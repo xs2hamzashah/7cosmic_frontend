@@ -17,6 +17,9 @@ export default function ProductDetail() {
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [sellerPhoneNumber, setSellerPhoneNumber] = useState();
+
+  console.log(sellerPhoneNumber);
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -28,6 +31,7 @@ export default function ProductDetail() {
 
         const data = await response.json();
         setPackageData(data);
+        setSellerPhoneNumber(data.company.phone_number);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -97,6 +101,7 @@ export default function ProductDetail() {
           </button>
         </div>
         <PhoneNumberPopup
+          phoneNumber={sellerPhoneNumber}
           isOpen={isPopupOpen}
           onClose={handleClosePopup}
           id={id}

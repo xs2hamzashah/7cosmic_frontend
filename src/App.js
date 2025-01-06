@@ -22,6 +22,7 @@ import TermsAndConditions from "./Pages/TermsAndCondition";
 import { Contact } from "lucide-react";
 import ContactUsPage from "./Pages/ContactUsPage";
 import SubscriptionPlan from "./Pages/SubscriptionPlan";
+import AdminProductDetail from "./Components/AdminProductDetail";
 
 function App() {
   return (
@@ -36,6 +37,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/add-product/:id" element={<AddPackageForm />} />
               <Route path="/product-detail/:id" element={<ProductDetail />} />
+              <Route
+                path="/admin-product-detail/:id"
+                element={<AdminProductDetail />}
+              />
               <Route path="/seller-analytics" element={<SellerAnalytics />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route

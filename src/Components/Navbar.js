@@ -4,6 +4,7 @@ import { IonIcon } from "@ionic/react";
 import {
   searchOutline,
   clipboardOutline,
+  logInOutline,
   logOutOutline,
   personOutline,
   documentOutline,
@@ -91,7 +92,7 @@ export default function Navbar({
               onClick={() => navigate("/login")}
               style={{ cursor: "pointer" }}
             >
-              <IonIcon icon={personOutline} />
+              <IonIcon icon={logInOutline} />
             </p>
           ) : (
             <div className="dropdown" ref={dropdownRef}>

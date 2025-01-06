@@ -19,13 +19,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
   console.log("🚀 ~ SolarPanel ~ data:", data);
 
-  // <td>{solar.subtype}</td>
-  // <td>{solar.brand}</td>
-  // <td>{solar.details}</td>
-  // <td>{solar.capacity}</td>
-  // <td>{solar.warranty}</td>
-  // <td>{solar.quantity}</td>
-
   const _solarData = Array.isArray(data?.results)
     ? data.results.map((item) => ({
         id: item.id,
@@ -36,7 +29,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       }))
     : [];
 
-  console.log("🚀 ~ SolarPanel ~ _solarData:", _solarData);
+  console.log(" SolarPanel ~ _solarData:", _solarData);
 
   const highlightedIds = components.map((component) => component.id);
 
@@ -67,7 +60,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
         quantity: item.quantity,
         id: item.id,
       }));
-
+      
       setSolarData(filteredData || []);
     } catch (error) {
       console.error("Error fetching Solar Panel data:", error);

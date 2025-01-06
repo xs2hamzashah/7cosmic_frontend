@@ -216,7 +216,7 @@ const Dashboard = () => {
 
       setSelectedSeller(seller); // Save seller for UI context
       console.log(data[0]);
-      setSelectedSellerPackages(data || []); // Store packages in state
+      setSelectedSellerPackages(data.results || []); // Store packages in state
     } catch (error) {
       console.error("Error fetching seller packages:", error);
       setSelectedSellerPackages([]); // Clear packages on error

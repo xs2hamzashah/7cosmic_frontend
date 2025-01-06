@@ -45,7 +45,7 @@ export default function PackagesList({ packages }) {
                     Price: <span>{pkg.price}</span>
                   </p>
                   <p>
-                    Size: <span>{pkg.size}</span>
+                    Company name: <span>{pkg.company}</span>
                   </p>
                   <p>
                     City: <span>{pkg.city}</span>
