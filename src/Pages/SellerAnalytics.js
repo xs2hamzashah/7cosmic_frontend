@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
 import { useNavigate } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { pencilOutline } from "ionicons/icons";
 import API_BASE_URL from "../config";
 import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
@@ -118,6 +120,11 @@ const SellerAnalytics = () => {
     },
   };
 
+  // -------------- EDIT -------------------
+  const handleEdit = (id) => {
+    navigate(`/edit-product/${id}`);
+  };
+
   return (
     <section id="body">
       <Navbar
@@ -188,6 +195,13 @@ const SellerAnalytics = () => {
                     <h3>{product.display_name}</h3>
                     <p>Price: ${product.price}</p>
                   </div>
+                  <button
+                    onClick={(e) => {
+                      handleEdit(product.id);
+                    }}
+                  >
+                    <IonIcon icon={pencilOutline} />Edit
+                  </button>
                 </li>
               );
             })}

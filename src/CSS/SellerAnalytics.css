@@ -120,6 +120,34 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.package-card button {
+  display: flex; /* Enables flexbox layout */
+  align-items: center; /* Vertically centers the icon and text */
+  justify-content: center; /* Horizontally centers content */
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid #ff6f20;
+  border-radius: 5px;
+  color: #ff6f20;
+  background: none; /* Transparent background */
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-left: auto; /* Aligns the button to the right */
+  gap: 5px; /* Adds space between the icon and text */
+}
+
+.package-card button:hover {
+  background-color: #ff6f20;
+  color: #fff;
+}
+
+.package-card button ion-icon {
+  height: 20px; /* Ensures the icon height is 20px */
+  width: 20px; /* Ensures the icon width is 20px */
+}
+
 .add-new-package:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25), 0 3px 5px rgba(0, 0, 0, 0.15);
