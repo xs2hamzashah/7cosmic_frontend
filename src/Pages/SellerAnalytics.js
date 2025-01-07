@@ -176,14 +176,16 @@ const SellerAnalytics = () => {
 
               return (
                 <li key={product.id} className="package-card relative">
-                  {product.is_approved && (
-                    <div
-                      className="absolute bottom-5 left-36 px-2 py-1 rounded-md text-white text-sm font-medium"
-                      style={{ backgroundColor: "#149921" }}
-                    >
-                      Approved
-                    </div>
-                  )}
+                  <div
+                    className="absolute bottom-5 left-36 px-2 py-1 rounded-md text-white text-sm font-medium"
+                    style={{
+                      backgroundColor: product.is_approved
+                        ? "#149921"
+                        : "#F39C12", // Green for Approved, Yellow for Pending
+                    }}
+                  >
+                    {product.is_approved ? "Approved" : "Pending.."}
+                  </div>
                   <div className="img">
                     {displayImage ? (
                       <img src={displayImage} alt={product.display_name} />
@@ -200,7 +202,8 @@ const SellerAnalytics = () => {
                       handleEdit(product.id);
                     }}
                   >
-                    <IonIcon icon={pencilOutline} />Edit
+                    <IonIcon icon={pencilOutline} />
+                    Edit
                   </button>
                 </li>
               );

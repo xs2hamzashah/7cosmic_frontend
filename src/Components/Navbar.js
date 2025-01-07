@@ -30,8 +30,10 @@ export default function Navbar({
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    const sellerId = localStorage.getItem("sellerId");
-    setIsLoggedIn(!!(token && sellerId));
+    const role = localStorage.getItem("role");
+
+    // Check if the user is logged in based on the token and role
+    setIsLoggedIn(!!(token && role));
   }, []);
 
   // Close dropdown when clicking outside
@@ -156,12 +158,19 @@ export default function Navbar({
                     <p
                       className="dropdown-item"
                       onClick={() => {
-                        const sellerId = localStorage.getItem("sellerId");
-                        if (sellerId) {
+                        const role = localStorage.getItem("role");
+                        const token = localStorage.getItem("accessToken");
+
+                        if (role === "seller" && token) {
                           navigate(`/seller-analytics`);
+                        } else if (role === "admin" && token) {
+                          navigate(`/admin`);
                         } else {
-                          console.error("Seller ID is missing.");
+                          console.error(
+                            "Invalid role or missing access token."
+                          );
                         }
+
                         setIsDropdownVisible(false);
                       }}
                       style={{ cursor: "pointer", fontSize: "16px" }}

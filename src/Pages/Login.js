@@ -36,28 +36,29 @@ function Login() {
     setLoading(true);
 
     try {
-      let role = "seller";
-      if (email === "ceo@7solar.com" && password === "useradmin") {
-        role = "admin";
-      }
+      // Send login request
+      const response = await api.post("auth/login/", { email, password });
 
-      const response = await api.post("auth/login/", { email, password, role });
-      const { access, refresh } = response.data;
+      // Extract data from the response
+      const { access, refresh, role } = response.data;
 
-      // Store tokens
+      // Store tokens in localStorage
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
+      // Store role in localStorage
+      localStorage.setItem("role", role);
+
       // Fetch profile data after login
-      await fetchProfileData(); // Ensure profile data is fetched after login
+      await fetchProfileData();
 
       // Navigate based on the role
       if (role === "admin") {
         navigate("/admin");
+      } else if (role === "seller") {
+        navigate("/seller-analytics");
       } else {
-        const sellerId = response.data.seller_id;
-        localStorage.setItem("sellerId", sellerId);
-        navigate(`/seller-analytics`);
+        console.error("Unknown role, unable to navigate.");
       }
     } catch (error) {
       setError(error.response?.data?.detail || "Invalid email or password");
