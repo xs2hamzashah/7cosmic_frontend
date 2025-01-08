@@ -8,6 +8,7 @@ import { API_URL } from "../../api/request";
 const apiEndPoints = `/civil-work`;
 
 const TOKEN = localStorage.getItem("accessToken");
+
 export const civilWorkPriceService = createApi({
   reducerPath: "civil-work-price",
   baseQuery: fetchBaseQuery({
@@ -79,4 +80,9 @@ export const {
   useEditMutation,
   useAllQuery,
   useSingleQuery,
+
 } = civilWorkPriceService;
+
+
+
+

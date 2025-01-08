@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ProfileContext } from "../context/ProfileContext"; // Import ProfileContex
 import API_BASE_URL from "../config";
 import "../CSS/Login.css";
+import { resetAPis } from "../service/utils/reset";
 
 // Create Axios Instance
 const api = axios.create({
@@ -51,6 +52,7 @@ function Login() {
 
       // Fetch profile data after login
       await fetchProfileData();
+      resetAPis();
 
       // Navigate based on the role
       if (role === "admin") {
