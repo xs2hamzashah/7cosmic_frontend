@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../CSS/SignUp.css";
 import API_BASE_URL from "../config";
 import CompanyNameInput from "../Components/CompanyNameInput";
+import Navbar from "../Components/Navbar";
 
 function SignupForm() {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ function SignupForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false); // Loading state
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -33,9 +35,21 @@ function SignupForm() {
     });
   };
 
+  const handleCheckboxChange = (e) => {
+    setTermsAccepted(e.target.checked);
+  };
+
   const handleSendOtp = async () => {
     if (!formData.phoneNumber) {
       alert("Please enter your phone number.");
+      return;
+    }
+
+    // Regular expression for validating phone numbers (basic validation for digits and length)
+    const phoneRegex = /^[0-9]{10}$/; // Assuming a 10-digit phone number format
+
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      alert("Please enter a valid phone number. It should contain 10 digits.");
       return;
     }
 
@@ -142,6 +156,10 @@ function SignupForm() {
       newErrors.otp = "Please verify OTP before signing up.";
     }
 
+    if (!termsAccepted) {
+      newErrors.terms = "You must accept the terms and conditions to proceed.";
+    }
+
     return newErrors;
   };
 
@@ -219,163 +237,194 @@ function SignupForm() {
   };
 
   return (
-    <section className="signup-section">
-      <h1>Create Business Account</h1>
-      <p>
-        Already have an account?
-        <a onClick={handleNavigateToLogin} style={{ cursor: "pointer" }}>
-          Log in
-        </a>
-      </p>
+    <section>
+      <Navbar />
+      <div className="signup-section">
+        <h1>Create Business Account</h1>
+        <p>
+          Already have an account?
+          <a onClick={handleNavigateToLogin} style={{ cursor: "pointer" }}>
+            Log in
+          </a>
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        {errors.form && <div className="error-message">{errors.form}</div>}
-        <div className="inputs-section">
-          <div className="right-side">
-            <input
-              type="text"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && (
-              <span className="error-message">{errors.email}</span>
-            )}
-            <CompanyNameInput
-              value={formData.companyName}
-              onChange={(newValue) =>
-                setFormData({ ...formData, companyName: newValue })
-              }
-            />
-            {errors.companyName && (
-              <span className="error-message">{errors.companyName}</span>
-            )}
-            <div className="otp-container">
-              <div className="input-button-pair">
-                <input
-                  type="text"
-                  className="otp"
-                  placeholder="WhatsApp Number"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                />
-                <button
-                  type="button"
-                  className="ghost-otp"
-                  onClick={handleSendOtp}
-                  disabled={isOtpButtonDisabled}
-                >
-                  Send OTP
-                </button>
-              </div>
-              {errors.phoneNumber && (
-                <span className="error-message">{errors.phoneNumber}</span>
+        <form onSubmit={handleSubmit}>
+          {errors.form && <div className="error-message">{errors.form}</div>}
+          <div className="inputs-section">
+            <div className="right-side">
+              <input
+                type="text"
+                placeholder="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {errors.email && (
+                <span className="error-message">{errors.email}</span>
               )}
-              <div className="input-button-pair">
-                <input
-                  type="text"
-                  className="otp"
-                  placeholder="Enter OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="ghost-otp"
-                  onClick={handleVerifyOtp}
-                >
-                  Verify OTP
-                </button>
+              <CompanyNameInput
+                value={formData.companyName}
+                onChange={(newValue) =>
+                  setFormData({ ...formData, companyName: newValue })
+                }
+              />
+              {errors.companyName && (
+                <span className="error-message">{errors.companyName}</span>
+              )}
+              <div className="otp-container">
+                <div className="input-button-pair">
+                  <input
+                    type="text"
+                    className="otp"
+                    placeholder="WhatsApp Number"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className="ghost-otp"
+                    onClick={handleSendOtp}
+                    disabled={isOtpButtonDisabled}
+                  >
+                    Send OTP
+                  </button>
+                </div>
+                {errors.phoneNumber && (
+                  <span className="error-message">{errors.phoneNumber}</span>
+                )}
+                <div className="input-button-pair">
+                  <input
+                    type="text"
+                    className="otp"
+                    placeholder="Enter OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="ghost-otp"
+                    onClick={handleVerifyOtp}
+                  >
+                    Verify OTP
+                  </button>
+                </div>
+                {errors.otp && (
+                  <span className="error-message">{errors.otp}</span>
+                )}
               </div>
-              {errors.otp && (
-                <span className="error-message">{errors.otp}</span>
+            </div>
+
+            <div className="left-side">
+              <select name="city" value={formData.city} onChange={handleChange}>
+                <option value="">Select City</option>
+                <option value="Islamabad">Islamabad</option>
+                <option value="Karachi">Karachi</option>
+                <option value="Lahore">Lahore</option>
+              </select>
+              {errors.city && (
+                <div className="error-message">{errors.city}</div>
+              )}
+              <input
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+              {errors.username && (
+                <div className="error-message">{errors.username}</div>
+              )}
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              {errors.password && (
+                <div className="error-message">{errors.password}</div>
+              )}
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+              {errors.confirmPassword && (
+                <div className="error-message">{errors.confirmPassword}</div>
               )}
             </div>
           </div>
 
-          <div className="left-side">
-            <select name="city" value={formData.city} onChange={handleChange}>
-              <option value="">Select City</option>
-              <option value="Islamabad">Islamabad</option>
-              <option value="Karachi">Karachi</option>
-              <option value="Lahore">Lahore</option>
-            </select>
-            {errors.city && <div className="error-message">{errors.city}</div>}
-            <input
-              type="text"
-              placeholder="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-            />
-            {errors.username && (
-              <div className="error-message">{errors.username}</div>
-            )}
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {errors.password && (
-              <div className="error-message">{errors.password}</div>
-            )}
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            {errors.confirmPassword && (
-              <div className="error-message">{errors.confirmPassword}</div>
-            )}
-          </div>
-        </div>
-
-        <div className="otp-timer">
-          {showTimer && ( // Conditionally show the timer
-            <div className="timer">
-              <p>
-                Time remaining:
-                {timer > 0
-                  ? `00:${timer.toString().padStart(2, "0")}` // Format timer
-                  : "Expired"}
-              </p>
-              {timer === 0 && ( // Show resend OTP link after timer expires
-                <p>
-                  <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
+          <div className="otp-timer w-full max-w-md mx-auto flex flex-col items-center p-4">
+            {/* Timer Section */}
+            {showTimer && (
+              <div className="flex items-center justify-center w-full">
+                <p className="text-sm">
+                  Time remaining:{" "}
+                  {timer > 0
+                    ? `00:${timer.toString().padStart(2, "0")}`
+                    : "Expired"}
+                </p>
+                {timer === 0 && (
+                  <a
+                    onClick={handleSendOtp}
+                    className="text-orange-500 cursor-pointer hover:underline ml-2"
+                  >
                     Resend OTP
                   </a>
-                </p>
+                )}
+              </div>
+            )}
+
+            {/* Button Section */}
+            <div className="w-full flex justify-center mt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full max-w-xs rounded-lg bg-orange-500 text-white text-sm font-medium uppercase py-3 ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "hover:bg-orange-600"
+                }`}
+              >
+                {loading ? "Processing..." : "Create"}
+              </button>
+            </div>
+
+            {/* Terms Section */}
+            <div className="terms-section flex items-center gap-2 mt-2 w-full justify-center">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={handleCheckboxChange}
+                className="w-4 h-4 accent-orange-500 border-gray-400 cursor-pointer"
+              />
+              <label className="text-sm text-gray-800">
+                I agree to the{" "}
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-500 no-underline hover:underline"
+                >
+                  terms and conditions
+                </a>
+              </label>
+              {errors.terms && (
+                <span className="text-xs text-red-500 ml-2">
+                  {errors.terms}
+                </span>
               )}
             </div>
-          )}
+          </div>
 
-          {/* <div className="timer">
-            <p>
-              Time remaining:
-              {timer > 0
-                ? `00:${timer.toString().padStart(2, "0")}` // Format timer
-                : "Expired"}
-            </p>
-
-            <p>
-              <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
-                Resend OTP
-              </a>
-            </p>
-          </div> */}
-          <button type="submit" disabled={loading}>
-            {loading ? "Processing..." : "Create"}
-          </button>
-        </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-      </form>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </form>
+      </div>
     </section>
   );
 }

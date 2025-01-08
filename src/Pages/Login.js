@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ProfileContext } from "../context/ProfileContext"; // Import ProfileContex
 import API_BASE_URL from "../config";
 import "../CSS/Login.css";
+import Navbar from "../Components/Navbar";
 
 // Create Axios Instance
 const api = axios.create({
@@ -86,53 +87,56 @@ function Login() {
   };
 
   return (
-    <section id="body" className="login-container">
-      <div className="login-form">
-        <h2>Business Login</h2>
-        <p>
-          Don't have an account yet?{" "}
-          <a onClick={handleNavigateToSignUp} style={{ cursor: "pointer" }}>
-            Create Account
-          </a>
-        </p>
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleForgotPassword();
-            }}
-          >
-            Forgot your password?
-          </a>
-          <button className="btn" type="submit" disabled={loading}>
-            {loading ? (
-              <span className="loading-dots">
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-              </span>
-            ) : (
-              "Sign In"
-            )}
-          </button>
-        </form>
-        {error && <p className="login-error">{error}</p>}
-        {forgotMessage && <p className="forgot-message">{forgotMessage}</p>}
+    <section id="body">
+      <Navbar />
+      <div className="login-container">
+        <div className="login-form">
+          <h2>Business Login</h2>
+          <p>
+            Don't have an account yet?{" "}
+            <a onClick={handleNavigateToSignUp} style={{ cursor: "pointer" }}>
+              Create Account
+            </a>
+          </p>
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleForgotPassword();
+              }}
+            >
+              Forgot your password?
+            </a>
+            <button className="btn" type="submit" disabled={loading}>
+              {loading ? (
+                <span className="loading-dots">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </form>
+          {error && <p className="login-error">{error}</p>}
+          {forgotMessage && <p className="forgot-message">{forgotMessage}</p>}
+        </div>
       </div>
     </section>
   );

@@ -86,7 +86,11 @@ export default function Navbar({
         </>
       )}
 
-      {!location.pathname.startsWith("/product-detail") && (
+      {!(
+        location.pathname.startsWith("/product-detail") ||
+        location.pathname === "/login" ||
+        location.pathname === "/sign-up"
+      ) && (
         <div className="icon-section">
           {!isLoggedIn ? (
             <p
@@ -113,20 +117,20 @@ export default function Navbar({
               )}
               {isDropdownVisible && (
                 <div className="dropdown-menu">
+                  <p
+                    className="dropdown-item"
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsDropdownVisible(false);
+                    }}
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    <IonIcon icon={personOutline} /> {companyName}
+                  </p>
                   <div
                     className="dropdown-header"
                     style={{ display: "flex", alignItems: "center" }}
                   >
-                    <p
-                      className="dropdown-item-text"
-                      style={{
-                        fontSize: "20px",
-                        marginRight: "auto",
-                        margin: "20px",
-                      }}
-                    >
-                      {companyName}
-                    </p>
                     <button
                       className="close-button"
                       onClick={() => setIsDropdownVisible(false)}
@@ -144,16 +148,7 @@ export default function Navbar({
                   <p className="dropdown-item" style={{ fontSize: "16px" }}>
                     {sellerEmail}
                   </p>
-                  <p
-                    className="dropdown-item"
-                    onClick={() => {
-                      navigate("/profile");
-                      setIsDropdownVisible(false);
-                    }}
-                    style={{ cursor: "pointer", fontSize: "16px" }}
-                  >
-                    <IonIcon icon={personOutline} /> Profile
-                  </p>
+
                   {location.pathname !== "/seller-analytics" && (
                     <p
                       className="dropdown-item"

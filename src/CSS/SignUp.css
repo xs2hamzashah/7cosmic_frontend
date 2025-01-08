@@ -101,45 +101,12 @@ input:focus {
   margin-top: 5px;
 }
 
-.otp-timer {
-  width: 100%;
-  max-width: 520px;
-  margin: 5.4rem auto;
-  display: flex; /* Use flexbox layout */
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items horizontally */
-  justify-content: center; /* Center items vertically */
+.terms-section .error-message {
+  font-size: 1.2vh;
+  color: red;
+  margin-top: 0.5vh;
 }
 
-.otp-timer .timer {
-  margin-bottom: 20px; /* Add space between timer and button */
-}
-
-.otp-timer p {
-  display: inline;
-  font-size: 14px;
-  margin-right: 30px;
-  margin-left: 10px;
-}
-
-.otp-timer a {
-  margin-left: 100px;
-  color: #ff6f20;
-  text-decoration: none;
-}
-
-.otp-timer button {
-  width: 80%; /* Center and make button responsive */
-  border-radius: 10px;
-  background-color: #ff6f20;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  text-transform: uppercase;
-  padding: 15px;
-  border: none;
-  text-align: center; /* Center text inside the button */
-}
 .error-message {
   color: red;
   font-size: 11px;

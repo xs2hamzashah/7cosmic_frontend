@@ -24,7 +24,7 @@
   text-align: center;
 }
 
-a {
+.login-form a {
   text-transform: capitalize;
   border-bottom: 1px solid #000;
   text-decoration: none;
