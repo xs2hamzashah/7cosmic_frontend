@@ -3,6 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const apiEndPoints = `/inverter`;
 
 const TOKEN = localStorage.getItem("accessToken");
+
+
 export const inverterPriceService = createApi({
   reducerPath: "inverter-price",
   baseQuery: fetchBaseQuery({

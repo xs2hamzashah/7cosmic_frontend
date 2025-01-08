@@ -52,6 +52,7 @@ function Login() {
 
       // Fetch profile data after login
       await fetchProfileData();
+      resetAPis();
 
       // Navigate based on the role
       if (role === "admin") {

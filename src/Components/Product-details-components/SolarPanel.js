@@ -36,6 +36,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("accessToken");
+      console.log("🚀 ~ fetchData ~ token:", token);
       const response = await fetch(
         `${API_BASE_URL}/api/listings/components/?component_type=PV%20Module`,
         {
