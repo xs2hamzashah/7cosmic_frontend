@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { usePanelsQuery } from "../../service/priceList/panel";
 
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import { removeOutline, addOutline, filter } from "ionicons/icons";
 import API_BASE_URL from "../../config";
 // issue solved
 const SolarPanel = ({ components, handleSelectComponent }) => {
@@ -17,7 +17,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
   const { data } = usePanelsQuery({ page: 1 });
 
-  console.log("🚀 ~ SolarPanel ~ data:", data);
+  // console.log("🚀 ~ SolarPanel ~ data:", data);
 
   const _solarData = Array.isArray(data?.results)
     ? data.results.map((item) => ({
@@ -29,7 +29,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       }))
     : [];
 
-  console.log(" SolarPanel ~ _solarData:", _solarData);
+  // console.log(" SolarPanel ~ _solarData:", _solarData);
 
   const highlightedIds = components.map((component) => component.id);
 
@@ -60,7 +60,9 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
         quantity: item.quantity,
         id: item.id,
       }));
-      
+
+      console.log(filteredData);
+
       setSolarData(filteredData || []);
     } catch (error) {
       console.error("Error fetching Solar Panel data:", error);
@@ -198,8 +200,8 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
               </tr>
             </thead>
             <tbody>
-              {_solarData.length > 0 ? (
-                _solarData.map((solar) => (
+              {solarData.length > 0 ? (
+                solarData.map((solar) => (
                   <tr
                     key={solar.id}
                     onClick={() => handleSelectComponent(solar)}
