@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { IonIcon } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import PackagesList from "../Components/PackagesList";
-import { ProfileContext } from "../context/ProfileContext"; // Correct import
+import { ProfileContext } from "../context/ProfileContext";
 import API_BASE_URL from "../config";
 
 export default function HomePage() {
@@ -14,33 +14,37 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [sellerEmail, setSellerEmail] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const {
-    profileData,
-    loading: profileLoading,
-    fetchProfileData,
-  } = useContext(ProfileContext); // Correctly access context
+  const observer = useRef();
+  const { profileData, loading: profileLoading } = useContext(ProfileContext);
 
-  const fetchPackages = async () => {
+  const fetchPackages = async (pageNumber = 1) => {
+    setLoading(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/listings/solar-solutions/`
+        `${API_BASE_URL}/api/listings/solar-solutions/?page=${pageNumber}`
       );
       const data = await response.json();
-      setPackages(data.results); // Store all packages
+
+      setPackages((prev) => [...prev, ...data.results]);
+      setHasMore(!!data.next); // If `next` is null, there's no more data
     } catch (error) {
       console.error("Error fetching packages:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPackages();
-  }, []);
+    fetchPackages(page);
+  }, [page]);
 
   const handleSearch = async (searchParams) => {
     const { city, size, price_range, query } = searchParams;
 
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const queryString = new URLSearchParams({
         ...(city && { city }),
@@ -58,26 +62,36 @@ export default function HomePage() {
       }
 
       const data = await response.json();
-      setFilteredPackages(data); // Update filtered packages with API response
-      setIsFilteredView(true); // Switch to filtered view
+      setFilteredPackages(data.results);
+      setIsFilteredView(true);
     } catch (error) {
       console.error("Error fetching filtered packages:", error);
     } finally {
-      setLoading(false); // Stop loading after fetch
+      setLoading(false);
     }
   };
 
   const goBackToHomePage = () => {
-    setIsFilteredView(false); // Switch back to homepage view
+    setIsFilteredView(false);
   };
 
-  // Debugging: Log profile data to the console
   useEffect(() => {
     if (profileData && profileData.company && profileData.user) {
-      setCompanyName(profileData.company.name); // Only set if profileData is available
-      setSellerEmail(profileData.user.email); // Only set if profileData is available
+      setCompanyName(profileData.company.name);
+      setSellerEmail(profileData.user.email);
     }
   }, [profileData]);
+
+  const lastPackageElementRef = (node) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  };
 
   return (
     <section>
@@ -85,9 +99,12 @@ export default function HomePage() {
         onSearch={handleSearch}
         companyName={companyName}
         sellerEmail={sellerEmail}
-        loading={profileLoading} // Pass loading status from context
+        loading={profileLoading}
       />
-      {/* Render loading animation if profile is still being fetched */}
+      {/* Show HeroSection only when not in filtered view */}
+      {!isFilteredView && <HeroSection />}
+
+      {/* Loading Indicator */}
       {loading ? (
         <div className="loading-container">
           <div className="loader"></div>
@@ -103,13 +120,15 @@ export default function HomePage() {
         </section>
       ) : (
         <>
-          <HeroSection />
           <div className="calculator">
             <button className="ghost">Solar Need Calculator</button>
           </div>
           <section className="card-section">
             <h1>Featured Listing</h1>
-            <PackagesList packages={packages} />
+            <PackagesList
+              packages={packages}
+              lastPackageRef={lastPackageElementRef}
+            />
           </section>
         </>
       )}

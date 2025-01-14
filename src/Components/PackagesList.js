@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import "../CSS/PackagesList.css";
 
-export default function PackagesList({ packages }) {
+export default function PackagesList({ packages,lastPackageRef }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -16,10 +16,11 @@ export default function PackagesList({ packages }) {
         {packages.length > 0 ? (
           packages
             .filter((pkg) => pkg) // Ensure no null packages
-            .map((pkg) => (
+            .map((pkg, index) => (
               <div
                 className="card"
                 onClick={() => handleCardClick(pkg.id)}
+                ref={index === packages.length - 1 ? lastPackageRef : null}
                 key={pkg.id}
               >
                 {/* Find the image with is_display_image: true */}
