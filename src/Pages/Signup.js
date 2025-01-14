@@ -48,10 +48,10 @@ function SignupForm() {
     // Regular expression for validating phone numbers (basic validation for digits and length)
     const phoneRegex = /^[0-9]{10}$/; // Assuming a 10-digit phone number format
 
-    if (!phoneRegex.test(formData.phoneNumber)) {
-      alert("Please enter a valid phone number. It should contain 10 digits.");
-      return;
-    }
+    // if (!phoneRegex.test(formData.phoneNumber)) {
+    //   alert("Please enter a valid phone number. It should contain 10 digits.");
+    //   return;
+    // }
 
     setLoading(true); // Set loading to true
     try {
@@ -359,41 +359,6 @@ function SignupForm() {
           </div>
 
           <div className="otp-timer w-full max-w-md mx-auto flex flex-col items-center p-4">
-            {/* Timer Section */}
-            {showTimer && (
-              <div className="flex items-center justify-center w-full">
-                <p className="text-sm">
-                  Time remaining:{" "}
-                  {timer > 0
-                    ? `00:${timer.toString().padStart(2, "0")}`
-                    : "Expired"}
-                </p>
-                {timer === 0 && (
-                  <a
-                    onClick={handleSendOtp}
-                    className="text-orange-500 cursor-pointer hover:underline ml-2"
-                  >
-                    Resend OTP
-                  </a>
-                )}
-              </div>
-            )}
-
-            {/* Button Section */}
-            <div className="w-full flex justify-center mt-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full max-w-xs rounded-lg bg-orange-500 text-white text-sm font-medium uppercase py-3 ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "hover:bg-orange-600"
-                }`}
-              >
-                {loading ? "Processing..." : "Create"}
-              </button>
-            </div>
-
             {/* Terms Section */}
             <div className="terms-section flex items-center gap-2 mt-2 w-full justify-center">
               <input
@@ -419,6 +384,41 @@ function SignupForm() {
                 </span>
               )}
             </div>
+
+            {/* Button Section */}
+            <div className="w-full flex justify-center mt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full max-w-xs rounded-lg bg-orange-500 text-white text-sm font-medium uppercase py-3 ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "hover:bg-orange-600"
+                }`}
+              >
+                {loading ? "Processing..." : "Create"}
+              </button>
+            </div>
+
+            {/* Timer Section */}
+            {showTimer && (
+              <div className="flex items-center justify-center w-full">
+                <p className="text-sm">
+                  Time remaining:{" "}
+                  {timer > 0
+                    ? `00:${timer.toString().padStart(2, "0")}`
+                    : "Expired"}
+                </p>
+                {timer === 0 && (
+                  <a
+                    onClick={handleSendOtp}
+                    className="text-orange-500 cursor-pointer hover:underline ml-2"
+                  >
+                    Resend OTP
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {errorMessage && <p className="error-message">{errorMessage}</p>}

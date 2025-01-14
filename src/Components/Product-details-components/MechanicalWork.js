@@ -55,6 +55,13 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
   }, []);
 
   const handleSubmit = async () => {
+    if (!mechanicalMaterial || !mechanicalStructureType || !warranty) {
+      alert(
+        "Mechanical Material, Mechanical StructureType and Warranty feilds are required."
+      );
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -148,10 +155,10 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
             <option value="Other">Other</option>
           </select>
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add

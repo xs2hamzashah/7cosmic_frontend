@@ -49,6 +49,11 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
   }, []);
 
   const handleSubmit = async () => {
+    if (!wireMaterial || !warranty) {
+      alert("Both Wire Material and Warranty are required.");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -120,15 +125,13 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
           >
             <option value="">Wire Material</option>
             <option value="Copper">Copper</option>
-            <option value="Aluminium">Aluminium</option>
-            <option value="PVC">PVC</option>
             <option value="Other">Other</option>
           </select>
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add

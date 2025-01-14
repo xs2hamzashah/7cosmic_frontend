@@ -56,7 +56,38 @@ const Battery = ({ components, handleSelectComponent }) => {
     fetchData();
   }, []);
 
+  // Function to validate inputs
+  const validateInputs = () => {
+    // Validation for required text fields
+    if (!batteryType || !brand || !detail) {
+      alert("Battery Type, Brand, and Specifications are required.");
+      return false;
+    }
+
+    // Validation for numeric fields, ensuring they are numbers and positive integers
+    if (
+      isNaN(capacity) ||
+      isNaN(warranty) ||
+      isNaN(quantity) ||
+      isNaN(totalBackupCapacity) ||
+      Math.max(Number(capacity), 0) <= 0 ||
+      Math.max(Number(warranty), 0) <= 0 ||
+      Math.max(Number(quantity), 0) <= 0 ||
+      Math.max(Number(totalBackupCapacity), 0) <= 0
+    ) {
+      alert(
+        "Capacity, Warranty, Quantity, and Total Backup Capacity must be positive numbers."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateInputs()) {
+      return;
+    }
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -149,28 +180,33 @@ const Battery = ({ components, handleSelectComponent }) => {
             onChange={(e) => setDetail(e.target.value)}
           />
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Capacity"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => setCapacity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
-            placeholder="total Backup Capacity"
+            type="number"
+            placeholder="Total Backup Capacity"
             value={totalBackupCapacity}
-            onChange={(e) => setTotalBackupCapacity(e.target.value)}
+            onChange={(e) =>
+              setTotalBackupCapacity(Math.max(0, e.target.value))
+            }
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add

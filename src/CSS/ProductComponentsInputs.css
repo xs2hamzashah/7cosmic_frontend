@@ -31,7 +31,7 @@
 .component-head h2 {
   color: #ff6f20;
   font-weight: 400;
-  font-size:21px;
+  font-size: 21px;
 }
 
 .component-head ion-icon {
@@ -81,7 +81,7 @@
   border: none;
   background-color: #ff6f20;
   color: #fff;
-  padding: 15px 30px;
+  padding: 12px 30px;
   margin-left: 10px;
   border-radius: 5px;
   font-size: 16px;
@@ -93,9 +93,12 @@
   opacity: 100%;
 }
 
-.component-table table {
+.component-table {
   margin: 20px 0 0 20px;
   border-collapse: collapse;
+  max-height: 400px; /* Adjust this height as needed */
+  overflow-y: auto;
+  display: block; /* Makes the table body scrollable */
 }
 
 .component-table table thead {

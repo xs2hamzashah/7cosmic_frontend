@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { usePanelsQuery } from "../../service/priceList/panel";
 
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline, filter } from "ionicons/icons";
+import { removeOutline, addOutline } from "ionicons/icons";
 import API_BASE_URL from "../../config";
-// issue solved
+
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [solarData, setSolarData] = useState([]);
@@ -17,26 +17,11 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
   const { data } = usePanelsQuery({ page: 1 });
 
-  // console.log("🚀 ~ SolarPanel ~ data:", data);
-
-  const _solarData = Array.isArray(data?.results)
-    ? data.results.map((item) => ({
-        id: item.id,
-        brand: item.brand_name,
-        details: item.specification,
-        quantity: item.quantity,
-        capacity: item.capacity,
-      }))
-    : [];
-
-  // console.log(" SolarPanel ~ _solarData:", _solarData);
-
   const highlightedIds = components.map((component) => component.id);
 
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      console.log("🚀 ~ fetchData ~ token:", token);
       const response = await fetch(
         `${API_BASE_URL}/api/listings/components/?component_type=PV%20Module`,
         {
@@ -62,8 +47,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
         id: item.id,
       }));
 
-      console.log(filteredData);
-
       setSolarData(filteredData || []);
     } catch (error) {
       console.error("Error fetching Solar Panel data:", error);
@@ -74,7 +57,37 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
     fetchData();
   }, []);
 
+  const validateInputs = () => {
+    if (!solarType.trim() || !brand.trim() || !detail.trim()) {
+      alert("Please fill in all required text fields.");
+      return false;
+    }
+
+    // Convert values to numbers and validate
+    const capacityNum = Number(capacity);
+    const warrantyNum = Number(warranty);
+    const quantityNum = Number(quantity);
+
+    if (
+      isNaN(capacityNum) ||
+      capacityNum <= 0 ||
+      isNaN(warrantyNum) ||
+      warrantyNum <= 0 ||
+      isNaN(quantityNum) ||
+      quantityNum <= 0
+    ) {
+      alert("Capacity, Warranty, and Quantity must be positive numbers.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -95,9 +108,9 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
             subtype: solarType,
             brand: brand,
             details: detail,
-            capacity: capacity.toString(),
-            warranty: warranty.toString(),
-            quantity: parseInt(quantity, 10), // Ensure quantity is an integer
+            capacity: capacity,
+            warranty: warranty,
+            quantity: parseInt(quantity, 10),
           }),
         }
       );
@@ -112,7 +125,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       const createdComponent = await postResponse.json();
       handleSelectComponent(createdComponent);
 
-      // Refresh the list to include the newly added component
       fetchData();
 
       setSolarType("");
@@ -166,22 +178,34 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
             onChange={(e) => setDetail(e.target.value)}
           />
           <input
-            type="text"
-            placeholder="Warranty"
+            type="number"
+            placeholder="Warranty (Years)"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+              setWarranty(value);
+            }}
+            onWheel={(e) => e.target.blur()} // Prevent up/down buttons
           />
           <input
-            type="text"
+            type="number"
             placeholder="Capacity"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+              setCapacity(value);
+            }}
+            onWheel={(e) => e.target.blur()}
           />
           <input
-            type="text"
+            type="number"
             placeholder="Quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+              setQuantity(value);
+            }}
+            onWheel={(e) => e.target.blur()}
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add
@@ -192,7 +216,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
           <table>
             <thead>
               <tr>
-                {/* <th>Solar Type</th> */}
                 <th>Brand</th>
                 <th>Specification</th>
                 <th>Capacity</th>
@@ -210,10 +233,9 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                       cursor: "pointer",
                       ...(highlightedIds.includes(solar.id) && {
                         backgroundColor: "#ff6e2088",
-                      }), // Change color if id matches
+                      }),
                     }}
                   >
-                    {/* <td>{solar.subtype}</td> */}
                     <td>{solar.brand}</td>
                     <td>{solar.details}</td>
                     <td>{solar.capacity}</td>
@@ -223,7 +245,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6">No data available</td>
+                  <td colSpan="5">No data available</td>
                 </tr>
               )}
             </tbody>

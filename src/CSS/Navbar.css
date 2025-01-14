@@ -37,12 +37,12 @@ nav {
 
 .search-box select {
   width: 130px;
-  padding: 10px;
+  padding: 8px;
   margin-left: 10px;
   border: 2px solid #a7aaab;
   outline: none;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .search-box .search-btn {
@@ -68,14 +68,16 @@ nav {
 }
 
 .profile-icon {
-  font-size: 30px;
-  background-color: #ff6f20;
-  width: 45px;
-  height: 45px;
-  padding: 2px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  color: #fff;
+  color: #ff6f20;
+  display: flex;
+  align-items: center;
+  padding: 5px 5px;
+  margin-top: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.profile-icon:hover {
+  transform: scale(1.15);
 }
 
 .log-out,
@@ -94,7 +96,6 @@ nav {
   height: 20px;
 }
 
-.profile-icon:hover,
 .log-out:hover,
 .dropdown-toggle:hover {
   transform: translateY(-2px);

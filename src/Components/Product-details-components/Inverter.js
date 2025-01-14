@@ -52,8 +52,41 @@ const Inverter = ({ components, handleSelectComponent }) => {
     fetchData();
   }, []);
 
+  // Function to validate inputs
+  const validateInputs = () => {
+    // Validation for required text fields
+    if (!inverterType || !brand || !detail) {
+      alert("Inverter Type, Brand, and Specifications are required.");
+      return false;
+    }
+
+    // Validation for numeric fields, ensuring they are numbers and positive integers
+    if (
+      isNaN(capacity) ||
+      isNaN(warranty) ||
+      isNaN(quantity) ||
+      isNaN(ipRating) ||
+      Math.max(Number(capacity), 0) <= 0 ||
+      Math.max(Number(warranty), 0) <= 0 ||
+      Math.max(Number(quantity), 0) <= 0 ||
+      Math.max(Number(ipRating), 0) <= 0
+    ) {
+      alert(
+        "Capacity, Warranty, Quantity, and IP Rating must be positive numbers."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!validateInputs()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -146,28 +179,31 @@ const Inverter = ({ components, handleSelectComponent }) => {
             onChange={(e) => setDetail(e.target.value)}
           />
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Capacity"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => setCapacity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="IP Rating"
             value={ipRating}
-            onChange={(e) => setIpRating(e.target.value)}
+            onChange={(e) => setIpRating(Math.max(0, e.target.value))}
           />
           <button type="submit" className="add-component-btn">
             Add

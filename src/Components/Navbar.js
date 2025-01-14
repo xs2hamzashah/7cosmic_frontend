@@ -98,7 +98,7 @@ export default function Navbar({
               onClick={() => navigate("/login")}
               style={{ cursor: "pointer" }}
             >
-              <IonIcon icon={logInOutline} />
+              <IonIcon icon={personOutline} />
             </p>
           ) : (
             <div className="dropdown" ref={dropdownRef}>
