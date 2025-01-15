@@ -32,11 +32,15 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/product-detail/:id" element={<ProductDetail />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/sign-up" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/add-product/:id" element={<AddPackageForm />} />
-              <Route path="/product-detail/:id" element={<ProductDetail />} />
+              <Route
+                path="/product-detail-list/:id"
+                element={<ProductDetailList />}
+              />
               <Route
                 path="/admin-product-detail/:id"
                 element={<AdminProductDetail />}
@@ -50,10 +54,7 @@ function App() {
               <Route path="/contact-us" element={<ContactUsPage />} />
               <Route path="/subscription-page" element={<SubscriptionPlan />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route
-                path="/product-detail-list/:id"
-                element={<ProductDetailList />}
-              />
+
               <Route path="/edit-product/:id" element={<EditPackage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route

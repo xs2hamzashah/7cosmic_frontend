@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { closeOutline } from "ionicons/icons";
 
 import API_BASE_URL from "../../config";
 
@@ -9,14 +11,19 @@ const ImageUploader = () => {
   const [files, setFiles] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  // Load files from local storage when the component mounts
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     setSelectedIndex(null);
   };
 
-  // Upload all images to the server
+  const handleRemoveImage = (indexToRemove) => {
+    setFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+    if (selectedIndex === indexToRemove) setSelectedIndex(null);
+  };
+
   const handleUpload = async () => {
     if (files.length === 0) {
       console.error("No files to upload.");
@@ -47,8 +54,6 @@ const ImageUploader = () => {
         responses.map((res) => res.data)
       );
 
-      // Clear local storage and state after successful upload
-      localStorage.removeItem("uploadedFiles");
       setFiles([]);
       setSelectedIndex(null);
     } catch (error) {
@@ -60,71 +65,57 @@ const ImageUploader = () => {
   };
 
   return (
-    <div id="body" className="image-uploader">
-      <h2>Upload Images</h2>
-      <div className="image-uploader-btn">
+    <div className="p-6 bg-gray-100">
+      <h2 className="text-2xl font-bold text-center text-[#FF6F20] mb-4">
+        Upload Your Images
+      </h2>
+      <p className="text-sm text-gray-600 text-center mb-6">
+        Choose photos for your listing and select one as the main display image.
+      </p>
+
+      <div className="flex flex-col items-center">
+        <label
+          htmlFor="fileUpload"
+          className="px-6 py-3 bg-[#FF6F20] text-white font-semibold rounded-lg cursor-pointer hover:bg-[#e65a14] transition"
+        >
+          Choose Photos
+        </label>
         <input
           type="file"
           multiple
           accept="image/*"
           onChange={handleFileChange}
           id="fileUpload"
-          style={{ display: "none" }}
+          className="hidden"
         />
-        <label htmlFor="fileUpload">Choose Files</label>
       </div>
 
-      {/* Display previews in a row */}
       {files.length > 0 && (
-        <div
-          className="image-showcase"
-          style={{
-            display: "flex",
-            overflowX: "auto",
-            gap: "10px",
-            marginTop: "20px",
-            padding: "10px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            maxWidth: "100%",
-          }}
-        >
+        <div className="flex flex-wrap gap-4 mt-6 p-4 border border-gray-300 rounded-lg bg-white">
           {files.map((file, index) => (
             <div
               key={index}
-              className={`image-preview ${
-                index === selectedIndex ? "selected" : ""
-              }`}
+              className={`relative group border ${
+                index === selectedIndex ? "border-[#FF6F20]" : "border-gray-300"
+              } rounded-lg overflow-hidden shadow-md cursor-pointer`}
               onClick={() => setSelectedIndex(index)}
-              style={{
-                flex: "0 0 auto",
-                cursor: "pointer",
-                border:
-                  index === selectedIndex
-                    ? "2px solid #FF6F20"
-                    : "1px solid gray",
-                padding: "5px",
-                borderRadius: "4px",
-              }}
             >
               <img
                 src={URL.createObjectURL(file)}
                 alt={`Preview ${index + 1}`}
-                style={{
-                  maxWidth: "150px",
-                  maxHeight: "100px",
-                  objectFit: "cover",
-                  borderRadius: "4px",
-                }}
+                className="w-32 h-24 object-cover rounded-md"
               />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveImage(index);
+                }}
+                className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
+              >
+                <IonIcon icon={closeOutline} />
+              </button>
               {index === selectedIndex && (
-                <p
-                  style={{
-                    color: "#FF6F20",
-                    textAlign: "center",
-                    margin: "5px 0 0",
-                  }}
-                >
+                <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
                   Display Image
                 </p>
               )}
@@ -135,18 +126,10 @@ const ImageUploader = () => {
 
       <button
         onClick={handleUpload}
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#FF6F20",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
+        className="mt-6 px-8 py-3 bg-[#FF6F20] text-white font-bold rounded-lg hover:bg-[#e65a14] transition disabled:bg-gray-400 disabled:cursor-not-allowed"
         disabled={files.length === 0}
       >
-        Import
+        Upload Photos
       </button>
     </div>
   );
