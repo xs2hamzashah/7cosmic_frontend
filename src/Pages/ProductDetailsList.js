@@ -22,6 +22,35 @@ const ProductDetailList = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    const fetchDisplayName = async () => {
+      try {
+        // Call the API with the given id
+        const response = await axios.get(
+          `https://api.7solar.pk/api/listings/solar-solutions/${id}/`
+        );
+
+        // Extract and log the display_name
+        const data = response.data;
+        const fetchedDisplayName = data.display_name;
+
+        console.log("Display Name:", fetchedDisplayName);
+        setDisplayName(fetchedDisplayName);
+      } catch (error) {
+        console.error(
+          "Error fetching display name:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    if (id) {
+      fetchDisplayName();
+    }
+  }, [id]);
+
   useEffect(() => {
     const fetchPackageDetails = async () => {
       try {
@@ -117,6 +146,9 @@ const ProductDetailList = () => {
 
   return (
     <div id="body" className="component-detail-page">
+      <h2 className="text-4xl font-medium text-center mt-10 my-10 text-[#ff6f20]">
+        {displayName}
+      </h2>
       <h1>Components</h1>
       <SolarPanel
         components={components}

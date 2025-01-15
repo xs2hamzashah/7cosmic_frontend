@@ -1,4 +1,6 @@
 import React from "react";
+import { IonIcon } from "@ionic/react";
+import { checkmarkCircleOutline } from "ionicons/icons";
 
 const Services = ({
   services,
@@ -28,10 +30,7 @@ const Services = ({
           >
             <p>Net Metering File</p>
             {services.netMetering && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
+              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
             )}
           </li>
           <li
@@ -40,10 +39,7 @@ const Services = ({
           >
             <p>DC Earthing</p>
             {services.dcEarthing && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
+              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
             )}
           </li>
           <li
@@ -52,10 +48,7 @@ const Services = ({
           >
             <p>Online Monitoring</p>
             {services.onlineMonitoring && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
+              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
             )}
           </li>
           <li
@@ -64,10 +57,7 @@ const Services = ({
           >
             <p>HSE Equipment</p>
             {services.hseEquipment && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
+              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
             )}
           </li>
           <li>

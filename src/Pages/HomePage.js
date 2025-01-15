@@ -28,7 +28,14 @@ export default function HomePage() {
       );
       const data = await response.json();
 
-      setPackages((prev) => [...prev, ...data.results]);
+      setPackages((prev) => {
+        const newPackages = [...prev, ...data.results];
+        const uniquePackages = Array.from(
+          new Map(newPackages.map((item) => [item.id, item])).values()
+        );
+        return uniquePackages;
+      });
+
       setHasMore(!!data.next); // If `next` is null, there's no more data
     } catch (error) {
       console.error("Error fetching packages:", error);
