@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../config";
 
 const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
@@ -94,7 +96,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
       setIsOtpSent(true);
       setTimer(60);
     } catch (error) {
-      alert("Error sending OTP. Please try again.");
+      toast.error("Error sending OTP. Please try again.");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -152,7 +154,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
         console.error("Seller phone number is missing");
       }
     } catch (error) {
-      alert("Invalid OTP. Please try again.");
+      toast.error("Invalid OTP. Please try again.");
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
@@ -176,6 +178,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
 
   return (
     <div className="popup-phone-number-overlay">
+      <ToastContainer />
       <div className="popup-phone-number-content">
         <p onClick={onClose} className="close-button">
           X
@@ -317,7 +320,7 @@ export default PhoneNumberPopup;
 //       setIsOtpSent(true);
 //       setTimer(60);
 //     } catch (error) {
-//       alert("Error sending OTP. Please try again.");
+//       toast.error("Error sending OTP. Please try again.");
 //       console.error(error);
 //     } finally {
 //       setIsLoading(false);
@@ -360,7 +363,7 @@ export default PhoneNumberPopup;
 //         console.error("Seller phone number is missing");
 //       }
 //     } catch (error) {
-//       alert("Invalid OTP. Please try again.");
+//       toast.error("Invalid OTP. Please try again.");
 //       console.error("Error:", error);
 //     } finally {
 //       setIsLoading(false);

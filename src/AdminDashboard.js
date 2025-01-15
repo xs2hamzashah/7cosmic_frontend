@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import StatsComponent from "./Components/StatsComponent";
 import SellerListing from "./Components/SellerListing";
 import AdminPackageManager from "./Components/AdminPackageManager";
@@ -263,7 +265,7 @@ const Dashboard = () => {
       const data = await response.json();
       console.log("Package approved successfully:", data);
 
-      alert("Package approved successfully!");
+      toast.success("Package approved successfully!");
 
       // Update the package list locally
       setSelectedSellerPackages((prevPackages) =>
@@ -273,7 +275,7 @@ const Dashboard = () => {
       );
     } catch (error) {
       console.error("Error approving package:", error);
-      alert(`Failed to approve the package: ${error.message}`);
+      toast.error(`Failed to approve the package: ${error.message}`);
     }
   };
 
@@ -303,7 +305,7 @@ const Dashboard = () => {
         );
       }
 
-      alert("Package deleted successfully!");
+      toast.success("Package deleted successfully!");
 
       // Update the package list locally
       setSelectedSellerPackages((prevPackages) =>
@@ -311,12 +313,13 @@ const Dashboard = () => {
       );
     } catch (error) {
       console.error("Error deleting package:", error);
-      alert(`Failed to delete the package: ${error.message}`);
+      toast.error(`Failed to delete the package: ${error.message}`);
     }
   };
 
   return (
     <div id="body">
+      <ToastContainer />
       <StatsComponent
         title="Sellers"
         {...statsData.sellers}

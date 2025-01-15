@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../CSS/Calculator.css";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +14,7 @@ const CalculatorButtons = () => {
   // Function to handle the calculation and redirection
   const handleCalculate = () => {
     if (!numberInput || !calculatorType) {
-      alert("Please fill in all the fields.");
+      toast.error("Please fill in all the fields.");
       return;
     }
 

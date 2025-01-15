@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
 
 const Battery = ({ components, handleSelectComponent }) => {
@@ -60,7 +62,7 @@ const Battery = ({ components, handleSelectComponent }) => {
   const validateInputs = () => {
     // Validation for required text fields
     if (!batteryType || !brand || !detail) {
-      alert("Battery Type, Brand, and Specifications are required.");
+      toast.error("Battery Type, Brand, and Specifications are required.");
       return false;
     }
 
@@ -75,7 +77,7 @@ const Battery = ({ components, handleSelectComponent }) => {
       Math.max(Number(quantity), 0) <= 0 ||
       Math.max(Number(totalBackupCapacity), 0) <= 0
     ) {
-      alert(
+      toast.error(
         "Capacity, Warranty, Quantity, and Total Backup Capacity must be positive numbers."
       );
       return false;
@@ -91,7 +93,7 @@ const Battery = ({ components, handleSelectComponent }) => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -119,7 +121,7 @@ const Battery = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -137,8 +139,7 @@ const Battery = ({ components, handleSelectComponent }) => {
       setQuantity("");
       setTotalBackupCapacity("");
     } catch (error) {
-      console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -148,6 +149,7 @@ const Battery = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Battery</h2>
         <button className="button" onClick={toggleSection}>

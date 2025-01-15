@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
 
 const MechanicalWork = ({ components, handleSelectComponent }) => {
@@ -56,7 +58,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
 
   const handleSubmit = async () => {
     if (!mechanicalMaterial || !mechanicalStructureType || !warranty) {
-      alert(
+      toast.error(
         "Mechanical Material, Mechanical StructureType and Warranty feilds are required."
       );
       return;
@@ -65,7 +67,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -89,7 +91,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -105,7 +107,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
       setWarranty("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -115,6 +117,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer/>
       <div className="component-head">
         <h2>Mechanical Work</h2>
         <button className="button" onClick={toggleSection}>

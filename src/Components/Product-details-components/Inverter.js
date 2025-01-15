@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
 
 const Inverter = ({ components, handleSelectComponent }) => {
@@ -56,7 +58,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
   const validateInputs = () => {
     // Validation for required text fields
     if (!inverterType || !brand || !detail) {
-      alert("Inverter Type, Brand, and Specifications are required.");
+      toast.error("Inverter Type, Brand, and Specifications are required.");
       return false;
     }
 
@@ -71,7 +73,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
       Math.max(Number(quantity), 0) <= 0 ||
       Math.max(Number(ipRating), 0) <= 0
     ) {
-      alert(
+      toast.error(
         "Capacity, Warranty, Quantity, and IP Rating must be positive numbers."
       );
       return false;
@@ -90,7 +92,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -118,7 +120,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -137,7 +139,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
       setIpRating("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -147,6 +149,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer/>
       <div className="component-head">
         <h2>Inverter</h2>
         <button className="button" onClick={toggleSection}>

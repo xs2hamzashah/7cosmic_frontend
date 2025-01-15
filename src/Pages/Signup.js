@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../CSS/SignUp.css";
 import API_BASE_URL from "../config";
 import CompanyNameInput from "../Components/CompanyNameInput";
@@ -41,7 +43,7 @@ function SignupForm() {
 
   const handleSendOtp = async () => {
     if (!formData.phoneNumber) {
-      alert("Please enter your phone number.");
+      toast.error("Please enter your phone number.");
       return;
     }
 
@@ -49,7 +51,7 @@ function SignupForm() {
     const phoneRegex = /^[0-9]{10}$/; // Assuming a 10-digit phone number format
 
     // if (!phoneRegex.test(formData.phoneNumber)) {
-    //   alert("Please enter a valid phone number. It should contain 10 digits.");
+    //   toast.error("Please enter a valid phone number. It should contain 10 digits.");
     //   return;
     // }
 
@@ -71,7 +73,7 @@ function SignupForm() {
         startTimer();
         setShowTimer(true);
         setIsOtpButtonDisabled(true);
-        alert("OTP sent successfully!");
+        toast.success("OTP sent successfully!");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to send OTP.");
@@ -86,7 +88,7 @@ function SignupForm() {
 
   const handleVerifyOtp = async () => {
     if (!otp) {
-      alert("Please enter the OTP.");
+      toast.error("Please enter the OTP.");
       return;
     }
 
@@ -110,7 +112,7 @@ function SignupForm() {
       if (response.ok) {
         setOtpVerified(true);
         setShowTimer(false);
-        alert("OTP verified successfully!");
+        toast.success("OTP verified successfully!");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to verify OTP.");
@@ -202,16 +204,16 @@ function SignupForm() {
         body: JSON.stringify(signupData),
       });
       if (response.ok) {
-        alert("Account created successfully!");
+        toast.success("Account created successfully!");
         navigate("/login"); // Navigate to the dashboard
       } else {
         const errorData = await response.json();
         console.error("Failed to create account", errorData);
-        alert(`Error: ${errorData.message || "Check your input fields"}`);
+        toast.error(`Error: ${errorData.message || "Check your input fields"}`);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong, please try again.");
+      toast.error("Something went wrong, please try again.");
     } finally {
       setLoading(false); // Set loading to false
     }
@@ -239,6 +241,7 @@ function SignupForm() {
   return (
     <section>
       <Navbar />
+      <ToastContainer />
       <div className="signup-section">
         <h1>Create Business Account</h1>
         <p>
@@ -402,7 +405,7 @@ function SignupForm() {
 
             {/* Timer Section */}
             {showTimer && (
-              <div className="flex items-center justify-center w-full">
+              <div className="flex items-center justify-center my-1 w-full">
                 <p className="text-sm">
                   Time remaining:{" "}
                   {timer > 0

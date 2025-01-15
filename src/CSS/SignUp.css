@@ -1,5 +1,5 @@
 .signup-section {
-  margin: 10rem auto;
+  margin: 6rem auto;
   max-width: 100%; /* Ensure full width of the screen is utilized */
 }
 
@@ -71,7 +71,7 @@ input:focus {
 .otp {
   width: 300px !important;
   padding: 10px;
-  margin: 5px 5px 5px 0 !important;
+  margin: 0px 5px 5px 0 !important;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;

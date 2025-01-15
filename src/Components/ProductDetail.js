@@ -19,8 +19,6 @@ export default function ProductDetail() {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [sellerPhoneNumber, setSellerPhoneNumber] = useState();
 
-  console.log(sellerPhoneNumber);
-
   useEffect(() => {
     const fetchPackageData = async () => {
       try {

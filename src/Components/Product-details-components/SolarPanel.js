@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { usePanelsQuery } from "../../service/priceList/panel";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { IonIcon } from "@ionic/react";
 import { removeOutline, addOutline } from "ionicons/icons";
 import API_BASE_URL from "../../config";
@@ -59,7 +60,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
   const validateInputs = () => {
     if (!solarType.trim() || !brand.trim() || !detail.trim()) {
-      alert("Please fill in all required text fields.");
+      toast.error("Please fill in all required text fields.");
       return false;
     }
 
@@ -76,7 +77,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       isNaN(quantityNum) ||
       quantityNum <= 0
     ) {
-      alert("Capacity, Warranty, and Quantity must be positive numbers.");
+      toast.error("Capacity, Warranty, and Quantity must be positive numbers.");
       return false;
     }
 
@@ -91,7 +92,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -118,7 +119,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -135,7 +136,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       setQuantity("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -145,6 +146,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Solar Panel</h2>
 
