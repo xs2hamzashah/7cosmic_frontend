@@ -9,6 +9,7 @@ import PhoneNumberPopup from "./PhoneNumberPopup";
 import Navbar from "./Navbar";
 import API_BASE_URL from "../config";
 import "../CSS/ProductDetail.css";
+import Spinner from "./Spinner";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -48,7 +49,7 @@ export default function ProductDetail() {
     setPopupOpen(false);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p>Error: {error}</p>;
 
   return (

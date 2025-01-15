@@ -4,7 +4,6 @@ import AddPackageForm from "./Pages/AddPackageForm";
 import ProductDetail from "./Components/ProductDetail";
 import { Login } from "./Pages/Login";
 import { ProfileProvider } from "./context/ProfileContext";
-import ImageUploader from "./Components/Product-details-components/ImageUploader";
 import ProductDetailList from "./Pages/ProductDetailsList";
 import HomePage from "./Pages/HomePage";
 import SellerAnalytics from "./Pages/SellerAnalytics";
@@ -57,10 +56,6 @@ function App() {
 
               <Route path="/edit-product/:id" element={<EditPackage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route
-                path="/product-image-upload/:id"
-                element={<ImageUploader />}
-              />
               <Route
                 path="/seller/price-list"
                 element={

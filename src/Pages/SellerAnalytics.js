@@ -10,6 +10,7 @@ import Navbar from "../Components/Navbar";
 import SubscriptionPopup from "../Components/SubscriptionPopup";
 import CalculatorButtons from "../Components/CalculatorButtons";
 import { ProfileContext } from "../context/ProfileContext";
+import Spinner from "../Components/Spinner";
 
 Chart.register(ArcElement, Legend, Tooltip);
 
@@ -68,7 +69,7 @@ const SellerAnalytics = () => {
     fetchData();
   }, []);
 
-  if (!sellerData) return <p>Loading...</p>;
+  if (!sellerData) return <Spinner />;
 
   const handleSubscribe = () => {
     setIsSubscribed(true);

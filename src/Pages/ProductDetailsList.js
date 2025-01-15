@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { IonIcon } from "@ionic/react";
+import { closeOutline } from "ionicons/icons";
 import ElectricalWork from "../Components/Product-details-components/ElectricalWork";
 import MechanicalWork from "../Components/Product-details-components/MechanicalWork";
 import CivilWork from "../Components/Product-details-components/CivilWork";
@@ -18,26 +20,31 @@ const ProductDetailList = () => {
   const [afssWarrantyYears, setAfssWarrantyYears] = useState("");
   const [additionalNote, setAdditionalNote] = useState("");
   const [packageData, setPackageData] = useState(null);
+  const [displayName, setDisplayName] = useState("");
+
+  // Image upload states
+  const [files, setFiles] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [showImageUploader, setShowImageUploader] = useState(false);
+
+  // Loading states
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [displayName, setDisplayName] = useState("");
+  const location = useLocation();
+  const isEditMode = location.pathname.includes("edit");
 
   useEffect(() => {
     const fetchDisplayName = async () => {
       try {
-        // Call the API with the given id
         const response = await axios.get(
-          `https://api.7solar.pk/api/listings/solar-solutions/${id}/`
+          `${API_BASE_URL}/api/listings/solar-solutions/${id}/`
         );
-
-        // Extract and log the display_name
         const data = response.data;
-        const fetchedDisplayName = data.display_name;
-
-        console.log("Display Name:", fetchedDisplayName);
-        setDisplayName(fetchedDisplayName);
+        setDisplayName(data.display_name);
       } catch (error) {
         console.error(
           "Error fetching display name:",
@@ -53,6 +60,7 @@ const ProductDetailList = () => {
 
   useEffect(() => {
     const fetchPackageDetails = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           `${API_BASE_URL}/api/listings/solar-solutions/${id}/`,
@@ -71,6 +79,8 @@ const ProductDetailList = () => {
         setAdditionalNote(data.seller_note || "");
       } catch (error) {
         console.error("Error fetching package details:", error.response?.data);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -92,7 +102,64 @@ const ProductDetailList = () => {
     setComponents(updatedComponents);
   };
 
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    setSelectedIndex(null);
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+    if (selectedIndex === indexToRemove) setSelectedIndex(null);
+  };
+
+  const handleImageUpload = async () => {
+    if (files.length === 0) {
+      console.error("No files to upload.");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const uploadPromises = files.map((file, index) => {
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("is_display_image", index === selectedIndex);
+
+        return axios.post(
+          `${API_BASE_URL}/api/listings/solar-solutions/${id}/upload_media/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+      });
+
+      const responses = await Promise.all(uploadPromises);
+      console.log(
+        "Upload successful:",
+        responses.map((res) => res.data)
+      );
+
+      // Navigate based on edit mode
+      navigate(isEditMode ? -1 : -2);
+    } catch (error) {
+      console.error(
+        "Error uploading images:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const updateServer = async () => {
+    setIsSaving(true);
     const componentIds = components.map((comp) => comp.id);
 
     const servicePayload = {
@@ -131,17 +198,42 @@ const ProductDetailList = () => {
 
       if (response.ok) {
         console.log("Package updated successfully");
-        navigate(`/product-image-upload/${id}`);
+        setShowImageUploader(true);
       } else {
         throw new Error("Failed to update components and services");
       }
     } catch (error) {
       console.error("Error updating package:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  if (!packageData && id) {
-    return <div>Loading...</div>;
+  // Loading spinner component
+  const LoadingSpinner = () => (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6F20]"></div>
+    </div>
+  );
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-8"></div>
+            <div className="space-y-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+                  <div className="h-24 bg-gray-200 rounded w-full"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -149,46 +241,155 @@ const ProductDetailList = () => {
       <h2 className="text-4xl font-medium text-center mt-10 my-10 text-[#ff6f20]">
         {displayName}
       </h2>
-      <h1>Components</h1>
-      <SolarPanel
-        components={components}
-        handleSelectComponent={handleSelectComponent}
-      />
-      <Inverter
-        components={components}
-        handleSelectComponent={handleSelectComponent}
-      />
-      <Battery
-        components={components}
-        handleSelectComponent={handleSelectComponent}
-      />
-      <ElectricalWork
-        components={components}
-        handleSelectComponent={handleSelectComponent}
-      />
-      <MechanicalWork
-        components={components}
-        handleSelectComponent={handleSelectComponent}
-      />
-      <CivilWork
-        components={components}
-        handleSelectComponent={handleSelectComponent}
-      />
 
-      <Services
-        services={services}
-        setServices={setServices}
-        transportationDistance={transportationDistance}
-        setTransportationDistance={setTransportationDistance}
-        afssWarrantyYears={afssWarrantyYears}
-        setAfssWarrantyYears={setAfssWarrantyYears}
-        additionalNote={additionalNote}
-        setAdditionalNote={setAdditionalNote}
-      />
+      {!showImageUploader ? (
+        <>
+          <h1>Components</h1>
+          <SolarPanel
+            components={components}
+            handleSelectComponent={handleSelectComponent}
+          />
+          <Inverter
+            components={components}
+            handleSelectComponent={handleSelectComponent}
+          />
+          <Battery
+            components={components}
+            handleSelectComponent={handleSelectComponent}
+          />
+          <ElectricalWork
+            components={components}
+            handleSelectComponent={handleSelectComponent}
+          />
+          <MechanicalWork
+            components={components}
+            handleSelectComponent={handleSelectComponent}
+          />
+          <CivilWork
+            components={components}
+            handleSelectComponent={handleSelectComponent}
+          />
 
-      <button className="comp-sending-btn" onClick={updateServer}>
-        Next
-      </button>
+          <Services
+            services={services}
+            setServices={setServices}
+            transportationDistance={transportationDistance}
+            setTransportationDistance={setTransportationDistance}
+            afssWarrantyYears={afssWarrantyYears}
+            setAfssWarrantyYears={setAfssWarrantyYears}
+            additionalNote={additionalNote}
+            setAdditionalNote={setAdditionalNote}
+          />
+
+          <button
+            className={`comp-sending-btn relative ${
+              isSaving ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            onClick={updateServer}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+                Saving...
+              </div>
+            ) : (
+              "Next"
+            )}
+          </button>
+        </>
+      ) : (
+        <div className="p-6 bg-gray-100">
+          <h2 className="text-2xl font-bold text-center text-[#FF6F20] mb-4">
+            Upload Your Images
+          </h2>
+          <p className="text-sm text-gray-600 text-center mb-6">
+            Choose photos for your listing and select one as the main display
+            image.
+          </p>
+
+          <div className="flex flex-col items-center">
+            <label
+              htmlFor="fileUpload"
+              className="px-6 py-3 bg-[#FF6F20] text-white font-semibold rounded-lg cursor-pointer hover:bg-[#e65a14] transition"
+            >
+              Choose Photos
+            </label>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              id="fileUpload"
+              className="hidden"
+            />
+          </div>
+
+          {files.length > 0 && (
+            <div className="flex flex-wrap gap-4 mt-6 p-4 border border-gray-300 rounded-lg bg-white">
+              {files.map((file, index) => (
+                <div
+                  key={index}
+                  className={`relative group border ${
+                    index === selectedIndex
+                      ? "border-[#FF6F20]"
+                      : "border-gray-300"
+                  } rounded-lg overflow-hidden shadow-md cursor-pointer`}
+                  onClick={() => setSelectedIndex(index)}
+                >
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Preview ${index + 1}`}
+                    className="w-32 h-24 object-cover rounded-md"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage(index);
+                    }}
+                    className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
+                  >
+                    <IonIcon icon={closeOutline} />
+                  </button>
+                  {index === selectedIndex && (
+                    <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
+                      Display Image
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex gap-4 justify-center mt-6">
+            <button
+              onClick={() => setShowImageUploader(false)}
+              className="px-8 py-3 bg-gray-500 text-white font-bold rounded-lg hover:bg-gray-600 transition"
+              disabled={isUploading}
+            >
+              Back
+            </button>
+            <button
+              onClick={handleImageUpload}
+              className={`px-8 py-3 bg-[#FF6F20] text-white font-bold rounded-lg hover:bg-[#e65a14] transition ${
+                isUploading || files.length === 0
+                  ? "opacity-70 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={isUploading || files.length === 0}
+            >
+              {isUploading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+                  Uploading...
+                </div>
+              ) : (
+                "Upload Photos"
+              )}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
