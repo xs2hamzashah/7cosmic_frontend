@@ -19,8 +19,6 @@ const Services = ({
     }));
   };
 
-  console.log(services);
-
   return (
     <div className="input-bottom-section">
       <h1>Services</h1>
