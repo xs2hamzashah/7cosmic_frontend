@@ -40,7 +40,7 @@ const SearchBox = ({ onSearch, onClose }) => {
         type="text"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
-        placeholder="Search..."
+        placeholder="Search by keyword"
         className="search-bar"
       />
 

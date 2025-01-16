@@ -4,6 +4,7 @@ import axios from "axios";
 import API_BASE_URL from "../config";
 import AddPackageForm from "./AddPackageForm";
 import ProductDetailList from "./ProductDetailsList";
+import  Spinner from "../Components/Spinner";
 
 const EditPackage = () => {
   const [packageData, setPackageData] = useState(null);
@@ -51,7 +52,7 @@ const EditPackage = () => {
     }
   };
 
-  if (!packageData) return <div>Loading...</div>;
+  if (!packageData) return <Spinner />;
 
   return (
     <div id="body" className="edit-package-page">

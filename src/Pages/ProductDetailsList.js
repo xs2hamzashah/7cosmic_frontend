@@ -170,7 +170,6 @@ const ProductDetailList = () => {
         online_monitoring_included: services.onlineMonitoring,
         net_metering_included: services.netMetering,
         hse_equipment_included: services.hseEquipment,
-        transportation_included: services.transportation,
         transportation_distance: parseInt(transportationDistance, 10) || 0,
       },
       seller_note: additionalNote,
