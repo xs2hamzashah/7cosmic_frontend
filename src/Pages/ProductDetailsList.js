@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { IonIcon } from "@ionic/react";
-import { closeOutline } from "ionicons/icons";
+import { closeOutline, arrowBackOutline } from "ionicons/icons";
 import ElectricalWork from "../Components/Product-details-components/ElectricalWork";
 import MechanicalWork from "../Components/Product-details-components/MechanicalWork";
 import CivilWork from "../Components/Product-details-components/CivilWork";
@@ -237,6 +237,12 @@ const ProductDetailList = () => {
 
   return (
     <div id="body" className="component-detail-page">
+      {!isEditMode && (
+        <button className="back-button" onClick={() => navigate(-2)}>
+          <IonIcon icon={arrowBackOutline} />
+          Back
+        </button>
+      )}
       <h2 className="text-4xl font-medium text-center mt-10 my-10 text-[#ff6f20]">
         {displayName}
       </h2>

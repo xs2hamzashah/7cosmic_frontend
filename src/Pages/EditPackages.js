@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { arrowBackOutline } from "ionicons/icons";
 import axios from "axios";
 import API_BASE_URL from "../config";
 import AddPackageForm from "./AddPackageForm";
@@ -57,6 +59,10 @@ const EditPackage = () => {
   return (
     <div id="body" className="edit-package-page">
       {/* AddPackageForm appears at the top for editing */}
+      <button className="back-button" onClick={() => navigate(-1)}>
+        <IonIcon icon={arrowBackOutline} />
+        Back
+      </button>
       <AddPackageForm
         mode="edit"
         packageData={packageData}

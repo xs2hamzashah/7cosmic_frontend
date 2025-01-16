@@ -22,6 +22,7 @@ import { Contact } from "lucide-react";
 import ContactUsPage from "./Pages/ContactUsPage";
 import SubscriptionPlan from "./Pages/SubscriptionPlan";
 import AdminProductDetail from "./Components/AdminProductDetail";
+import GuestRoute from "./Components/GuestRoute"; // Import the GuestRoute
 
 function App() {
   return (
@@ -33,8 +34,22 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/product-detail/:id" element={<ProductDetail />} />
               <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/sign-up" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
+              <Route
+                path="/sign-up"
+                element={
+                  <GuestRoute>
+                    <Signup />
+                  </GuestRoute>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <GuestRoute>
+                    <Login />
+                  </GuestRoute>
+                }
+              />
               <Route path="/add-product/:id" element={<AddPackageForm />} />
               <Route
                 path="/product-detail-list/:id"
@@ -73,7 +88,3 @@ function App() {
 }
 
 export default App;
-
-// DOMAIN: 7-solar-calculators-production.up.railway.app
-
-// ⁠ /tools/solar-cost-calculator/10-kilo-watt-solar-cost?systemType=${data.systemType}&batteryType=tubular&voltageType=lv&structureType=iron_standard ⁠;
