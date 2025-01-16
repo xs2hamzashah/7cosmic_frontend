@@ -164,12 +164,12 @@ const ProductDetailList = () => {
 
     const servicePayload = {
       service: {
-        dc_earthing_included: services.dcEarthing,
+        dc_earthing_included: services.dc_earthing_included,
         afss_included: services.afss,
         afss_warranty_years: parseInt(afssWarrantyYears, 10) || 0,
-        online_monitoring_included: services.onlineMonitoring,
-        net_metering_included: services.netMetering,
-        hse_equipment_included: services.hseEquipment,
+        online_monitoring_included: services.online_monitoring_included,
+        net_metering_included: services.net_metering_included,
+        hse_equipment_included: services.hse_equipment_included,
         transportation_distance: parseInt(transportationDistance, 10) || 0,
       },
       seller_note: additionalNote,
