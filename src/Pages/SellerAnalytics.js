@@ -126,6 +126,21 @@ const SellerAnalytics = () => {
     },
   };
 
+  const handleProductClick = (product) => {
+    if (product.buyer_whatsapp_numbers.length > 0) {
+      setBuyerNumbers(product.buyer_whatsapp_numbers);
+    } else {
+      setBuyerNumbers(["There is no buyer on this package."]);
+    }
+  };
+
+  const resetBuyerNumbers = () => {
+    const numbers = sellerData.products.flatMap(
+      (product) => product.buyer_whatsapp_numbers
+    );
+    setBuyerNumbers(numbers);
+  };
+
   const handleEdit = (id) => {
     navigate(`/edit-product/${id}`);
   };
@@ -147,7 +162,10 @@ const SellerAnalytics = () => {
 
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="bg-white p-6 rounded-lg  h-[400px] shadow-lg">
-            <h3 className="text-lg font-medium text-gray-700 mb-2">
+            <h3
+              className="text-lg font-medium text-gray-700 mb-2 cursor-pointer hover:text-[#ff6f20] transition-colors"
+              onClick={() => resetBuyerNumbers()}
+            >
               Total Buyers
             </h3>
             <p className="text-3xl font-bold text-[#ff6f20]">{totalBuyers}</p>
@@ -155,23 +173,28 @@ const SellerAnalytics = () => {
               Buyers per Package List
             </h4>
             <ul className="mt-2 space-y-2">
-              {sellerData.products.length > 0 ? (
-                sellerData.products.map((product) => (
-                  <li
-                    key={product.id}
-                    className="flex justify-between items-center bg-gray-100 p-2 rounded-md"
-                  >
-                    <span>{product.display_name}</span>
-                    <span className="text-[#ff6f20] font-semibold">
-                      {product.buyer_whatsapp_numbers.length} Buyers
-                    </span>
+              <ul className="mt-2 space-y-2">
+                {sellerData.products.length > 0 ? (
+                  sellerData.products.map((product) => (
+                    <li
+                      key={product.id}
+                      className="flex justify-between items-center bg-gray-100 p-3 rounded-md cursor-pointer hover:bg-gray-200 hover:text-[#ff6f20] transition-colors"
+                      onClick={() => handleProductClick(product)}
+                    >
+                      <span className="font-medium">
+                        {product.display_name}
+                      </span>
+                      <span className="text-[#ff6f20] font-semibold">
+                        {product.buyer_whatsapp_numbers.length} Buyers
+                      </span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-sm text-gray-500 italic">
+                    You have no products.
                   </li>
-                ))
-              ) : (
-                <li className="text-sm text-gray-500 italic">
-                  You have no products.
-                </li>
-              )}
+                )}
+              </ul>
             </ul>
           </div>
 
@@ -184,19 +207,22 @@ const SellerAnalytics = () => {
           <h2 className="text-xl font-semibold text-gray-800">
             Aggregated Buyer Numbers
           </h2>
-          <ul className="list-disc list-inside mt-4 text-gray-700">
+          <div className="flex flex-wrap gap-2 mt-4">
             {buyerNumbers.length > 0 ? (
               buyerNumbers.map((number, index) => (
-                <li key={index} className="mb-2">
+                <span
+                  key={index}
+                  className="bg-gray-100 text-gray-800 px-3 py-1 rounded-md"
+                >
                   {number}
-                </li>
+                </span>
               ))
             ) : (
-              <li className="text-sm text-gray-500 italic">
+              <p className="text-sm text-gray-500 italic">
                 No buyers have shared WhatsApp numbers yet.
-              </li>
+              </p>
             )}
-          </ul>
+          </div>
         </div>
         <div className="calculator">
           <CalculatorButtons />
