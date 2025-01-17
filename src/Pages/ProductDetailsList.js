@@ -129,7 +129,7 @@ const ProductDetailList = () => {
   const handleRemoveExistingImage = async (imageId) => {
     try {
       await axios.delete(
-        `${API_BASE_URL}/api/listings/solar-solutions/${id}/delete_media/${imageId}/`,
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/update_media/${imageId}/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -148,7 +148,7 @@ const ProductDetailList = () => {
   const handleSetDisplayImage = async (imageId) => {
     try {
       await axios.patch(
-        `${API_BASE_URL}/api/listings/solar-solutions/${id}/set_display_image/${imageId}/`,
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/supdate_media/${imageId}/`,
         {},
         {
           headers: {

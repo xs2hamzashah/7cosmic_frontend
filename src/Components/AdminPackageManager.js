@@ -1,18 +1,34 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
+import Spinner from "./Spinner";
 
-const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
+const AdminPackageManager = ({
+  packages,
+  onEdit,
+  onApprove,
+  onDelete,
+  isLoading,
+}) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const handleCardClick = (id) => {
-    console.log('Card clicked with ID:', id);  // Check if this logs
+    console.log("Card clicked with ID:", id); // Check if this logs
     navigate(`/admin-product-detail/${id}`);
   };
 
   const stopPropagation = (e) => {
     e.stopPropagation(); // Prevents the event from bubbling up to the row's onClick
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Spinner />
+        {/* You can also add a spinner or other loading indicator */}
+      </div>
+    );
+  }
 
   return (
     <div className="admin-package-manager">
@@ -30,7 +46,15 @@ const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
         </thead>
         <tbody>
           {packages.map((pkg) => (
-            <tr onClick={() => handleCardClick(pkg.id)} key={pkg.id}>
+            <tr
+              key={pkg.id}
+              onClick={() => handleCardClick(pkg.id)}
+              className={`${
+                pkg.is_approved
+                  ? "border-b-2 border-[#ff6f20] bg-[#fff4e6]"
+                  : "bg-white"
+              } hover:bg-gray-100 cursor-pointer`}
+            >
               <td>{pkg.display_name}</td>
               <td>{pkg.size}</td>
               <td>{parseFloat(pkg.price).toLocaleString()}</td>
@@ -53,10 +77,10 @@ const AdminPackageManager = ({ packages, onEdit, onApprove, onDelete }) => {
                   }`}
                   onClick={(e) => {
                     stopPropagation(e);
-                    onApprove(pkg.id);
+                    onApprove(pkg.id); // Assuming this function handles toggling approval
                   }}
                 >
-                  {pkg.is_approved ? "Approved" : "Approve"}
+                  {pkg.is_approved ? "Unapprove" : "Approve"}
                 </button>
                 <button
                   className="btn delete-btn"

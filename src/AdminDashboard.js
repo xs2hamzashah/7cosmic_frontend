@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [selectedCity, setSelectedCity] = useState("All"); // Add state for selected city
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [selectedSellerPackages, setSelectedSellerPackages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -222,6 +223,8 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error fetching seller packages:", error);
       setSelectedSellerPackages([]); // Clear packages on error
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -365,6 +368,7 @@ const Dashboard = () => {
             onEdit={handleEdit}
             onApprove={handleApprove}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </div>
       )}

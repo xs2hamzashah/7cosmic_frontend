@@ -94,7 +94,6 @@
 
 .admin-package-manager .package-table th,
 .admin-package-manager .package-table td {
-  border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
