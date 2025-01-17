@@ -61,7 +61,10 @@ const SellerAnalytics = () => {
 
         // Aggregate WhatsApp numbers
         const numbers = data.products.flatMap(
-          (product) => product.buyer_whatsapp_numbers
+          (product) =>
+            product.buyer_whatsapp_numbers.map(
+              (whatsapp) => whatsapp.whatsapp_number
+            ) // Assuming the object has a 'whatsapp_number' field
         );
         setBuyerNumbers(numbers);
 
@@ -128,15 +131,20 @@ const SellerAnalytics = () => {
 
   const handleProductClick = (product) => {
     if (product.buyer_whatsapp_numbers.length > 0) {
-      setBuyerNumbers(product.buyer_whatsapp_numbers);
+      // Extract the 'whatsapp_number' from each object in the array
+      const numbers = product.buyer_whatsapp_numbers.map(
+        (buyer) => buyer.whatsapp_number
+      );
+      setBuyerNumbers(numbers);
     } else {
       setBuyerNumbers(["There is no buyer on this package."]);
     }
   };
 
   const resetBuyerNumbers = () => {
-    const numbers = sellerData.products.flatMap(
-      (product) => product.buyer_whatsapp_numbers
+    // Aggregate all whatsapp numbers from all products
+    const numbers = sellerData.products.flatMap((product) =>
+      product.buyer_whatsapp_numbers.map((buyer) => buyer.whatsapp_number)
     );
     setBuyerNumbers(numbers);
   };
