@@ -17,6 +17,7 @@ const SellerAnalytics = () => {
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(true);
+  const [buyerNumbers, setBuyerNumbers] = useState([]);
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [sellerEmail, setSellerEmail] = useState("");
@@ -52,12 +53,17 @@ const SellerAnalytics = () => {
 
         const data = await response.json();
         setSellerData(data);
-
         const buyersCount = data.products.reduce(
           (acc, product) => acc + product.buyer_interaction_count,
           0
         );
         setTotalBuyers(buyersCount);
+
+        // Aggregate WhatsApp numbers
+        const numbers = data.products.flatMap(
+          (product) => product.buyer_whatsapp_numbers
+        );
+        setBuyerNumbers(numbers);
 
         setIsSubscribed(data.is_subscribed || false);
       } catch (error) {
@@ -174,6 +180,24 @@ const SellerAnalytics = () => {
           </div>
         </div>
 
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Aggregated Buyer Numbers
+          </h2>
+          <ul className="list-disc list-inside mt-4 text-gray-700">
+            {buyerNumbers.length > 0 ? (
+              buyerNumbers.map((number, index) => (
+                <li key={index} className="mb-2">
+                  {number}
+                </li>
+              ))
+            ) : (
+              <li className="text-sm text-gray-500 italic">
+                No buyers have shared WhatsApp numbers yet.
+              </li>
+            )}
+          </ul>
+        </div>
         <div className="calculator">
           <CalculatorButtons />
         </div>
