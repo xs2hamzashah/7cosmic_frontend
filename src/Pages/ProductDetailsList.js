@@ -21,6 +21,7 @@ const ProductDetailList = () => {
   const [additionalNote, setAdditionalNote] = useState("");
   const [packageData, setPackageData] = useState(null);
   const [displayName, setDisplayName] = useState("");
+  const [existingImages, setExistingImages] = useState([]);
 
   // Image upload states
   const [files, setFiles] = useState([]);
@@ -77,6 +78,16 @@ const ProductDetailList = () => {
         setTransportationDistance(data.service?.transportation_distance || "");
         setAfssWarrantyYears(data.service?.afss_warranty_years || "");
         setAdditionalNote(data.seller_note || "");
+
+        // Set existing images if available
+        if (data.images && Array.isArray(data.images)) {
+          setExistingImages(
+            data.images.map((img, index) => ({
+              ...img,
+              isDisplay: img.is_display_image,
+            }))
+          );
+        }
       } catch (error) {
         console.error("Error fetching package details:", error.response?.data);
       } finally {
@@ -113,6 +124,48 @@ const ProductDetailList = () => {
       prevFiles.filter((_, index) => index !== indexToRemove)
     );
     if (selectedIndex === indexToRemove) setSelectedIndex(null);
+  };
+
+  const handleRemoveExistingImage = async (imageId) => {
+    try {
+      await axios.delete(
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/delete_media/${imageId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      setExistingImages((prevImages) =>
+        prevImages.filter((img) => img.id !== imageId)
+      );
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
+  };
+
+  const handleSetDisplayImage = async (imageId) => {
+    try {
+      await axios.patch(
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/set_display_image/${imageId}/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      setExistingImages((prevImages) =>
+        prevImages.map((img) => ({
+          ...img,
+          isDisplay: img.id === imageId,
+        }))
+      );
+    } catch (error) {
+      console.error("Error setting display image:", error);
+    }
   };
 
   const handleImageUpload = async () => {
@@ -207,13 +260,6 @@ const ProductDetailList = () => {
       setIsSaving(false);
     }
   };
-
-  // Loading spinner component
-  const LoadingSpinner = () => (
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6F20]"></div>
-    </div>
-  );
 
   if (isLoading) {
     return (
@@ -330,39 +376,89 @@ const ProductDetailList = () => {
             />
           </div>
 
-          {files.length > 0 && (
-            <div className="flex flex-wrap gap-4 mt-6 p-4 border border-gray-300 rounded-lg bg-white">
-              {files.map((file, index) => (
-                <div
-                  key={index}
-                  className={`relative group border ${
-                    index === selectedIndex
-                      ? "border-[#FF6F20]"
-                      : "border-gray-300"
-                  } rounded-lg overflow-hidden shadow-md cursor-pointer`}
-                  onClick={() => setSelectedIndex(index)}
-                >
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={`Preview ${index + 1}`}
-                    className="w-32 h-24 object-cover rounded-md"
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveImage(index);
-                    }}
-                    className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
+          {/* Existing Images Section */}
+          {isEditMode && existingImages.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-700 mb-3">
+                Existing Images
+              </h3>
+              <div className="flex flex-wrap gap-4 p-4 border border-gray-300 rounded-lg bg-white">
+                {existingImages.map((image) => (
+                  <div
+                    key={image.id}
+                    className={`relative group border ${
+                      image.isDisplay ? "border-[#FF6F20]" : "border-gray-300"
+                    } rounded-lg overflow-hidden shadow-md`}
                   >
-                    <IonIcon icon={closeOutline} />
-                  </button>
-                  {index === selectedIndex && (
-                    <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
-                      Display Image
-                    </p>
-                  )}
-                </div>
-              ))}
+                    <img
+                      src={image.image_url}
+                      alt={`Image ${image.id}`}
+                      className="w-32 h-24 object-cover rounded-md"
+                    />
+                    <button
+                      onClick={() => handleRemoveExistingImage(image.id)}
+                      className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
+                    >
+                      <IonIcon icon={closeOutline} />
+                    </button>
+                    {!image.isDisplay && (
+                      <button
+                        onClick={() => handleSetDisplayImage(image.id)}
+                        className="absolute bottom-1 left-1 text-xs text-[#FF6F20] bg-white px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition"
+                      >
+                        Set as Display
+                      </button>
+                    )}
+                    {image.isDisplay && (
+                      <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
+                        Display Image
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* New Images Section */}
+          {files.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-700 mb-3">
+                New Images
+              </h3>
+              <div className="flex flex-wrap gap-4 p-4 border border-gray-300 rounded-lg bg-white">
+                {files.map((file, index) => (
+                  <div
+                    key={index}
+                    className={`relative group border ${
+                      index === selectedIndex
+                        ? "border-[#FF6F20]"
+                        : "border-gray-300"
+                    } rounded-lg overflow-hidden shadow-md cursor-pointer`}
+                    onClick={() => setSelectedIndex(index)}
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`Preview ${index + 1}`}
+                      className="w-32 h-24 object-cover rounded-md"
+                    />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveImage(index);
+                      }}
+                      className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
+                    >
+                      <IonIcon icon={closeOutline} />
+                    </button>
+                    {index === selectedIndex && (
+                      <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
+                        Display Image
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
