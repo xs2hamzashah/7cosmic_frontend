@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { pencilOutline } from "ionicons/icons";
 import API_BASE_URL from "../config";
-import "../CSS/SellerAnalytics.css";
 import Navbar from "../Components/Navbar";
 import SubscriptionPopup from "../Components/SubscriptionPopup";
 import CalculatorButtons from "../Components/CalculatorButtons";
@@ -89,14 +88,14 @@ const SellerAnalytics = () => {
           (product) => product.buyer_interaction_count
         ),
         backgroundColor: [
-          "rgba(75, 192, 192, 0.6)",
+          "rgba(255, 111, 32, 0.6)",
           "rgba(54, 162, 235, 0.6)",
           "rgba(255, 206, 86, 0.6)",
           "rgba(153, 102, 255, 0.6)",
           "rgba(255, 159, 64, 0.6)",
         ],
         borderColor: [
-          "rgba(75, 192, 192, 1)",
+          "rgba(255, 111, 32, 1)",
           "rgba(54, 162, 235, 1)",
           "rgba(255, 206, 86, 1)",
           "rgba(153, 102, 255, 1)",
@@ -121,27 +120,56 @@ const SellerAnalytics = () => {
     },
   };
 
-  // -------------- EDIT -------------------
   const handleEdit = (id) => {
     navigate(`/edit-product/${id}`);
   };
 
   return (
-    <section id="body">
+    <section className="min-h-screen bg-gray-50">
       <Navbar
         companyName={companyName}
         sellerEmail={sellerEmail}
         loading={profileLoading}
       />
-      <div className="seller-dashboard">
-        <h2 className="welcome-text">Welcome Back, {sellerData.seller_name}</h2>
+      <div className="p-6 max-w-7xl mx-auto mt-10">
+        <h2 className="text-4xl font-medium text-gray-800 mb-4">
+          Welcome Back,{""}
+          <span className="font-bold uppercase ml-4 text-[#ff6f20]">
+            {sellerData.seller_name}
+          </span>
+        </h2>
 
-        <div className="sells-detail">
-          <div className="box-1">
-            <h3>Total buyers</h3>
-            <p>{totalBuyers}</p>
+        <div className="grid lg:grid-cols-2 gap-8">
+          <div className="bg-white p-6 rounded-lg  h-[400px] shadow-lg">
+            <h3 className="text-lg font-medium text-gray-700 mb-2">
+              Total Buyers
+            </h3>
+            <p className="text-3xl font-bold text-[#ff6f20]">{totalBuyers}</p>
+            <h4 className="text-lg font-medium text-gray-700 mt-4">
+              Buyers per Package List
+            </h4>
+            <ul className="mt-2 space-y-2">
+              {sellerData.products.length > 0 ? (
+                sellerData.products.map((product) => (
+                  <li
+                    key={product.id}
+                    className="flex justify-between items-center bg-gray-100 p-2 rounded-md"
+                  >
+                    <span>{product.display_name}</span>
+                    <span className="text-[#ff6f20] font-semibold">
+                      {product.buyer_whatsapp_numbers.length} Buyers
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-gray-500 italic">
+                  You have no products.
+                </li>
+              )}
+            </ul>
           </div>
-          <div className="graph">
+
+          <div className="bg-white p-6 rounded-lg h-[400px] shadow-lg">
             <Pie data={chartData} options={chartOptions} />
           </div>
         </div>
@@ -150,35 +178,21 @@ const SellerAnalytics = () => {
           <CalculatorButtons />
         </div>
 
-        <div className="whatsapp-info">
-          <h2>Buyers per package list</h2>
-          <ul>
-            {sellerData.products.map((product) => (
-              <li key={product.id} className="whatsapp-item">
-                <p>
-                  {product.display_name}:{" "}
-                  <span>{product.buyer_whatsapp_numbers.length} Buyers</span>
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="packages-cards">
-          <h2>Packages List</h2>
-          <ul>
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold text-gray-800">Packages List</h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
             {sellerData.products.map((product) => {
               const displayImagePath =
                 product.images.find((img) => img.is_display_image)?.image ||
                 product.images[0]?.image;
-              const displayImage = displayImagePath
-                ? `${API_BASE_URL}${displayImagePath}`
-                : null;
 
               return (
-                <li key={product.id} className="package-card relative">
+                <li
+                  key={product.id}
+                  className="package-card relative bg-white shadow-lg rounded-lg p-4 mb-4"
+                >
                   <div
-                    className="absolute bottom-5 left-36 px-2 py-1 rounded-md text-white text-sm font-medium"
+                    className="absolute bottom-4 right-4 px-2 py-1 rounded-md text-white text-sm font-medium"
                     style={{
                       backgroundColor: product.is_approved
                         ? "#149921"
@@ -187,21 +201,33 @@ const SellerAnalytics = () => {
                   >
                     {product.is_approved ? "Approved" : "Pending.."}
                   </div>
-                  <div className="img">
-                    {displayImage ? (
-                      <img src={displayImage} alt={product.display_name} />
+
+                  <div className="img mb-4">
+                    {displayImagePath ? (
+                      <img
+                        src={displayImagePath}
+                        alt={product.display_name}
+                        className="w-full h-40 object-cover rounded-md"
+                      />
                     ) : (
-                      <p>No Image Available</p>
+                      <p className="text-gray-500 text-center">
+                        No Image Available
+                      </p>
                     )}
                   </div>
-                  <div className="package-card-text">
-                    <h3>{product.display_name}</h3>
-                    <p>Price: ${product.price}</p>
+
+                  <div className="package-card-text mb-4">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {product.display_name}
+                    </h3>
+                    <p className="text-gray-600">Price: ${product.price}</p>
                   </div>
+
                   <button
                     onClick={(e) => {
                       handleEdit(product.id);
                     }}
+                    className="flex items-center justify-center gap-2 px-4 py-2 border border-[#ff6f20] text-[#ff6f20] rounded-md hover:bg-[#ff6f20] hover:text-white transition duration-300"
                   >
                     <IonIcon icon={pencilOutline} />
                     Edit
@@ -211,7 +237,10 @@ const SellerAnalytics = () => {
             })}
           </ul>
 
-          <button className="add-new-package" onClick={handleAddPackage}>
+          <button
+            onClick={handleAddPackage}
+            className="mt-6 bg-[#ff6f20] text-white px-4 py-2 rounded-md shadow-lg hover:bg-orange-600 transition"
+          >
             Add New Package
           </button>
         </div>
