@@ -82,8 +82,8 @@ function OnlineMonitoring({ setIsLoading }) {
         setIsFormOpen(false),
         addToast(
           isEdit
-            ? "Net Metering Edited Successfully"
-            : "Net Metering Added Successfully",
+            ? "Online Monitoring Edited Successfully"
+            : "Online Monitoring Added Successfully",
           {
             appearance: "success",
             autoDismiss: true,

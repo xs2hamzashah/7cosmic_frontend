@@ -1,8 +1,4 @@
-import {
-  FetchArgs,
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
 const apiEndPoints = `/online-monitoring`;
@@ -23,7 +19,7 @@ export const onlinePricingService = createApi({
     create: mutation({
       query: (data) => {
         return {
-          url: `${apiEndPoints}`,
+          url: `${apiEndPoints}/`,
           method: "POST",
           body: data,
         };

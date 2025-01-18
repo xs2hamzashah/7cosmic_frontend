@@ -1,8 +1,4 @@
-import {
-  FetchArgs,
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
 const apiEndPoints = `/civil-work`;
