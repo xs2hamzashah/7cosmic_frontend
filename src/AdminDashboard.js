@@ -218,7 +218,7 @@ const Dashboard = () => {
       }
 
       setSelectedSeller(seller); // Save seller for UI context
-      console.log(data[0]);
+      console.log(seller.id);
       setSelectedSellerPackages(data.results || []); // Store packages in state
     } catch (error) {
       console.error("Error fetching seller packages:", error);
@@ -236,49 +236,113 @@ const Dashboard = () => {
     navigate(`/edit-product/${id}`);
   };
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (packageId) => {
+    let approval = null; // Ensure that 'approval' is defined before usage
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("No access token found. Please log in.");
+      if (!token) {
+        throw new Error("No access token found. Please log in.");
+      }
 
-      const url = `${API_BASE_URL}/api/operations/approvals/${id}/approve/`;
+      // Step 1: Fetch the package data to get the `approval` object
+      const packageUrl = `${API_BASE_URL}/api/listings/solar-solutions/${packageId}/`;
 
-      const payload = {
-        admin_verified: true,
-        discrepancy: "No issues found", // Optional: Make this dynamic if needed
-        discrepancy_resolved: true,
-        email_notification_sent: true,
-      };
+      const packageResponse = await fetch(packageUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      const response = await fetch(url, {
+      if (!packageResponse.ok) {
+        throw new Error(
+          `Failed to fetch package data. HTTP status: ${packageResponse.status}`
+        );
+      }
+
+      const packageData = await packageResponse.json();
+      approval = packageData?.approval;
+
+      if (!approval) {
+        throw new Error("Approval object not found in package data.");
+      }
+
+      // Step 2: Check if the approval status is true or false and make the appropriate API call
+      const approvalUrl = approval.admin_verified
+        ? `${API_BASE_URL}/api/operations/approvals/${approval.id}/unapprove/`
+        : `${API_BASE_URL}/api/operations/approvals/${approval.id}/approve/`;
+
+      const payload = approval.admin_verified
+        ? {} // Unapprove may not require a payload
+        : {
+            admin_verified: true,
+            discrepancy: "No issues found", // Adjust dynamically if needed
+            discrepancy_resolved: true,
+            email_notification_sent: true,
+          };
+
+      // Step 3: Make the API call to approve or unapprove
+      const approvalResponse = await fetch(approvalUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: approval.admin_verified ? null : JSON.stringify(payload),
       });
 
-      if (!response.ok) {
+      if (!approvalResponse.ok) {
+        const errorData = await approvalResponse.json();
         throw new Error(
-          `Failed to approve package. HTTP status: ${response.status}`
+          `Failed to ${
+            approval.admin_verified ? "unapprove" : "approve"
+          } package. HTTP status: ${approvalResponse.status}. Message: ${
+            errorData.message || "Unknown error"
+          }`
         );
       }
 
-      const data = await response.json();
-      console.log("Package approved successfully:", data);
+      const approvalData = await approvalResponse.json();
+      console.log(
+        `Package ${
+          approval.admin_verified ? "unapproved" : "approved"
+        } successfully:`,
+        approvalData
+      );
 
-      toast.success("Package approved successfully!");
+      toast.success(
+        `Package ${
+          approval.admin_verified ? "unapproved" : "approved"
+        } successfully!`
+      );
 
-      // Update the package list locally
+      // Step 4: Update the package list locally
       setSelectedSellerPackages((prevPackages) =>
         prevPackages.map((pkg) =>
-          pkg.id === id ? { ...pkg, admin_verified: true } : pkg
+          pkg.id === packageId
+            ? {
+                ...pkg,
+                approval: {
+                  ...pkg.approval,
+                  admin_verified: !approval.admin_verified, // Toggle approval status
+                },
+              }
+            : pkg
         )
       );
+
+      await handleStatsClick();
+
+      // Step 5: Reload the seller's packages
+      if (selectedSeller) {
+        await handleSellerClick(selectedSeller);
+      }
     } catch (error) {
-      console.error("Error approving package:", error);
-      toast.error(`Failed to approve the package: ${error.message}`);
+      console.error("Error updating package approval status:", error);
+      toast.error(
+        `Failed to ${
+          approval && approval.admin_verified ? "unapprove" : "approve"
+        } the package: ${error.message || "Unknown error"}`
+      );
     }
   };
 

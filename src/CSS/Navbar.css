@@ -8,11 +8,13 @@ nav {
 
 .logo {
   text-transform: uppercase;
-  margin-top: 7px;
+  width: 100px;
+  height: 100px;
   color: #ff6f20;
   font-weight: 500;
   position: absolute;
   left: 10px;
+  top: -20px;
 }
 
 .logo:hover {

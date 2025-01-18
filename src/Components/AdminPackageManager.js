@@ -50,7 +50,7 @@ const AdminPackageManager = ({
               key={pkg.id}
               onClick={() => handleCardClick(pkg.id)}
               className={`${
-                pkg.is_approved
+                pkg.approval_status?.approved
                   ? "border-b-2 border-[#ff6f20] bg-[#fff4e6]"
                   : "bg-white"
               } hover:bg-gray-100 cursor-pointer`}
@@ -60,7 +60,11 @@ const AdminPackageManager = ({
               <td>{parseFloat(pkg.price).toLocaleString()}</td>
               <td>{pkg.solution_type}</td>
               <td>{pkg.buyer_interaction_count}</td>
-              <td>{pkg.is_approved ? "Approved" : "Pending Approval"}</td>
+              <td>
+                {pkg.approval_status?.approved
+                  ? "Approved"
+                  : "Pending Approval"}
+              </td>
               <td>
                 <button
                   className="btn edit-btn"
@@ -73,14 +77,14 @@ const AdminPackageManager = ({
                 </button>
                 <button
                   className={`btn approve-btn ${
-                    pkg.is_approved ? "approved" : ""
+                    pkg.approval_status?.approved ? "approved" : ""
                   }`}
                   onClick={(e) => {
                     stopPropagation(e);
                     onApprove(pkg.id); // Assuming this function handles toggling approval
                   }}
                 >
-                  {pkg.is_approved ? "Unapprove" : "Approve"}
+                  {pkg.approval_status?.approved ? "Unapprove" : "Approve"}
                 </button>
                 <button
                   className="btn delete-btn"

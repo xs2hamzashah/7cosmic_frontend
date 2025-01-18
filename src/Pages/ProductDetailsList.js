@@ -38,8 +38,6 @@ const ProductDetailList = () => {
   const location = useLocation();
   const isEditMode = location.pathname.includes("edit");
 
-  console.log(existingImages[0].image);
-
   useEffect(() => {
     const fetchDisplayName = async () => {
       try {

@@ -252,12 +252,14 @@ const SellerAnalytics = () => {
                   <div
                     className="absolute bottom-4 right-4 px-2 py-1 rounded-md text-white text-sm font-medium"
                     style={{
-                      backgroundColor: product.is_approved
+                      backgroundColor: product.approval_status?.approved
                         ? "#149921"
                         : "#F39C12", // Green for Approved, Yellow for Pending
                     }}
                   >
-                    {product.is_approved ? "Approved" : "Pending.."}
+                    {product.approval_status?.approved
+                      ? "Approved"
+                      : "Pending.."}
                   </div>
 
                   <div className="img mb-4">

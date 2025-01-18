@@ -15,6 +15,8 @@ import {
 import "../CSS/Navbar.css";
 import SearchBox from "./SearchBox";
 
+import Logo from "../assets/logo.svg";
+
 export default function Navbar({
   onSearch,
   companyName,
@@ -66,9 +68,9 @@ export default function Navbar({
 
   return (
     <nav>
-      <h2 className="logo" onClick={handleLogo}>
-        logo
-      </h2>
+      <div className="logo" onClick={handleLogo}>
+        <img src={Logo} alt="Profile" className="profile-image" />
+      </div>
 
       {location.pathname === "/" && (
         <>
