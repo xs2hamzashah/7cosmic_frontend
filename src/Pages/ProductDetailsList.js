@@ -38,6 +38,8 @@ const ProductDetailList = () => {
   const location = useLocation();
   const isEditMode = location.pathname.includes("edit");
 
+  console.log(existingImages[0].image);
+
   useEffect(() => {
     const fetchDisplayName = async () => {
       try {
@@ -128,12 +130,17 @@ const ProductDetailList = () => {
 
   const handleRemoveExistingImage = async (imageId) => {
     try {
+      const formData = new FormData();
+      formData.append("image_id", imageId);
+
       await axios.delete(
-        `${API_BASE_URL}/api/listings/solar-solutions/${id}/update_media/${imageId}/`,
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/update_media/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "multipart/form-data",
           },
+          data: formData, // Pass the form data as the body of the request
         }
       );
 
@@ -147,12 +154,17 @@ const ProductDetailList = () => {
 
   const handleSetDisplayImage = async (imageId) => {
     try {
+      const formData = new FormData();
+      formData.append("image_id", imageId);
+      formData.append("is_display_image", true);
+
       await axios.patch(
-        `${API_BASE_URL}/api/listings/solar-solutions/${id}/supdate_media/${imageId}/`,
-        {},
+        `${API_BASE_URL}/api/listings/solar-solutions/${id}/update_media/`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -391,9 +403,10 @@ const ProductDetailList = () => {
                     } rounded-lg overflow-hidden shadow-md`}
                   >
                     <img
-                      src={image.image_url}
+                      src={image.image_url || image.url || image.image} // Try different possible image URL properties
                       alt={`Image ${image.id}`}
                       className="w-32 h-24 object-cover rounded-md"
+                      onError={(e) => console.log("Image load error:", e)} // Debug image loading
                     />
                     <button
                       onClick={() => handleRemoveExistingImage(image.id)}
