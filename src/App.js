@@ -16,6 +16,7 @@ import { PriceList } from "./Pages/PriseList";
 import { Provider } from "react-redux";
 import { persister, store } from "./redux/store/store";
 import { ToastProvider } from "react-toast-notifications";
+import { Calculator } from "./Pages/Calculator";
 
 function App() {
   return (
@@ -36,10 +37,15 @@ function App() {
             />
             <Route path="/edit-product/:id" element={<EditPackage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+
             <Route
               path="/product-image-upload/:id"
               element={<ImageUploader />}
             />
+
+            {/* TODO: Experimental */}
+            <Route path="/seller/calculator" element={<Calculator />} />
+
             <Route
               path="/seller/price-list"
               element={

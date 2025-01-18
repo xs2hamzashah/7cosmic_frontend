@@ -2,10 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
 const TOKEN = localStorage.getItem("accessToken");
+console.log("🚀 ~ TOKEN:", TOKEN);
 export const panelPriceService = createApi({
   reducerPath: "panel-price",
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: `${API_URL}/pricelist`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${TOKEN}`,
@@ -46,7 +47,7 @@ export const panelPriceService = createApi({
     panels: query({
       query: ({ page = 1, limit = 10 }) => {
         return {
-          url: `/panel/my_panels/?page=${page}`,
+          url: `/panel/my_panels?page=${page}`,
           method: "GET",
         };
       },

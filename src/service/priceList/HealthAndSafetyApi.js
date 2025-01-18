@@ -12,7 +12,7 @@ const TOKEN = localStorage.getItem("accessToken");
 export const HealthAndSafetyApi = createApi({
   reducerPath: "hse-equipment-price",
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: `${API_URL}/pricelist`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${TOKEN}`,

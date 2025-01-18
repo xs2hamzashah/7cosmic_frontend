@@ -41,7 +41,7 @@ const schema = yup
   })
   .required();
 
-function Panel({setIsLoading}) {
+function Panel({ setIsLoading }) {
   // ----------------- states -------------------------------->
   const { addToast } = useToasts();
   const [isEdit, setIsEdit] = useState(false);
@@ -56,6 +56,8 @@ function Panel({setIsLoading}) {
   const [deleteItem, deleteItemStatus] = useDeletePanelMutation();
   const { data, isLoading, isError, error } = usePanelsQuery({ page: 1 });
   const panels = data?.results;
+
+  console.log("🚀 ~ Panel ~ data:", data);
 
   // ----------------- react-form-hook -------------------------------->
   const {
