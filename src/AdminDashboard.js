@@ -378,6 +378,8 @@ const Dashboard = () => {
       setSelectedSellerPackages((prevPackages) =>
         prevPackages.filter((pkg) => pkg.id !== id)
       );
+
+      await handleStatsClick();
     } catch (error) {
       console.error("Error deleting package:", error);
       toast.error(`Failed to delete the package: ${error.message}`);
