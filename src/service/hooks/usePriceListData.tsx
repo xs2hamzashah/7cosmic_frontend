@@ -5,10 +5,10 @@ import { useAllQuery as useBatteriesQuery } from "../priceList/battery";
 import { useAllQuery as useElectricWorkQuery } from "../priceList/electricWork";
 import { useAllQuery as useMechanicalWorkQuery } from "../priceList/mechanicalWork";
 import { useAllQuery as useNetMeteringQuery } from "../priceList/netMetering";
-import { useAllQuery as useHseEquipmentQuery } from "../priceList/hseEquipment";
+import { useAllQuery as useHseEquipmentQuery } from "../priceList/HealthAndSafetyApi";
 import { useAllQuery as useDcEarthingQuery } from "../priceList/dcEarthing";
 import { useAllQuery as useOnlineMonitoringQuery } from "../priceList/onlineMonitoring";
-import { useAllQuery as useProfitQuery } from "../priceList/profit";
+// import { useAllQuery as useProfitQuery } from "../priceList/profit";
 import { useAllQuery as useCommissionQuery } from "../priceList/commission";
 import { useAllQuery as useAfterSalesServiceQuery } from "../priceList/afterSalesService";
 import { useAllQuery as useCivilWorkQuery } from "../priceList/civilWork";
@@ -24,7 +24,7 @@ const usePriceListData = () => {
   const hseEquipmentQuery = useHseEquipmentQuery({ id: "" });
   const dcEarthingQuery = useDcEarthingQuery({ id: "" });
   const onlineMonitoringQuery = useOnlineMonitoringQuery({ id: "" });
-  const profitQuery = useProfitQuery({ id: "" });
+
   const commissionQuery = useCommissionQuery({ id: "" });
   const afterSalesServiceQuery = useAfterSalesServiceQuery({ id: "" });
   const civilWorkQuery = useCivilWorkQuery({ id: "" });
@@ -40,7 +40,6 @@ const usePriceListData = () => {
     hseEquipmentQuery.isLoading ||
     dcEarthingQuery.isLoading ||
     onlineMonitoringQuery.isLoading ||
-    profitQuery.isLoading ||
     commissionQuery.isLoading ||
     afterSalesServiceQuery.isLoading ||
     civilWorkQuery.isLoading;
@@ -65,8 +64,6 @@ const usePriceListData = () => {
     isDcEarthingLoading: dcEarthingQuery.isLoading,
     onlineMonitories: onlineMonitoringQuery.data,
     isOnlineMonitoringLoading: onlineMonitoringQuery.isLoading,
-    profitPriceList: profitQuery.data,
-    isProfitLoading: profitQuery.isLoading,
     commissionData: commissionQuery.data,
     isCommissionLoading: commissionQuery.isLoading,
     afterSalesServiceData: afterSalesServiceQuery.data,

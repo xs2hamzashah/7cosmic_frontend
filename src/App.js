@@ -17,6 +17,7 @@ import { Provider } from "react-redux";
 import { persister, store } from "./redux/store/store";
 import { ToastProvider } from "react-toast-notifications";
 import { Calculator } from "./Pages/Calculator";
+import SolarCostCalculator from "./Pages/tools/solar-cost-calculator";
 
 function App() {
   return (
@@ -37,15 +38,16 @@ function App() {
             />
             <Route path="/edit-product/:id" element={<EditPackage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-
             <Route
               path="/product-image-upload/:id"
               element={<ImageUploader />}
             />
-
-            {/* TODO: Experimental */}
+            {/* TODO: Experimental */}˜
             <Route path="/seller/calculator" element={<Calculator />} />
-
+            <Route
+              path="/tools/solar-cost-calculator/:id"
+              element={<SolarCostCalculator />}
+            />
             <Route
               path="/seller/price-list"
               element={

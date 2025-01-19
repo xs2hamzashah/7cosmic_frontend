@@ -33,9 +33,11 @@ import {
 
 const schema = yup
   .object({
+    unit: yup.string().required(),
     brand_name: yup.string().required(),
     specification: yup.string().required(),
     capacity: yup.number().positive().integer().required(),
+
     unit: yup.string().required(),
     price: yup
     .number()
@@ -48,6 +50,7 @@ const schema = yup
       }
     )
     .required("Price is required"),
+
   })
   .required();
 
