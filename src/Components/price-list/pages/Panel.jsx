@@ -251,6 +251,7 @@ function Panel({ setIsLoading }) {
               className="flex flex-col flex-wrap gap-4 my-10"
               onSubmit={handleSubmit(onSubmit, onError)}
             >
+              <div className="relative group">
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
@@ -261,7 +262,13 @@ function Panel({ setIsLoading }) {
                   setValue("brand_name", "JA or Jinko or Longi");
                 }}
               />
+                <div className="absolute top-[-30px] left-0 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+    Double-click to autofill suggested Brand Name
+  </div>
+</div>
 
+
+<div className="relative group">
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
@@ -272,6 +279,10 @@ function Panel({ setIsLoading }) {
                   setValue("specification", "N-Type or TOPCon or HI-MO 6");
                 }}
               />
+                <div className="absolute top-[-30px] left-0 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+    Double-click to autofill with suggested specification
+  </div>
+</div>
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
@@ -327,6 +338,7 @@ function Panel({ setIsLoading }) {
                 onDoubleClick={() => {
                   setValue("price", 31.0); // Set default value on double click
                 }}
+                
                 onChange={(e) => {
                   const value = parseFloat(e.target.value);
                   if (!isNaN(value)) {
