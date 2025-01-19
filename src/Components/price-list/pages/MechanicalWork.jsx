@@ -50,7 +50,12 @@ const schema = yup
     unit: yup.string().required(),
     structure_type: yup.string().required(),
     specification: yup.string().required(),
-    price: yup.number().positive().integer().required(),
+     price: yup
+              .number()
+              .positive("Price must be a positive number")
+              .required("Price is required")
+              .min(1, "Price must be at least 1"),
+    //price: yup.number().positive().integer().required(),
   })
   .required();
 
@@ -334,6 +339,7 @@ function MechanicalWork() {
               errors={errors}
               onError={onError}
               onSubmit={onSubmit}
+              setValue={setValue}
               register={register}
               handleSubmit={handleSubmit}
               isLoading={editStatus.isLoading || createStatus.isLoading}
@@ -390,6 +396,7 @@ function Form({
   onSubmit,
   register,
   isLoading,
+  setValue,
 }) {
   return (
     <Fragment>
@@ -402,6 +409,9 @@ function Form({
           aria-invalid={errors.specification ? "true" : "false"}
           placeholder="Specification i:e Iron Angle/GI L3/Aluminium P1/Garder"
           {...register("specification")}
+          onDoubleClick={(e) => {
+            setValue("specification", "Iron Angle or Garder 2.5 x 5.0 ");
+          }}
         />
 
         <select
@@ -413,13 +423,37 @@ function Form({
           <option value="watt">watt</option>
         </select>
 
-        <Input
+        {/* <Input
           type="number"
           placeholder="Price PKR (please input per watt rate) i:e 15/18/22 etc"
           aria-invalid={errors.price ? "true" : "false"}
           {...register("price")}
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-        />
+        /> */}
+                               <Input
+  type="number"
+  className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+  placeholder="Price PKR (please input per watt rate) i:e 10/12/15 etc"
+  {...register("price", {
+    required: "Price is required",
+    min: {
+      value: 1,
+      message: "Price must be at least PKR 1 ",
+    },
+    validate: (value) => {
+      if (isNaN(value) || value <= 0) {
+        return "Price must be a valid positive value";
+      }
+      return true;
+    },
+  })}
+  aria-invalid={errors.price ? "true" : "false"}
+  onDoubleClick={() => {
+    setValue("price", 10); // Set a default value on double-click
+  }}
+  min="1"  // Restrict min input to 1 
+  step="1"  // Optional, restrict the input to multiples of 1
+/>
 
         <select
           {...register("structure_type")}

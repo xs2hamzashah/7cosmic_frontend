@@ -36,7 +36,13 @@ const schema = yup
   .object({
     specification: yup.string().required(),
     unit: yup.string().required(),
-    price: yup.number().positive().integer().required(),
+      price: yup
+                  .number()
+                  .positive("Price must be a positive number")
+                  .required("Price is required")
+                  .min(1, "Price must be at least 1"),
+    // price: yup.number().positive().integer().required(),
+    // TODO: Capacity is not required for civil work
     capacity: yup.number().positive().integer().required(),
   })
   .required();
@@ -106,6 +112,7 @@ function CivilWork({ setIsLoading }) {
     // const _result = ;
 
     if (_result) {
+      // TODO: Capacity is not required
       setValue("capacity", _result.capacity);
       setValue("specification", _result?.specification);
       setValue("unit", _result?.unit);
@@ -210,6 +217,9 @@ function CivilWork({ setIsLoading }) {
                 placeholder="Specification i:e Concrete/Curbstone/Brick Civil Pads etc"
                 {...register("specification")}
                 type="text"
+                onDoubleClick={() => {
+                  setValue("specification", "1x1x1 ft Concrete Civil Pads"); // Set a default value on double-click
+                }}
               />
               {/* TODO: Remove Capacity this from list */}
 
@@ -238,13 +248,40 @@ function CivilWork({ setIsLoading }) {
                 <option value="watt">watt</option>
               </select>
 
-              <Input
+              {/* <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
                 placeholder="Price PKR (please input per watt rate) i:e 01/02/05 etc"
                 {...register("price")}
                 type="number"
-              />
+                onDoubleClick={() => {
+                  setValue("price", 1); // Set a default value on double-click
+                }}
+              /> */}
+          <Input
+  type="number"
+  className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+  placeholder="Price PKR (please input per watt rate) i:e 2 or 5 etc"
+  {...register("price", {
+    required: "Price is required",
+    min: {
+      value: 1,
+      message: "Price must be at least PKR 1 ",
+    },
+    validate: (value) => {
+      if (isNaN(value) || value <= 0) {
+        return "Price must be a valid positive value";
+      }
+      return true;
+    },
+  })}
+  aria-invalid={errors.price ? "true" : "false"}
+  onDoubleClick={() => {
+    setValue("price", 1); // Set a default value on double-click
+  }}
+  min="1"  // Restrict min input to 1 
+  step="1"  // Optional, restrict the input to multiples of 1
+/>
 
               <div className="w-full">
                 {isEdit && (

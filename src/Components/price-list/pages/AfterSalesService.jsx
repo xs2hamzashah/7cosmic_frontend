@@ -37,7 +37,18 @@ const schema = yup
     specification: yup.string().required(),
     unit: yup.string().required(),
     price: yup.number().positive().integer().required(),
-    capacity: yup.number().positive().integer().required(),
+    capacity: yup.number().required(),
+    price: yup
+      .number()
+      .min(0, "Price cannot be negative")// Allows 0 or greater
+      .test(
+        "is-decimal",
+        "Price must be a number with up to one decimal place",
+        (value) => {
+          return value === undefined || /^\d+(\.\d{1})?$/.test(value.toString());
+        }
+      )
+      .required("Price is required"),
   })
   .required();
 
@@ -93,7 +104,7 @@ function AfterSalesService({ setIsLoading }) {
     }
   };
 
-  const onError = () => {};
+  const onError = () => { };
 
   // ----------------- functions ----------------------------->
   const onPriceListEditHandler = async (id) => {
@@ -211,15 +222,43 @@ function AfterSalesService({ setIsLoading }) {
                 placeholder="Specification i:e Complete system warranty / As per T&C"
                 {...register("specification")}
                 type="text"
+                onDoubleClick={(e) => {
+                  setValue("specification", "Complete System Warranty");
+                }}
               />
               {/* TODO: Replace Capacity name with Quantity in main list */}
-              <Input
+              {/* <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
                 placeholder="Quantity in Years i:e 1 or 2 or 5 etc"
                 {...register("capacity")}
                 type="number"
+              /> */}
+              <Input
+                className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+                aria-invalid={errors.capacity ? "true" : "false"}
+                placeholder="Quantity in Years (e.g., 0, 1, 2, 5, etc.)"
+                {...register("capacity", {
+                  required: "Quantity is required",
+                  validate: (value) => {
+                    const numValue = Number(value); // Convert to number
+                    if (isNaN(numValue)) {
+                      return "Quantity must be a valid number";
+                    }
+                    if (numValue < 0 || numValue >= 25) {
+                      return "Quantity must be between 0 and 25 years";
+                    }
+                    return true; // Valid value
+                  },
+                })}
+                type="number"
+                min="0"
+                max="25"
+                onDoubleClick={() => {
+                  setValue("capacity", 2); // Set a default value on double-click
+                }}
               />
+
 
               {/* <Input
              className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
@@ -241,16 +280,40 @@ function AfterSalesService({ setIsLoading }) {
 
                 <option value="watt">Year</option>
               </select>
-              {/* TODO: Price should take decimal values upto 1 decimal place like 2.5 or 3.1 etc */}
+              {/* TODO: I have changed price to take decimal values*/}
 
-              <Input
+              {/* <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
                 placeholder="Price PKR (Enter per watt rate) i:e 0 or 1 or 2 or 3 etc"
                 {...register("price")}
                 type="number"
+              /> */}
+              <Input
+                className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+                aria-invalid={errors.price ? "true" : "false"}
+                placeholder="Price PKR (Enter per watt rate, e.g., 0.0, 1.5, 2.0)"
+                {...register("price", {
+                  required: "Price is required",
+                  validate: (value) => {
+                    if (value === "" || isNaN(value)) {
+                      return "Price must be a valid number";
+                    }
+                    return /^\d+(\.\d{1})?$/.test(value) || "Price must have up to 1 decimal place";
+                  },
+                })}
+                type="number"
+                step="0.1"
+                onDoubleClick={() => {
+                  setValue("price", 1.5); // Set default value on double click
+                }}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (!isNaN(value)) {
+                    setValue("price", Math.round(value * 10) / 10); // Restrict to 1 decimal place
+                  }
+                }}
               />
-
               <div className="w-full">
                 {isEdit && (
                   <Button
