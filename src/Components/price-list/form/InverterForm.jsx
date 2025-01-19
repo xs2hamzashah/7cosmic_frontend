@@ -132,14 +132,14 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
       >
         <Input
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 "
-          placeholder="brand_name"
+          placeholder="Brand Name i:e Huawei/Sungrow/Sofar/Solis etc"
           {...register("brand_name")}
           aria-invalid={errors.brand_name ? "true" : "false"}
         />
 
         <Input
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-          placeholder="specification"
+          placeholder="Specification i:e SUN2000-10KTL/SH15T/10KTL-HYD TP"
           {...register("specification")}
           aria-invalid={errors.specification ? "true" : "false"}
         />
@@ -147,7 +147,7 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
         <Input
           type="number"
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-          placeholder="capacity"
+          placeholder="Capacity (kW) i:e 10 / 20 / 50 / 110 etc "
           {...register("capacity")}
           aria-invalid={errors.capacity ? "true" : "false"}
         />
@@ -161,7 +161,7 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
         <Input
           type="number"
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-          placeholder="price"
+          placeholder="Enter price of Inverter in PKR i:e 320000 or 610000 etc "
           {...register("price")}
           aria-invalid={errors.price ? "true" : "false"}
         />
