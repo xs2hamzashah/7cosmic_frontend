@@ -33,7 +33,12 @@ const schema = yup
   .object({
     specification: yup.string().required(),
     unit: yup.string().required(),
-    price: yup.number().positive().integer().required(),
+price: yup
+                  .number()
+                  .positive("Price must be a positive number")
+                  .required("Price is required")
+                  .min(0, "Price must be at least 1000"),
+    //price: yup.number().positive().integer().required(),
     capacity: yup.number().positive().integer().required(),
   })
   .required();
@@ -206,6 +211,9 @@ function HealthAndSafety({ setIsLoading }) {
                 placeholder="Specification i:e Fire Extinguisher, Safety Stickers ,Tags  "
                 {...register("specification")}
                 type="text"
+                onDoubleClick={(e) => {
+                  setValue("specification", "Fire Extinguisher, Safety Labels & Tags");
+                }}
               />
               {/* TODO: Remove capacity */}
 
@@ -237,12 +245,37 @@ function HealthAndSafety({ setIsLoading }) {
                 <option value="watt">SVC</option>
               </select>
 
-              <Input
+              {/* <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
                 placeholder="Price PKR (please input service price) i:e 5000 or 10000"
                 {...register("price")}
                 type="number"
+              /> */}
+                 <Input
+                className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+                aria-invalid={errors.price ? "true" : "false"}
+                placeholder="Price PKR (please input service price) i:e 5000 or 10000"
+                {...register("price", {
+                  required: "Price is required",
+                  validate: (value) => {
+                    if (value === "" || isNaN(value)) {
+                      return "Price must be a valid number";
+                    }
+                    return /^\d+(\.\d{1})?$/.test(value) || "Price must have up to 1 decimal place";
+                  },
+                })}
+                type="number"
+                step="1000"
+                onDoubleClick={() => {
+                  setValue("price", 5000); // Set default value on double click
+                }}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (!isNaN(value)) {
+                    setValue("price", Math.round(value * 10) / 10); // Restrict to 1 decimal place
+                  }
+                }}
               />
 
               <div className="w-full">

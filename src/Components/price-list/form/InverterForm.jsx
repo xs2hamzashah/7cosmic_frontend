@@ -81,14 +81,13 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
             autoDismiss: true,
           });
         }
+
         if ("data" in response) {
-          if (response.data.success) {
-            reset();
-            addToast(response.data.message, {
-              appearance: "success",
-              autoDismiss: true,
-            });
-          }
+          reset();
+          addToast("Inverter added successfully", {
+            appearance: "success",
+            autoDismiss: true,
+          });
         } else {
           throw new Error("Something went wrong");
         }
@@ -135,6 +134,9 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
           placeholder="Brand Name i:e Huawei/Sungrow/Sofar/Solis etc"
           {...register("brand_name")}
           aria-invalid={errors.brand_name ? "true" : "false"}
+          onDoubleClick={(e) => {
+            setValue("brand_name", "Huawei or Sungrow or Sofar or Solis");
+          }}
         />
 
         <Input
@@ -143,7 +145,7 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
           {...register("specification")}
           aria-invalid={errors.specification ? "true" : "false"}
           onDoubleClick={(e) => {
-            setValue("specification", "SUN2000-10KTL/SH15T/10KTL-HYD TP");
+            setValue("specification", "SUN2000-10KTL or SH15T or 10KTL-HYD TP");
           }}
         />
 
@@ -153,13 +155,30 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
           placeholder="Capacity (kW) i:e 10 / 20 / 50 / 110 etc "
           {...register("capacity")}
           aria-invalid={errors.capacity ? "true" : "false"}
+          onDoubleClick={(e) => {
+            setValue("capacity", 10);
+          }}
         />
-        <Input
-          placeholder="unit"
+        {/* TODO: I have pasted this select code from panel.jsx for making the unit field a dropdown with "kW" as option*/}
+        <select
+          {...register("unit")}
+          defaultValue={"watt"}
+          aria-invalid={errors.unit ? "true" : "false"}
+          className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
+        >
+          {/* <option value="kw">kw</option> */}
+          <option value="watt">kW</option>
+        </select>
+
+        {/* <Input
+          placeholder="kW"
           {...register("unit")}
           aria-invalid={errors.unit ? "true" : "false"}
+          onDoubleClick={(e) => {
+            setValue("unit", "kW");
+          }}
           className="flex-1 py-2 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-        />
+        /> */}
 
         <Input
           type="number"
@@ -167,6 +186,9 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
           placeholder="Enter price of Inverter in PKR i:e 320000 or 610000 etc "
           {...register("price")}
           aria-invalid={errors.price ? "true" : "false"}
+          onDoubleClick={(e) => {
+            setValue("price", 320000);
+          }}
         />
 
         <select
