@@ -223,7 +223,15 @@ function Battery({ setIsLoading }) {
         <AccordionContent className="p-4 bg-neutral-50 rounded-[8px]  ">
           <Tabs defaultValue={"tubular"} className="w-full">
             <div className="flex items-center justify-between gap-x-4 mb-6">
-              <DropdownMenu>
+              {/* Create Battery Button */}
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                className="outline-orange-primary border border-orange-primary text-orange-primary"
+              >
+                Add
+              </Button>
+
+              <DropdownMenu >
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -265,13 +273,6 @@ function Battery({ setIsLoading }) {
                   </TabsList>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {/* Create Battery Button */}
-              <Button
-                onClick={() => setIsFormOpen(true)}
-                className="outline-orange-primary border border-orange-primary text-orange-primary"
-              >
-                Add
-              </Button>
             </div>
 
             <TabsContent value="tubular" className="">
@@ -414,29 +415,29 @@ function Form({
                 }}
         /> */}
         <Input
-  type="number"
-  className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-  placeholder="Capacity in watt-hours (Wh) i:e 5000/2500/1800 etc"
-  {...register("capacity", {
-    required: "Capacity is required",
-    min: {
-      value: 1000,
-      message: "Capacity must be a positive number greater than 999",
-    },
-    validate: (value) => {
-      if (isNaN(value) || value <= 0) {
-        return "Capacity must be a valid positive number";
-      }
-      return true;
-    },
-  })}
-  aria-invalid={errors.capacity ? "true" : "false"}
-  onDoubleClick={() => {
-    setValue("capacity", 5000); // Set a default value on double-click
-  }}
-  min="1000"  // Restrict input to positive numbers
-  step="100"  // Optional, restrict the input to multiples of 100
-/>
+          type="number"
+          className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+          placeholder="Capacity in watt-hours (Wh) i:e 5000/2500/1800 etc"
+          {...register("capacity", {
+            required: "Capacity is required",
+            min: {
+              value: 1000,
+              message: "Capacity must be a positive number greater than 999",
+            },
+            validate: (value) => {
+              if (isNaN(value) || value <= 0) {
+                return "Capacity must be a valid positive number";
+              }
+              return true;
+            },
+          })}
+          aria-invalid={errors.capacity ? "true" : "false"}
+          onDoubleClick={() => {
+            setValue("capacity", 5000); // Set a default value on double-click
+          }}
+          min="1000" // Restrict input to positive numbers
+          step="100" // Optional, restrict the input to multiples of 100
+        />
 
         {/* <Input
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
@@ -445,14 +446,14 @@ function Form({
           aria-invalid={errors.unit ? "true" : "false"}
         /> */}
         <select
-                {...register("unit")}
-                defaultValue={"watt"}
-                aria-invalid={errors.unit ? "true" : "false"}
-                className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
-              >
-                {/* <option value="kw">kw</option> */}
-                <option value="watt">Wh</option>
-              </select>
+          {...register("unit")}
+          defaultValue={"watt"}
+          aria-invalid={errors.unit ? "true" : "false"}
+          className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
+        >
+          {/* <option value="kw">kw</option> */}
+          <option value="watt">Wh</option>
+        </select>
 
         {/* <Input
           type="number"
@@ -464,30 +465,30 @@ function Form({
             setValue("price", 44500); // Set a default value on double-click
           }}
         /> */}
-               <Input
-  type="number"
-  className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-  placeholder="Enter price of Battery in PKR i:e 285000/44000/42500"
-  {...register("price", {
-    required: "Price is required",
-    min: {
-      value: 10000,
-      message: "Price must be at least PKR 10000 ",
-    },
-    validate: (value) => {
-      if (isNaN(value) || value <= 0) {
-        return "Price must be a valid positive value";
-      }
-      return true;
-    },
-  })}
-  aria-invalid={errors.price ? "true" : "false"}
-  onDoubleClick={() => {
-    setValue("price", 10000); // Set a default value on double-click
-  }}
-  min="10000"  // Restrict min input to 10000 
-  step="500"  // Optional, restrict the input to multiples of 500
-/>
+        <Input
+          type="number"
+          className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+          placeholder="Enter price of Battery in PKR i:e 285000/44000/42500"
+          {...register("price", {
+            required: "Price is required",
+            min: {
+              value: 10000,
+              message: "Price must be at least PKR 10000 ",
+            },
+            validate: (value) => {
+              if (isNaN(value) || value <= 0) {
+                return "Price must be a valid positive value";
+              }
+              return true;
+            },
+          })}
+          aria-invalid={errors.price ? "true" : "false"}
+          onDoubleClick={() => {
+            setValue("price", 10000); // Set a default value on double-click
+          }}
+          min="10000" // Restrict min input to 10000
+          step="500" // Optional, restrict the input to multiples of 500
+        />
 
         <select
           id=""

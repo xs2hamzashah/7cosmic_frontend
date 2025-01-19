@@ -53,11 +53,11 @@ const schema = yup
     system_type: yup.string().required(),
     specification: yup.string().required(),
     unit: yup.string().required(),
-     price: yup
-          .number()
-          .positive("Price must be a positive number")
-          .required("Price is required")
-          .min(1, "Price must be at least 1"),
+    price: yup
+      .number()
+      .positive("Price must be a positive number")
+      .required("Price is required")
+      .min(1, "Price must be at least 1"),
     //price: yup.number().positive().integer().required(),
   })
   .required();
@@ -211,6 +211,14 @@ function ElectricWork({ setIsLoading }) {
         <AccordionContent className="p-4 bg-slate-50 rounded-[8px] dark:bg-dark-surface-mixed-200">
           <Tabs defaultValue={"onGrid"} className="w-full">
             <div className="flex items-center justify-between gap-x-4 mb-6">
+              {/* </DialogTrigger> */}
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                className="outline-orange-primary border border-orange-primary text-orange-primary"
+              >
+                Add
+              </Button>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -250,15 +258,6 @@ function ElectricWork({ setIsLoading }) {
                   </TabsList>
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              {/* <DialogTrigger asChild> */}
-              <Button
-                onClick={() => setIsFormOpen(true)}
-                className="outline-orange-primary border border-orange-primary text-orange-primary"
-              >
-                Add
-              </Button>
-              {/* </DialogTrigger> */}
             </div>
 
             {/* <TabsList className="border-1 rounded-[8px] w-full">
@@ -432,7 +431,6 @@ function Form({
             setValue("specification", "AC/DC Cable: Pakistan/Fast , Chint");
           }}
         />
-        
 
         {/* <Input
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
@@ -441,15 +439,15 @@ function Form({
           {...register("unit")}
           type="text"
         /> */}
-         <select
-                {...register("unit")}
-                defaultValue={"watt"}
-                aria-invalid={errors.unit ? "true" : "false"}
-                className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
-              >
-                {/* <option value="kw">kw</option> */}
-                <option value="watt">watt</option>
-              </select>
+        <select
+          {...register("unit")}
+          defaultValue={"watt"}
+          aria-invalid={errors.unit ? "true" : "false"}
+          className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
+        >
+          {/* <option value="kw">kw</option> */}
+          <option value="watt">watt</option>
+        </select>
         {/* <Input
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
           aria-invalid={errors.price ? "true" : "false"}
@@ -460,30 +458,30 @@ function Form({
             setValue("price", 10);
           }}
         /> */}
-                       <Input
-  type="number"
-  className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
-  placeholder="Price PKR (please input per watt rate) i:e 10/12/15 etc"
-  {...register("price", {
-    required: "Price is required",
-    min: {
-      value: 1,
-      message: "Price must be at least PKR 1 ",
-    },
-    validate: (value) => {
-      if (isNaN(value) || value <= 0) {
-        return "Price must be a valid positive value";
-      }
-      return true;
-    },
-  })}
-  aria-invalid={errors.price ? "true" : "false"}
-  onDoubleClick={() => {
-    setValue("price", 10); // Set a default value on double-click
-  }}
-  min="1"  // Restrict min input to 10000 
-  step="1"  // Optional, restrict the input to multiples of 500
-/>
+        <Input
+          type="number"
+          className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+          placeholder="Price PKR (please input per watt rate) i:e 10/12/15 etc"
+          {...register("price", {
+            required: "Price is required",
+            min: {
+              value: 1,
+              message: "Price must be at least PKR 1 ",
+            },
+            validate: (value) => {
+              if (isNaN(value) || value <= 0) {
+                return "Price must be a valid positive value";
+              }
+              return true;
+            },
+          })}
+          aria-invalid={errors.price ? "true" : "false"}
+          onDoubleClick={() => {
+            setValue("price", 10); // Set a default value on double-click
+          }}
+          min="1" // Restrict min input to 10000
+          step="1" // Optional, restrict the input to multiples of 500
+        />
 
         <select
           id=""

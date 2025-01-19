@@ -75,7 +75,7 @@ function Inverter({ setIsLoading }) {
   const onInverterDeleteHandler = async (id) => {
     const response = await deleteInverter({ id });
     if ("data" in response) {
-      addToast(response.data.message, {
+      addToast("Inverter deleted successfully", {
         appearance: "info",
         autoDismiss: true,
       });
