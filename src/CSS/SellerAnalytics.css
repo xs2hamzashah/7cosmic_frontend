@@ -1,0 +1,130 @@
+.seller-dashboard {
+  margin-top: 5rem;
+}
+
+.welcome-text {
+  font-size: 48px;
+  font-weight: 400;
+  color: #ff6f20;
+}
+
+.sells-detail {
+  display: flex;
+  margin: 30px;
+}
+
+.box-1 {
+  width: 300px;
+  text-align: center;
+  padding: 50px 0;
+  background-color: #f9f9f9;
+}
+
+.box-1 h3 {
+  font-size: 25px;
+  font-weight: 300;
+  color: #ff6f20;
+}
+
+.box-1 p {
+  font-size: 45px;
+  font-weight: 800;
+}
+
+.graph {
+  width: 400px;
+  height: 200px;
+  margin-left: 30px;
+}
+
+.whatsapp-info {
+  margin: 30px;
+  padding: 20px;
+  width: 750px;
+  background-color: #f9f9f9;
+}
+
+.whatsapp-info h2 {
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+
+.whatsapp-info ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.whatsapp-item p {
+  padding: 10px;
+  background-color: #ff6e2046;
+  margin-bottom: 5px;
+  /* border-radius: 5px; */
+}
+
+.whatsapp-item p span {
+  font-weight: 600;
+}
+
+.packages-cards {
+  margin: 30px;
+}
+
+.packages-cards h2 {
+  font-size: 32px;
+  font-weight: 400;
+  color: #ff6f20;
+}
+
+.package-card {
+  width: 500px;
+  margin: 30px;
+  padding: 20px;
+  display: flex;
+  border-bottom: 1px solid #818181;
+}
+
+.package-card .img img {
+  background-color: #1f1f1f;
+  width: 100px;
+  height: 100px;
+}
+
+.package-card-text {
+  margin: 10px 0 0 20px;
+}
+
+.package-card-text p {
+  margin-top: 10px;
+}
+
+.package-card-text span {
+  border: 1px solid #ff6f20;
+  color: #ff6f20;
+  border-radius: 5px;
+  padding: 3px 10px;
+  margin-left: 120px;
+  display: inline-block;
+}
+
+.add-new-package {
+  width: 500px;
+  margin-left: 0px;
+  padding: 15px;
+  font-size: 19px;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff6f20;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-new-package:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25), 0 3px 5px rgba(0, 0, 0, 0.15);
+}
+
+.add-new-package:hover {
+  cursor: pointer;
+}

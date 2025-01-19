@@ -1,0 +1,97 @@
+.calculator button {
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.calculator .btn {
+  padding: 15px 50px;
+  margin: 0 0 5em 2em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #ff6f20;
+  color: #fff;
+}
+
+.calculator .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25), 0 3px 5px rgba(0, 0, 0, 0.15);
+}
+
+.calculator .ghost {
+  margin: 0 0 5em 7em;
+  padding: 13px 48px;
+  background-color: #fff;
+  border: 2px solid #ff6f20;
+  color: #ff6f20;
+}
+
+@media (max-width: 1280px) {
+  .calculator .ghost {
+    margin: 0 0 2em 3em;
+  }
+}
+
+@media (max-width: 992px) {
+  .calculator .ghost {
+    margin: 0 0 2em 2em;
+    font-size: 14px;
+    padding: 7px 20px;
+    border: 1px solid #ff6f20;
+  }
+}
+
+@media (max-width: 600px) {
+  .calculator .ghost {
+    margin: 1rem 0 0 0.3rem;
+    font-size: 14px;
+    padding: 7px 20px;
+    border: 1px solid #ff6f20;
+  }
+}
+
+/* =========================== Seller Analytic Pop up ============================== */
+
+.calculator-pop-up h3 {
+  font-size: 25px;
+  color: #ff6f20;
+}
+
+.calculator-pop-up {
+  width: 500px;
+  /* height: 400px; */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.calculator-section {
+  background-color: #fff;
+  text-align: center;
+  padding: 30px;
+}
+
+.calculator-section div input,
+.calculator-section div select,
+.calculator-section button {
+  width: 400px;
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid #ff6f20;
+  border-radius: 5px;
+  outline: none;
+}
+
+.calculator-section button {
+  background-color: #ff6f20;
+  color: #fff;
+  text-transform: capitalize;
+  border: none;
+}

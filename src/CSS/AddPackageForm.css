@@ -1,0 +1,54 @@
+/* ========================================================================== */
+/* ============================= Add Package Section ======================== */
+/* ========================================================================== */
+
+.adding-package {
+  max-width: 1100px;
+  margin: 10rem auto;
+  text-align: center;
+}
+
+.adding-package h1 {
+  font-size: 64px;
+  font-weight: 400;
+  margin: 5rem 0;
+  color: #ff6f20;
+}
+
+.form {
+  padding: 5rem 0;
+  box-shadow: 1px 5px 10px 5px #a1a1a18f;
+}
+
+.adding-package .form form input,
+.adding-package .form form select {
+  width: 270px;
+  margin: 0 10px;
+  padding: 10px;
+  font-size: 19px;
+  border-radius: 5px;
+  border: 2px solid #a7aaab;
+  outline: none;
+}
+
+.adding-package .form form button {
+  padding: 8px;
+  font-size: 21px;
+  width: 80px;
+  border-radius: 5px;
+  border: 2px solid #ff6f20;
+  background-color: #ff6f20;
+  color: #fff;
+  outline: none;
+}
+
+.error {
+  width: 500px;
+  margin: 0 auto;
+  color: #f32222;
+  border: 2px solid #f32222;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 20px;
+  margin-top: 40px;
+}

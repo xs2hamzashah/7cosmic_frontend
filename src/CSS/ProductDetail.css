@@ -1,0 +1,345 @@
+.detail {
+  display: flex;
+  margin-top: 5rem;
+}
+
+.detail-imgs .detail-box img {
+  width: 600px;
+  height: 600px;
+}
+
+.detail .text {
+  width: 500px;
+  margin: 50px 0 0 70px;
+}
+
+.detail .text h2 {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  color: #ff6f20;
+  letter-spacing: 1px;
+}
+
+.price-tag {
+  color: #000;
+  font-weight: 700;
+  line-height: 3;
+}
+
+h3 {
+  font-size: 14px;
+}
+
+.boxes {
+  display: flex;
+  margin: 20px 0px;
+}
+
+.detail .text p {
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+
+.seller-note {
+  margin-left: 30px;
+  font-size: 17px;
+}
+
+.detail p span {
+  font-weight: 600;
+  color: #ff6f20;
+}
+
+.detail .text ul li {
+  font-size: 19px;
+  line-height: 1.5;
+  margin-left: 25px;
+}
+
+.detail .service-list {
+  margin: 40px;
+}
+
+.detail .service-list h3 {
+  font-size: 19px;
+  padding: 10px 0;
+  color: #ff6f20;
+}
+
+.detail .service-list ul {
+  list-style-type: none;
+  line-height: 1.5;
+  margin-left: 10px;
+}
+
+.service-list p {
+  margin: 20px 0;
+}
+
+.component-detail h3 {
+  font-size: 21px;
+  color: #ff6f20;
+}
+
+.components-list-detail {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.component-list {
+  max-height: 150px; /* Initial half-open height */
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.component-list.expanded {
+  max-height: none; /* Fully expanded height */
+}
+
+.service-list p span {
+  font-weight: 600;
+  color: #ff6f20;
+}
+
+.detail-btn {
+  width: 500px;
+  padding: 10px;
+  margin: 20px 10px;
+  font-size: 21px;
+  text-transform: uppercase;
+  font-weight: 500;
+  background: none;
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.center-text {
+  text-align: center;
+  margin: 30px 0;
+  display: flex;
+  align-items: center;
+  color: orange;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.center-text::before,
+.center-text::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: orange;
+  margin: 0 10px;
+}
+
+.expand-btn {
+  width: 100%;
+  background-color: #ff6f20;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin: 30px 0;
+  padding-top: 5px;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+/* ============================================ */
+/* ================== Pop up ================== */
+/* ============================================ */
+
+/* PhoneNumberPopup.css */
+.popup-phone-number-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-phone-number-content {
+  background: white;
+  padding: 80px;
+  border-radius: 3px;
+  box-shadow: 0 2px 10px #0c0c0c73;
+  text-align: center;
+  position: relative;
+}
+
+.popup-phone-number-content input {
+  width: 100%;
+  padding: 10px;
+  margin: 20px 0 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.popup-phone-number-content {
+  padding: 10px 15px;
+  border: none;
+  color: black;
+  width: 400px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popup-phone-number-content div {
+  margin-top: 20px;
+}
+
+.product-otp-timer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.popup-phone-number-content button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #ff6f20;
+  border: none;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.close-button {
+  position: absolute;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #333;
+  right: 0px;
+  top: 0px;
+  cursor: pointer;
+}
+
+/* Responsive Design with Media Queries */
+
+@media (max-width: 1280px) {
+  .detail {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .detail-imgs {
+    order: 2;
+  }
+
+  .detail .text .detail-main-text {
+    order: 1;
+    margin: 20px 0;
+  }
+
+  .detail .service-list {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail {
+    margin-top: 2rem;
+  }
+
+  .detail-box {
+    margin: 10px;
+  }
+
+  .detail .text {
+    margin: 10px;
+  }
+
+  .detail .text h2 {
+    font-size: 20px;
+  }
+
+  .price-tag {
+    font-size: 16px;
+  }
+
+  .detail-btn {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .expand-btn {
+    font-size: 20px;
+  }
+
+  .popup-phone-number-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .popup-phone-number-content input {
+    padding: 8px;
+  }
+
+  .popup-phone-number-content button {
+    font-size: 16px;
+  }
+
+  .close-button {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 600px) {
+  .detail {
+    max-width: 300px;
+    padding: 3rem;
+  }
+
+  .detail .text {
+    width: 250px;
+    /* background-color: #000; */
+  }
+  .detail .text h2 {
+    font-size: 18px;
+  }
+
+  .price-tag {
+    font-size: 14px;
+  }
+
+  .detail-btn {
+    width: 250px;
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  .expand-btn {
+    font-size: 18px;
+  }
+
+  .detail-imgs .detail-box img {
+    width: 300px;
+    height: 400px;
+    overflow: hidden;
+  }
+
+  .popup-phone-number-content {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .popup-phone-number-content button {
+    font-size: 14px;
+  }
+
+  .close-button {
+    font-size: 10px;
+    padding: 4px;
+  }
+}
