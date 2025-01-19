@@ -41,6 +41,7 @@ const schema = yup
   })
   .required();
 
+
 function BatteryManagement({ setIsLoading }) {
   // ----------------- states -------------------------------->
   const { addToast } = useToasts();
@@ -197,7 +198,7 @@ function BatteryManagement({ setIsLoading }) {
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
             <DialogTitle>
-              {isEdit.bool ? "Edit" : "Create"} Net Metering
+              {isEdit.bool ? "Edit" : "Create"} BMS
             </DialogTitle>
             <DialogDescription></DialogDescription>
 
@@ -208,7 +209,7 @@ function BatteryManagement({ setIsLoading }) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="Brand Name"
+                placeholder="Brand Name i:e Pylontech / Sofar / AlphaESS etc"
                 {...register("brand_name")}
                 type="text"
               />
@@ -216,14 +217,15 @@ function BatteryManagement({ setIsLoading }) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="specification"
+                placeholder="Specification i:e SC-1000 / AMASS BM / BMS-1000V etc"
                 {...register("specification")}
                 type="text"
               />
+              {/* TODO: Replace from capacity to Quantity  */}
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
-                placeholder="capacity"
+                placeholder="Quantity"
                 {...register("capacity")}
                 type="number"
               />
@@ -234,6 +236,7 @@ function BatteryManagement({ setIsLoading }) {
              {...register("unit")}
              type="text"
            /> */}
+           {/* TODO: Replace unit from watt to PCS */}
 
               <select
                 {...register("unit")}
@@ -242,13 +245,13 @@ function BatteryManagement({ setIsLoading }) {
                 className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
               >
                 {/* <option value="kw">kw</option> */}
-                <option value="watt">watt</option>
+                <option value="watt">PCS</option>
               </select>
 
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
-                placeholder="price"
+                placeholder="Price PKR (please enter price of a BMS unit) i:e 190000 "
                 {...register("price")}
                 type="number"
               />
@@ -308,9 +311,9 @@ function BatteryManagement({ setIsLoading }) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>Delete Battery</DialogTitle>
+            <DialogTitle>Delete BMS</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Battery
+              Are you sure you want to delete this BMS ?
             </DialogDescription>
             <div className="flex gap-x-3 items-center">
               <Button
