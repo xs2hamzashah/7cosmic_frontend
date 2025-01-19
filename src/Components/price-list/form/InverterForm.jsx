@@ -142,6 +142,9 @@ function InverterForm({ currentId, isEdit, setIsEdit, systemType, closeForm }) {
           placeholder="Specification i:e SUN2000-10KTL/SH15T/10KTL-HYD TP"
           {...register("specification")}
           aria-invalid={errors.specification ? "true" : "false"}
+          onDoubleClick={(e) => {
+            setValue("specification", "SUN2000-10KTL/SH15T/10KTL-HYD TP");
+          }}
         />
 
         <Input
