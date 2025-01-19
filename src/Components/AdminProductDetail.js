@@ -60,12 +60,8 @@ export default function AdminProductDetail() {
 
   return (
     <div>
-      <button className="back-button">
-        <IonIcon
-          icon={arrowBackOutline}
-          onClick={handleBack}
-          className="back-icon"
-        />
+      <button className="back-button" onClick={handleBack}>
+        <IonIcon icon={arrowBackOutline} className="back-icon" />
         Back
       </button>
       <div className="detail">

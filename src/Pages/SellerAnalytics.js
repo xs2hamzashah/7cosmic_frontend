@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
 import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { pencilOutline } from "ionicons/icons";
+import { X } from "lucide-react";
 import API_BASE_URL from "../config";
 import Navbar from "../Components/Navbar";
 import SubscriptionPopup from "../Components/SubscriptionPopup";
@@ -13,6 +16,90 @@ import Spinner from "../Components/Spinner";
 
 Chart.register(ArcElement, Legend, Tooltip);
 
+// Buyer Numbers Modal Component
+const BuyerNumbersModal = ({ isOpen, onClose, sellerData, buyerNumbers }) => {
+  const [selectedPackage, setSelectedPackage] = useState("all");
+
+  if (!isOpen) return null;
+
+  const getFilteredNumbers = () => {
+    if (selectedPackage === "all") {
+      return buyerNumbers;
+    }
+
+    const selectedProduct = sellerData.products.find(
+      (product) => product.id === selectedPackage
+    );
+
+    return selectedProduct
+      ? selectedProduct.buyer_whatsapp_numbers.map(
+          (buyer) => buyer.whatsapp_number
+        )
+      : [];
+  };
+
+  const filteredNumbers = getFilteredNumbers();
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Buyer Numbers
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
+
+        <div className="p-4 border-b">
+          <select
+            value={selectedPackage}
+            onChange={(e) => setSelectedPackage(e.target.value)}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="all">All Packages</option>
+            {sellerData.products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.display_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="p-4 overflow-y-auto flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {filteredNumbers.length > 0 ? (
+              filteredNumbers.map((number, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 p-3 rounded-lg flex items-center justify-between"
+                >
+                  <span className="font-medium text-gray-700">{number}</span>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(number)}
+                    className="text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    Copy
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-500 py-8">
+                No numbers available for this package
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Main SellerAnalytics Component
 const SellerAnalytics = () => {
   const [sellerData, setSellerData] = useState(null);
   const [totalBuyers, setTotalBuyers] = useState(0);
@@ -21,9 +108,12 @@ const SellerAnalytics = () => {
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [sellerEmail, setSellerEmail] = useState("");
+  const [isNumbersModalOpen, setIsNumbersModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const { profileData, loading: profileLoading } = useContext(ProfileContext);
+
+  const isDisabled = sellerData?.products?.length >= 3;
 
   useEffect(() => {
     if (profileData && profileData.company && profileData.company.name) {
@@ -60,11 +150,10 @@ const SellerAnalytics = () => {
         setTotalBuyers(buyersCount);
 
         // Aggregate WhatsApp numbers
-        const numbers = data.products.flatMap(
-          (product) =>
-            product.buyer_whatsapp_numbers.map(
-              (whatsapp) => whatsapp.whatsapp_number
-            ) // Assuming the object has a 'whatsapp_number' field
+        const numbers = data.products.flatMap((product) =>
+          product.buyer_whatsapp_numbers.map(
+            (whatsapp) => whatsapp.whatsapp_number
+          )
         );
         setBuyerNumbers(numbers);
 
@@ -86,6 +175,14 @@ const SellerAnalytics = () => {
 
   const handleAddPackage = () => {
     navigate("/add-product/:id");
+  };
+
+  const handleClick = () => {
+    if (isDisabled) {
+      toast.info("You have already added 3 packages.");
+    } else {
+      handleAddPackage();
+    }
   };
 
   const chartData = {
@@ -131,7 +228,6 @@ const SellerAnalytics = () => {
 
   const handleProductClick = (product) => {
     if (product.buyer_whatsapp_numbers.length > 0) {
-      // Extract the 'whatsapp_number' from each object in the array
       const numbers = product.buyer_whatsapp_numbers.map(
         (buyer) => buyer.whatsapp_number
       );
@@ -142,7 +238,6 @@ const SellerAnalytics = () => {
   };
 
   const resetBuyerNumbers = () => {
-    // Aggregate all whatsapp numbers from all products
     const numbers = sellerData.products.flatMap((product) =>
       product.buyer_whatsapp_numbers.map((buyer) => buyer.whatsapp_number)
     );
@@ -160,6 +255,7 @@ const SellerAnalytics = () => {
         sellerEmail={sellerEmail}
         loading={profileLoading}
       />
+      <ToastContainer />
       <div className="p-6 max-w-7xl mx-auto mt-10">
         <h2 className="text-4xl font-medium text-gray-800 mb-4">
           Welcome Back,{""}
@@ -181,28 +277,24 @@ const SellerAnalytics = () => {
               Buyers per Package List
             </h4>
             <ul className="mt-2 space-y-2">
-              <ul className="mt-2 space-y-2">
-                {sellerData.products.length > 0 ? (
-                  sellerData.products.map((product) => (
-                    <li
-                      key={product.id}
-                      className="flex justify-between items-center bg-gray-100 p-3 rounded-md cursor-pointer hover:bg-gray-200 hover:text-[#ff6f20] transition-colors"
-                      onClick={() => handleProductClick(product)}
-                    >
-                      <span className="font-medium">
-                        {product.display_name}
-                      </span>
-                      <span className="text-[#ff6f20] font-semibold">
-                        {product.buyer_whatsapp_numbers.length} Buyers
-                      </span>
-                    </li>
-                  ))
-                ) : (
-                  <li className="text-sm text-gray-500 italic">
-                    You have no products.
+              {sellerData.products.length > 0 ? (
+                sellerData.products.map((product) => (
+                  <li
+                    key={product.id}
+                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md cursor-pointer hover:bg-gray-200 hover:text-[#ff6f20] transition-colors"
+                    onClick={() => handleProductClick(product)}
+                  >
+                    <span className="font-medium">{product.display_name}</span>
+                    <span className="text-[#ff6f20] font-semibold">
+                      {product.buyer_whatsapp_numbers.length} Buyers
+                    </span>
                   </li>
-                )}
-              </ul>
+                ))
+              ) : (
+                <li className="text-sm text-gray-500 italic">
+                  You have no products.
+                </li>
+              )}
             </ul>
           </div>
 
@@ -212,26 +304,17 @@ const SellerAnalytics = () => {
         </div>
 
         <div className="mt-8">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2
+            className="text-xl font-semibold text-gray-800 cursor-pointer hover:text-[#ff6f20]"
+            onClick={() => setIsNumbersModalOpen(true)}
+          >
             Aggregated Buyer Numbers
           </h2>
-          <div className="flex flex-wrap gap-2 mt-4">
-            {buyerNumbers.length > 0 ? (
-              buyerNumbers.map((number, index) => (
-                <span
-                  key={index}
-                  className="bg-gray-100 text-gray-800 px-3 py-1 rounded-md"
-                >
-                  {number}
-                </span>
-              ))
-            ) : (
-              <p className="text-sm text-gray-500 italic">
-                No buyers have shared WhatsApp numbers yet.
-              </p>
-            )}
-          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            Click to view all {buyerNumbers.length} buyer numbers
+          </p>
         </div>
+
         <div className="calculator">
           <CalculatorButtons />
         </div>
@@ -254,7 +337,7 @@ const SellerAnalytics = () => {
                     style={{
                       backgroundColor: product.approval_status?.approved
                         ? "#149921"
-                        : "#F39C12", // Green for Approved, Yellow for Pending
+                        : "#F39C12",
                     }}
                   >
                     {product.approval_status?.approved
@@ -298,13 +381,20 @@ const SellerAnalytics = () => {
           </ul>
 
           <button
-            onClick={handleAddPackage}
+            onClick={handleClick}
             className="mt-6 bg-[#ff6f20] text-white px-4 py-2 rounded-md shadow-lg hover:bg-orange-600 transition"
           >
             Add New Package
           </button>
         </div>
       </div>
+
+      <BuyerNumbersModal
+        isOpen={isNumbersModalOpen}
+        onClose={() => setIsNumbersModalOpen(false)}
+        sellerData={sellerData}
+        buyerNumbers={buyerNumbers}
+      />
 
       {showSubscriptionPopup && (
         <SubscriptionPopup

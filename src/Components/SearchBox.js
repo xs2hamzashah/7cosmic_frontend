@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SearchBox = ({ onSearch, onClose }) => {
   const [city, setCity] = useState("");
@@ -16,12 +18,21 @@ const SearchBox = ({ onSearch, onClose }) => {
       query: inputText,
     };
 
+    // Check if at least one field is filled
+    const isAnyFieldFilled = Object.values(params).some((value) => value);
+
+    if (!isAnyFieldFilled) {
+      toast.info("Please fill at least one field to perform a search.");
+      return; // Exit without performing the search
+    }
+
     onSearch(params);
     onClose();
   };
 
   return (
     <form onSubmit={handleSearch} className="search-form">
+      <ToastContainer />
       <select
         value={city}
         onChange={(e) => setCity(e.target.value)}

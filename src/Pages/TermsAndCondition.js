@@ -6,15 +6,19 @@ import "../CSS/TermsAndConditions.css";
 
 const TermsAndConditions = () => {
   const navigate = useNavigate();
+  const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
+
   return (
     <div className="terms-and-conditions">
-      <button
-        className="back-button"
-        onClick={() => navigate(-1)} // Navigate back to the previous page
-      >
-        <IonIcon icon={arrowBackOutline} className="profile-back-icon" />
-        Back
-      </button>
+      {isLoggedIn && (
+        <button
+          className="back-button"
+          onClick={() => navigate(-1)} // Navigate back to the previous page
+        >
+          <IonIcon icon={arrowBackOutline} className="profile-back-icon" />
+          Back
+        </button>
+      )}
       <h1>Welcome to 7Solar Web!</h1>
       <p>
         Please take a moment to read these Terms and Conditions carefully, as

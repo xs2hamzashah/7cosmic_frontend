@@ -24,7 +24,7 @@ export default function HomePage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/listings/solar-solutions/?page=${pageNumber}`
+        `${API_BASE_URL}/api/listings/solar-solutions/?approved=approved/?page=${pageNumber}`
       );
       const data = await response.json();
 

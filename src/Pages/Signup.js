@@ -245,7 +245,7 @@ function SignupForm() {
       <div className="signup-section">
         <h1>Create Business Account</h1>
         <p>
-          Already have an account?
+          Already have an account?{" "}
           <a onClick={handleNavigateToLogin} style={{ cursor: "pointer" }}>
             Log in
           </a>
@@ -321,9 +321,9 @@ function SignupForm() {
             <div className="left-side">
               <select name="city" value={formData.city} onChange={handleChange}>
                 <option value="">Select City</option>
-                <option value="Islamabad">Islamabad</option>
-                <option value="Karachi">Karachi</option>
-                <option value="Lahore">Lahore</option>
+                <option value="ISB">Islamabad</option>
+                <option value="KAR">Karachi</option>
+                <option value="LHR">Lahore</option>
               </select>
               {errors.city && (
                 <div className="error-message">{errors.city}</div>
