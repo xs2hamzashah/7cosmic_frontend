@@ -207,10 +207,12 @@ function CivilWork({ setIsLoading }) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="specification"
+                placeholder="Specification i:e Concrete/Curbstone/Brick Civil Pads etc"
                 {...register("specification")}
                 type="text"
               />
+              {/* TODO: Remove Capacity this from list */}
+
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
@@ -239,7 +241,7 @@ function CivilWork({ setIsLoading }) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
-                placeholder="price"
+                placeholder="Price PKR (please input per watt rate) i:e 01/02/05 etc"
                 {...register("price")}
                 type="number"
               />
@@ -298,9 +300,9 @@ function CivilWork({ setIsLoading }) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>Delete Battery</DialogTitle>
+            <DialogTitle>Delete Civil Work</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Battery
+              Are you sure you want to delete this Civil Work ?
             </DialogDescription>
             <div className="flex gap-x-3 items-center">
               <Button

@@ -41,6 +41,8 @@ import {
 
 import { Filter, FilterIcon, MoreHorizontal } from "lucide-react";
 
+// TODO: Add edit and delete modals functionalities
+
 function Inverter({ setIsLoading }) {
   // ----------------- states -------------------------------->
   const { addToast } = useToasts();

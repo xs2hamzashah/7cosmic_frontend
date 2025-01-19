@@ -191,7 +191,8 @@ function HealthAndSafety({ setIsLoading }) {
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
             <DialogTitle>
-              {isEdit.bool ? "Edit" : "Create"} Net Metering
+              {isEdit.bool ? "Edit" : "Create"} Health, Safety and Environment
+              Service
             </DialogTitle>
             <DialogDescription></DialogDescription>
 
@@ -202,10 +203,12 @@ function HealthAndSafety({ setIsLoading }) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="specification"
+                placeholder="Specification i:e Fire Extinguisher, Safety Stickers ,Tags  "
                 {...register("specification")}
                 type="text"
               />
+              {/* TODO: Remove capacity */}
+
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
@@ -221,6 +224,8 @@ function HealthAndSafety({ setIsLoading }) {
              type="text"
            /> */}
 
+              {/* TODO: Change unit from watt to SVC in the main list */}
+
               <select
                 {...register("unit")}
                 defaultValue={"watt"}
@@ -228,13 +233,14 @@ function HealthAndSafety({ setIsLoading }) {
                 className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
               >
                 {/* <option value="kw">kw</option> */}
-                <option value="watt">watt</option>
+
+                <option value="watt">SVC</option>
               </select>
 
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
-                placeholder="price"
+                placeholder="Price PKR (please input service price) i:e 5000 or 10000"
                 {...register("price")}
                 type="number"
               />
@@ -293,9 +299,9 @@ function HealthAndSafety({ setIsLoading }) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>Delete Battery</DialogTitle>
+            <DialogTitle>Delete HSE Service</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Battery
+              Are you sure you want to delete this HSE Service ?
             </DialogDescription>
             <div className="flex gap-x-3 items-center">
               <Button
