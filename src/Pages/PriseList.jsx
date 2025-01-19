@@ -17,7 +17,6 @@ import { Loader2 } from "lucide-react";
 
 export function PriceList() {
   const [isLoading, setIsLoading] = useState(false);
-  console.log("🚀 ~ PriceList ~ isLoading:", isLoading);
   const [isPanelLoading, setIsPanelLoading] = useState(false);
   const [isInverterLoading, setIsInverterLoading] = useState(false);
   const [isBatteryLoading, setIsBatteryLoading] = useState(false);
@@ -30,6 +29,11 @@ export function PriceList() {
   const [isDCEarthingLoading, setIsDCEarthingLoading] = useState(false);
   const [isBmsLoading, setIsBmsLoading] = useState(false);
   const [isAfterSalesLoading, setIsAfterSalesLoading] = useState(false);
+
+  console.log(
+    "🚀 ~ PriceList ~ accessToken:",
+    localStorage.getItem("accessToken")
+  );
 
   const dependencies = [
     setIsPanelLoading,

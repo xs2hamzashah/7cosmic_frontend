@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
 const TOKEN = localStorage.getItem("accessToken");
-console.log("🚀 ~ TOKEN:", TOKEN);
+// console.log("🚀 ~ TOKEN:", TOKEN);
 export const panelPriceService = createApi({
   reducerPath: "panel-price",
   baseQuery: fetchBaseQuery({

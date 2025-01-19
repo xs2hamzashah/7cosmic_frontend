@@ -3,33 +3,39 @@ import "../CSS/Calculator.css";
 import { useNavigate } from "react-router-dom";
 
 const CalculatorButtons = () => {
-  // implment functionality to redirect to the calculator page
+  // implement functionality to redirect to the calculator page
+
   const navigation = useNavigate();
+
   const [numberInput, setNumberInput] = useState("");
   const [calculatorType, setCalculatorType] = useState("");
   const [showSolarCostPopup, setShowSolarCostPopup] = useState(false);
 
   // Function to handle the calculation and redirection
-  const handleCalculate = () => {
-    if (!numberInput || !calculatorType) {
-      alert("Please fill in all the fields.");
-      return;
-    }
+  // const handleCalculate = () => {
+  //   if (!numberInput || !calculatorType) {
+  //     alert("Please fill in all the fields.");
+  //     return;
+  //   }
 
-    const data = {
-      search: numberInput,
-      systemType: calculatorType === "Hybrid" ? "hybrid" : "on-grid",
-    };
+  //   const data = {
+  //     search: numberInput,
+  //     systemType: calculatorType === "Hybrid" ? "hybrid" : "on-grid",
+  //   };
 
-    const url = `https://7-solar-calculators-production.up.railway.app/tools/solar-cost-calculator/${data.search}-kilo-watt-solar-cost?systemType=${data.systemType}&batteryType=tubular&voltageType=lv&structureType=iron_standard`;
+  //   const url = `https://7-solar-calculators-production.up.railway.app/tools/solar-cost-calculator/${data.search}-kilo-watt-solar-cost?systemType=${data.systemType}&batteryType=tubular&voltageType=lv&structureType=iron_standard`;
 
-    console.log("Redirecting to:", url);
+  //   console.log("Redirecting to:", url);
 
-    // Redirect to the constructed URL
-    window.location.href = url;
+  //   // Redirect to the constructed URL
+  //   window.location.href = url;
 
-    // Close the popup
-    setShowSolarCostPopup(false);
+  //   // Close the popup
+  //   setShowSolarCostPopup(false);
+  // };
+
+  const handleSolarCostCalculator = () => {
+    navigation("/seller/calculator");
   };
 
   return (
@@ -38,7 +44,7 @@ const CalculatorButtons = () => {
       <button
         className="btn"
         style={{ marginRight: "10px" }}
-        onClick={() => setShowSolarCostPopup(true)}
+        onClick={handleSolarCostCalculator}
       >
         Solar Cost Calculator
       </button>
@@ -77,7 +83,7 @@ const CalculatorButtons = () => {
                 <option value="On Grid">On Grid</option>
               </select>
             </div>
-            <button onClick={handleCalculate}>Calculate</button>
+            {/* <button onClick={handleCalculate}>Calculate</button> */}
             <button onClick={() => setShowSolarCostPopup(false)}>Close</button>
           </div>
         </div>
