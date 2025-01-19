@@ -75,9 +75,7 @@ const Services = ({
               type="number"
               placeholder="Transportation Distance"
               value={transportationDistance}
-              onChange={(e) =>
-                setTransportationDistance(Math.max(0, e.target.value))
-              }
+              onChange={(e) => setTransportationDistance(e.target.value)}
             />
           </li>
           <li>
@@ -85,9 +83,7 @@ const Services = ({
               type="number"
               placeholder="AFSS Warranty Years"
               value={afssWarrantyYears}
-              onChange={(e) =>
-                setAfssWarrantyYears(Math.max(0, e.target.value))
-              }
+              onChange={(e) => setAfssWarrantyYears(e.target.value)}
             />
           </li>
         </ul>

@@ -1,8 +1,4 @@
-import {
-  FetchArgs,
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../api/request";
 
 const apiEndPoints = `/hse-equipment`;
@@ -12,7 +8,7 @@ const TOKEN = localStorage.getItem("accessToken");
 export const HealthAndSafetyApi = createApi({
   reducerPath: "hse-equipment-price",
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: `${API_URL}/pricelist`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${TOKEN}`,

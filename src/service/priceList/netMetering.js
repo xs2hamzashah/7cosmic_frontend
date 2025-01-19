@@ -8,7 +8,7 @@ const TOKEN = localStorage.getItem("accessToken");
 export const netMeteringPriceService = createApi({
   reducerPath: "net-metering-price",
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: `${API_URL}/pricelist`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${TOKEN}`,

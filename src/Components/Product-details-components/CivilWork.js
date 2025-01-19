@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
-import API_BASE_URL from "../../config";
+import API_BASE_URL from "../../config"; 
 
 const CivilWork = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -101,11 +99,7 @@ const CivilWork = ({ components, handleSelectComponent }) => {
       <div className="component-head">
         <h2>Civil Work</h2>
         <button className="button" onClick={toggleSection}>
-          <IonIcon
-            icon={isOpen ? removeOutline : addOutline}
-            className="toggle-icon"
-            onClick={() => setIsOpen(!isOpen)}
-          />
+          <ion-icon name={isOpen ? "remove-outline" : "add-outline"}></ion-icon>
         </button>
       </div>
 

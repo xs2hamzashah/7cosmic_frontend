@@ -325,7 +325,7 @@ function MechanicalWork() {
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
             <DialogTitle>
-              {isEdit.bool ? "Edit" : "Create"} Mechanical
+              {isEdit.bool ? "Edit" : "Create"} Mechanical Work
             </DialogTitle>
             <DialogDescription></DialogDescription>
 
@@ -346,9 +346,9 @@ function MechanicalWork() {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>Delete Battery</DialogTitle>
+            <DialogTitle>Delete Mechanical Work</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Battery
+              Are you sure you want to delete this Mechanical Work ?
             </DialogDescription>
             <div className="flex gap-x-3 items-center">
               <Button
@@ -400,7 +400,7 @@ function Form({
         <Input
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
           aria-invalid={errors.specification ? "true" : "false"}
-          placeholder="specification"
+          placeholder="Specification i:e Iron Angle/GI L3/Aluminium P1/Garder"
           {...register("specification")}
         />
 
@@ -415,7 +415,7 @@ function Form({
 
         <Input
           type="number"
-          placeholder="price"
+          placeholder="Price PKR (please input per watt rate) i:e 15/18/22 etc"
           aria-invalid={errors.price ? "true" : "false"}
           {...register("price")}
           className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
@@ -427,7 +427,8 @@ function Form({
         >
           <option value="iron_standard">Iron Standard</option>
           <option value="aluminum_standard">Aluminum Standard</option>
-          <option value="ms_iron_standard">Ms Iron Standard</option>
+
+          <option value="ms_iron_standard">Ms Iron Elevated</option>
         </select>
 
         <div className="w-full">

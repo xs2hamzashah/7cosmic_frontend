@@ -10,7 +10,7 @@ const apiEndPoints = `/commission`;
 export const commissionPriceService = createApi({
   reducerPath: "commission-price",
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: `${API_URL}/pricelist`,
   }),
   tagTypes: ["commission"],
   endpoints: ({ mutation, query }) => ({

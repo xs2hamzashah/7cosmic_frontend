@@ -82,8 +82,8 @@ function OnlineMonitoring({ setIsLoading }) {
         setIsFormOpen(false),
         addToast(
           isEdit
-            ? "Net Metering Edited Successfully"
-            : "Net Metering Added Successfully",
+            ? "Online Monitoring Edited Successfully"
+            : "Online Monitoring Added Successfully",
           {
             appearance: "success",
             autoDismiss: true,
@@ -203,7 +203,7 @@ function OnlineMonitoring({ setIsLoading }) {
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
             <DialogTitle>
-              {isEdit.bool ? "Edit" : "Create"} Net Metering
+              {isEdit.bool ? "Edit" : "Create"} Online Monitoring
             </DialogTitle>
             <DialogDescription></DialogDescription>
 
@@ -214,10 +214,12 @@ function OnlineMonitoring({ setIsLoading }) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="specification"
+                placeholder="Specification i:e Solarman App or Mobile Application etc "
                 {...register("specification")}
                 type="text"
               />
+              {/* TODO: Remove capacity from list */}
+
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
@@ -233,6 +235,8 @@ function OnlineMonitoring({ setIsLoading }) {
              type="text"
            /> */}
 
+              {/* TODO: Replace watt with SVC */}
+
               <select
                 {...register("unit")}
                 defaultValue={"watt"}
@@ -240,13 +244,14 @@ function OnlineMonitoring({ setIsLoading }) {
                 className="px-2 py-2.5 flex-1 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500 border border-gray-500 rounded-sm bg-transparent"
               >
                 {/* <option value="kw">kw</option> */}
-                <option value="watt">watt</option>
+
+                <option value="watt">SVC</option>
               </select>
 
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
-                placeholder="price"
+                placeholder="Price PKR (please input service price) i:e 00 or 1000 "
                 {...register("price")}
                 type="number"
               />
@@ -305,9 +310,9 @@ function OnlineMonitoring({ setIsLoading }) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>Delete Battery</DialogTitle>
+            <DialogTitle>Delete Online Monitoring</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Battery
+              Are you sure you want to delete this Online Monitoring ?
             </DialogDescription>
             <div className="flex gap-x-3 items-center">
               <Button

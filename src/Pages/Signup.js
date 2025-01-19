@@ -199,17 +199,16 @@ function SignupForm() {
     }
   };
 
-  // Implementing the countdown timer logic
   const startTimer = () => {
-    let countdown = 59; // Set initial time to 59 seconds
-    setTimer(countdown); // Set the timer state
+    let countdown = 59;
+    setTimer(countdown);
     const interval = setInterval(() => {
       countdown -= 1;
-      setTimer(countdown); // Update timer state every second
+      setTimer(countdown);
       if (countdown <= 0) {
-        clearInterval(interval); // Clear interval when the timer reaches 0
+        clearInterval(interval);
         setIsOtpButtonDisabled(false); // Re-enable "Send OTP" button
-        // setShowTimer(false); // Hide the timer
+        setShowTimer(false); // Hide timer
       }
     }, 1000);
   };
@@ -251,47 +250,49 @@ function SignupForm() {
             {errors.companyName && (
               <span className="error-message">{errors.companyName}</span>
             )}
-            <div className="otp-container">
-              <div className="input-button-pair">
-                <input
-                  type="text"
-                  className="otp"
-                  placeholder="WhatsApp Number"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                />
-                <button
-                  type="button"
-                  className="ghost-otp"
-                  onClick={handleSendOtp}
-                  disabled={isOtpButtonDisabled}
-                >
-                  Send OTP
-                </button>
-              </div>
-              {errors.phoneNumber && (
-                <span className="error-message">{errors.phoneNumber}</span>
-              )}
-              <div className="input-button-pair">
-                <input
-                  type="text"
-                  className="otp"
-                  placeholder="Enter OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="ghost-otp"
-                  onClick={handleVerifyOtp}
-                >
-                  Verify OTP
-                </button>
-              </div>
-              {errors.otp && (
-                <span className="error-message">{errors.otp}</span>
-              )}
+            <input
+              type="text"
+              className="otp"
+              placeholder="WhatsApp Number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+            />
+            {errors.phoneNumber && (
+              <span className="error-message">{errors.phoneNumber}</span>
+            )}
+            <input
+              type="text"
+              className="otp"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
+            {errors.otp && <span className="error-message">{errors.otp}</span>}
+            <div className="side-otp-buttons">
+              <button
+                type="button"
+                className="ghost-otp send-otp"
+                style={{
+                  marginBottom:
+                    errors.phoneNumber || errors.otp ? "43px" : "10px",
+                }}
+                onClick={handleSendOtp}
+                disabled={isOtpButtonDisabled}
+              >
+                Send OTP
+              </button>
+              <button
+                type="button"
+                className="ghost-otp verify-otp"
+                style={{
+                  marginBottom:
+                    errors.phoneNumber || errors.otp ? "25px" : "10px",
+                }}
+                onClick={handleVerifyOtp}
+              >
+                Verify OTP
+              </button>
             </div>
           </div>
 
@@ -337,43 +338,27 @@ function SignupForm() {
         </div>
 
         <div className="otp-timer">
-          {showTimer && ( // Conditionally show the timer
-            <div className="timer">
+          {showTimer && ( // Conditionally show timer
+            <div>
               <p>
-                Time remaining:
+                Time remaining:{" "}
                 {timer > 0
-                  ? `00:${timer.toString().padStart(2, "0")}` // Format timer
+                  ? `00:${timer.toString().padStart(2, "0")}`
                   : "Expired"}
               </p>
-              {timer === 0 && ( // Show resend OTP link after timer expires
-                <p>
-                  <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
-                    Resend OTP
-                  </a>
-                </p>
+              {timer === 0 && (
+                <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
+                  Resend OTP
+                </a>
               )}
             </div>
           )}
-
-          {/* <div className="timer">
-            <p>
-              Time remaining:
-              {timer > 0
-                ? `00:${timer.toString().padStart(2, "0")}` // Format timer
-                : "Expired"}
-            </p>
-
-            <p>
-              <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
-                Resend OTP
-              </a>
-            </p>
-          </div> */}
           <button type="submit" disabled={loading}>
             {loading ? "Processing..." : "Create"}
           </button>
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
     </section>

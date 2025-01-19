@@ -150,18 +150,18 @@ const SellerAnalytics = () => {
         </div>
 
         <div className="packages-cards">
-          <h2>Packages List</h2>
-          <ul>
-            {sellerData.products.map((product) => {
-              const displayImagePath =
-                product.images.find((img) => img.is_display_image)?.image ||
-                product.images[0]?.image;
-              const displayImage = displayImagePath
-                ? `${API_BASE_URL}${displayImagePath}`
-                : null;
+          {sellerData.products.map((product) => {
+            const displayImagePath =
+              product.images.find((img) => img.is_display_image)?.image ||
+              product.images[0]?.image;
+            const displayImage = displayImagePath
+              ? `${API_BASE_URL}${displayImagePath}`
+              : null;
 
-              return (
-                <>
+            return (
+              <>
+                <h2>Packages List</h2>
+                <ul>
                   <li key={product.id} className="package-card">
                     <div className="img">
                       {displayImage ? (
@@ -175,10 +175,10 @@ const SellerAnalytics = () => {
                       <p>Price: ${product.price}</p>
                     </div>
                   </li>
-                </>
-              );
-            })}
-          </ul>
+                </ul>
+              </>
+            );
+          })}
 
           <button className="add-new-package" onClick={handleAddPackage}>
             {/* {isSubscribed ? "Add New Package" : "Subscribe"} */}

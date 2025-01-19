@@ -41,7 +41,7 @@ const schema = yup
   })
   .required();
 
-function Panel({setIsLoading}) {
+function Panel({ setIsLoading }) {
   // ----------------- states -------------------------------->
   const { addToast } = useToasts();
   const [isEdit, setIsEdit] = useState(false);
@@ -56,6 +56,8 @@ function Panel({setIsLoading}) {
   const [deleteItem, deleteItemStatus] = useDeletePanelMutation();
   const { data, isLoading, isError, error } = usePanelsQuery({ page: 1 });
   const panels = data?.results;
+
+  console.log("🚀 ~ Panel ~ data:", data);
 
   // ----------------- react-form-hook -------------------------------->
   const {
@@ -228,7 +230,10 @@ function Panel({setIsLoading}) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>{isEdit.bool ? "Edit" : "Create"} Panel</DialogTitle>
+            <DialogTitle>
+              {isEdit.bool ? "Edit" : "Create"} Solar Panel
+            </DialogTitle>
+
             <DialogDescription></DialogDescription>
 
             <form
@@ -246,14 +251,14 @@ function Panel({setIsLoading}) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.specification ? "true" : "false"}
-                placeholder="specification"
+                placeholder="Specification i:e N-Type / TOPCon / HI-MO 6 etc"
                 {...register("specification")}
                 type="text"
               />
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.capacity ? "true" : "false"}
-                placeholder="capacity"
+                placeholder="Capacity (watt) i:e 555 / 580 / 585 / 610 / 690 etc "
                 {...register("capacity")}
                 type="number"
               />
@@ -278,7 +283,7 @@ function Panel({setIsLoading}) {
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
-                placeholder="price"
+                placeholder="Price PKR (please input per watt rate) i:e 30 or 40 etc"
                 {...register("price")}
                 type="number"
               />
@@ -334,9 +339,9 @@ function Panel({setIsLoading}) {
         {/* <DialogTrigger asChild></DialogTrigger> */}
         <DialogContent className="max-w-[600px] sm:max-w-[425px] bg-white">
           <DialogHeader>
-            <DialogTitle>Delete Battery</DialogTitle>
+            <DialogTitle>Delete Solar Panel</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Battery
+              Are you sure you want to delete this Solar Panel ?
             </DialogDescription>
             <div className="flex gap-x-3 items-center">
               <Button

@@ -1,6 +1,5 @@
 .signup-section {
   margin: 10rem auto;
-  max-width: 100%; /* Ensure full width of the screen is utilized */
 }
 
 .signup-section h1 {
@@ -22,144 +21,115 @@
 }
 
 .inputs-section {
-  width: 100%; /* Full width on small screens */
-  max-width: 900px; /* Restrict the width on larger screens */
+  width: 900px;
   margin: 3rem auto;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* Allow wrapping of elements to prevent overflow */
-  gap: 20px; /* Adds space between inputs */
 }
-
 .right-side,
 .left-side {
-  flex: 1 1 45%; /* Make both sides flexible and take up 45% of the container width */
+  width: 400px;
   position: relative;
-  min-width: 250px; /* Ensure they do not shrink below this width */
 }
 
 .inputs-section input,
 .inputs-section select {
   display: block;
-  width: 100%; /* Full width of its container */
+  width: 450px;
   padding: 15px;
   font-size: 19px;
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 10px;
   outline: none;
   border: 2px solid #858c8e;
 }
+
+/* .input-box {
+  margin: 50px 0;
+} */
 
 input:focus {
   border: 2px solid #ff6f20;
 }
 
-.otp-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0px; /* Controls spacing between children */
-  align-items: flex-start; /* Ensures vertical alignment */
-}
-
-.input-button-pair {
-  display: flex;
-  align-items: center;
-  /* margin-left: 45px; */
-}
-
 .otp {
-  width: 300px !important;
-  padding: 10px;
-  margin: 5px 5px 5px 0 !important;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+  width: 290px !important;
 }
 
 .ghost-otp {
   width: 140px;
-  padding: 17px;
-  margin-bottom: 3px;
+  margin: 0 0 10px 320px;
+  padding: 15px;
   background: none;
   border: 2px solid #ff6f20;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 19px;
   color: #ff6f20;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
 }
 
-.ghost-otp:hover {
-  background-color: #ff6f20;
-  color: #fff;
-}
-
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
+.side-otp-buttons {
+  position: absolute;
+  bottom: 0;
+  width: 0;
 }
 
 .otp-timer {
-  width: 100%;
-  max-width: 520px;
-  margin: 5.4rem auto;
-  display: flex; /* Use flexbox layout */
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items horizontally */
-  justify-content: center; /* Center items vertically */
-}
+  width: 420px;
+  padding: 10px;
 
-.otp-timer .timer {
-  margin-bottom: 20px; /* Add space between timer and button */
+  margin: 5.4rem auto;
 }
 
 .otp-timer p {
   display: inline;
-  font-size: 14px;
-  margin-right: 30px;
+  margin-right: 80px;
   margin-left: 10px;
 }
 
 .otp-timer a {
-  margin-left: 100px;
+  padding-left: 0px;
   color: #ff6f20;
   text-decoration: none;
 }
 
 .otp-timer button {
-  width: 80%; /* Center and make button responsive */
+  display: block;
+  width: 400px;
   border-radius: 5px;
+  margin-top: 10px;
   background-color: #ff6f20;
   color: #fff;
   font-size: 21px;
   font-weight: 500;
   text-transform: uppercase;
   padding: 15px;
+
   border: none;
-  text-align: center; /* Center text inside the button */
 }
+
 .error-message {
   color: red;
   font-size: 11px;
   margin-left: 10px;
 }
 
+/* Base styles remain as is */
+
+/* Responsive styles */
 @media (max-width: 1200px) {
   .signup-section {
     margin: 5rem auto;
   }
-
   .inputs-section {
-    width: 90%;
+    width: 70%;
     flex-direction: column;
     align-items: center;
   }
 
   .right-side,
   .left-side {
-    width: 100%;
+    width: 90%;
   }
 
   .inputs-section input,
@@ -167,42 +137,39 @@ input:focus {
     width: 100%;
   }
 
-  .input-button-pair {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    /* margin-left: 45px; */
-  }
-
   .otp {
-    width: 70% !important;
-    padding: 10px;
-    margin: 5px 5px 5px 0 !important;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+    width: 65% !important;
   }
 
   .ghost-otp {
-    width: 30%;
-    padding: 17px;
-    margin-bottom: 3px;
-    background: none;
-    border: 2px solid #ff6f20;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #ff6f20;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+    margin: 3px 0; /* Reset margin to stack properly */
+    padding: 14px;
   }
 
-  .ghost-otp:hover {
-    background-color: #ff6f20;
-    color: #fff;
+  .side-otp-buttons {
+    /* margin: 30px; */
+    position: absolute; /* Ensures proper stacking */
+    right: 0px;
+    width: 30%;
+    text-align: center;
+    display: flex; /* Ensures elements stack properly */
+    flex-direction: column;
+    /* gap: 40px; Adds spacing between elements */
+  }
+
+  .side-otp-buttons .send-otp {
+    margin: 0; /* Ensure no conflicting margins */
   }
 }
 
 @media (max-width: 768px) {
+  .inputs-section {
+    width: 90%;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .signup-section {
     margin: 5rem auto;
   }
@@ -213,7 +180,7 @@ input:focus {
 
   .right-side,
   .left-side {
-    width: 100%;
+    width: 90%;
   }
 
   .inputs-section input,
@@ -223,13 +190,26 @@ input:focus {
   }
 
   .otp {
-    width: 100%;
+    width: 65% !important;
   }
 
   .ghost-otp {
-    font-size: 12px;
-    margin: 3px 0;
+    width: 100%;
+    font-size: 14px;
+    margin: 3px 0; /* Reset margin to stack properly */
     padding: 13px;
+  }
+
+  .side-otp-buttons {
+    /* margin: 30px; */
+    width: 40%;
+    position: absolute; /* Ensures proper stacking */
+    right: 0px;
+
+    width: 30%;
+    text-align: center;
+    display: flex; /* Ensures elements stack properly */
+    flex-direction: column;
   }
 
   .inputs-section {
@@ -238,18 +218,17 @@ input:focus {
 
   .otp-timer p {
     display: block;
-  }
-
-  .otp-timer a {
-    margin: 0;
-  }
-
-  .otp-timer button {
-    width: 70%;
+    margin: 10px 0;
   }
 }
 
 @media (max-width: 480px) {
+  .inputs-section {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .signup-section {
     margin: 2rem auto;
   }
@@ -260,7 +239,7 @@ input:focus {
 
   .right-side,
   .left-side {
-    width: 100%;
+    width: 90%;
   }
 
   .inputs-section input,
@@ -270,33 +249,40 @@ input:focus {
   }
 
   .otp {
-    width: 65%;
+    width: 65% !important;
   }
 
   .ghost-otp {
-    font-size: 9px;
-    margin: 3px 0;
+    width: 100%;
+    font-size: 12px;
+    margin: 3px 0; /* Reset margin to stack properly */
     padding: 13px;
+  }
+  .otp-timer p {
+    margin: 5px 0;
   }
 
   .otp-timer button {
-    width: 50%;
+    font-size: 12px;
+    padding: 8px;
   }
 }
 
+/* Additional mobile adjustments */
 @media (max-width: 360px) {
   .signup-section p {
     font-size: 14px;
   }
 
   .otp {
-    width: 75%;
+    width: 55% !important;
   }
 
   .ghost-otp {
+    width: 130%;
     font-size: 12px;
-    margin: 3px 0;
-    padding: 5px;
+    margin: 3px 0; /* Reset margin to stack properly */
+    padding: 8px;
   }
 
   .inputs-section input,
@@ -310,9 +296,9 @@ input:focus {
   }
 
   .otp-timer button {
-    width: 60%;
+    width: 55%;
+    margin-left: 30px;
     font-size: 12px;
-    margin: 2rem;
-    padding: 12px;
+    padding: 8px;
   }
 }

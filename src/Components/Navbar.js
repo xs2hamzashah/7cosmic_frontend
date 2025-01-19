@@ -93,22 +93,20 @@ export default function Navbar({ onSearch }) {
           </p>
         ) : (
           <>
-            {!location.pathname.startsWith("/seller-analytics") && (
-              <p
-                className="clipboard"
-                onClick={() => {
-                  const sellerId = localStorage.getItem("sellerId");
-                  if (sellerId) {
-                    navigate(`/seller-analytics/${sellerId}`);
-                  } else {
-                    console.error("Seller ID is missing.");
-                  }
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <IonIcon icon={clipboardOutline} />
-              </p>
-            )}
+            <p
+              className="clipboard"
+              onClick={() => {
+                const sellerId = localStorage.getItem("sellerId");
+                if (sellerId) {
+                  navigate(`/seller-analytics/${sellerId}`);
+                } else {
+                  console.error("Seller ID is missing.");
+                }
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <IonIcon icon={clipboardOutline} />
+            </p>
             <p
               className="log-out"
               onClick={handleLogout}
