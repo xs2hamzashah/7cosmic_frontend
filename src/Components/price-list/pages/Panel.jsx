@@ -37,7 +37,17 @@ const schema = yup
     specification: yup.string().required(),
     capacity: yup.number().positive().integer().required(),
     unit: yup.string().required(),
-    price: yup.number().positive().integer().required(),
+    price: yup
+    .number()
+    .positive()
+    .test(
+      "is-decimal",
+      "Price must be a number with up to one decimal place",
+      (value) => {
+        return value === undefined || /^\d+(\.\d{1})?$/.test(value.toString());
+      }
+    )
+    .required("Price is required"),
   })
   .required();
 
@@ -75,6 +85,7 @@ function Panel({ setIsLoading }) {
     const payload = isEdit ? { ...data, id: currentItemId } : data;
     const response = await action(payload);
 
+    console.log("response", response)
     if ("data" in response) {
       await Promise.all([
         reset(),
@@ -125,7 +136,7 @@ function Panel({ setIsLoading }) {
   //   }
   // };
 
-  const onError = () => {};
+  const onError = () => { };
   // ----------------- functions ----------------------------->
 
   const onPriceListEditHandler = async (id) => {
@@ -246,6 +257,9 @@ function Panel({ setIsLoading }) {
                 placeholder="Brand Name i:e JA , Jinko, Longi, etc"
                 {...register("brand_name")}
                 type="text"
+                onDoubleClick={(e) => {
+                  setValue("brand_name", "JA or Jinko or Longi");
+                }}
               />
 
               <Input
@@ -254,6 +268,9 @@ function Panel({ setIsLoading }) {
                 placeholder="Specification i:e N-Type / TOPCon / HI-MO 6 etc"
                 {...register("specification")}
                 type="text"
+                onDoubleClick={(e) => {
+                  setValue("specification", "N-Type or TOPCon or HI-MO 6");
+                }}
               />
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
@@ -261,6 +278,9 @@ function Panel({ setIsLoading }) {
                 placeholder="Capacity (watt) i:e 555 / 580 / 585 / 610 / 690 etc "
                 {...register("capacity")}
                 type="number"
+                onDoubleClick={(e) => {
+                  setValue("capacity", 585);
+                }}
               />
               {/* <Input
              className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
@@ -279,14 +299,42 @@ function Panel({ setIsLoading }) {
                 {/* <option value="kw">kw</option> */}
                 <option value="watt">watt</option>
               </select>
-
+              {/* 
               <Input
                 className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
                 aria-invalid={errors.price ? "true" : "false"}
                 placeholder="Price PKR (please input per watt rate) i:e 30 or 40 etc"
                 {...register("price")}
                 type="number"
+                onDoubleClick={(e) => {
+                  setValue("price",  31 );
+                }}
               />
+               */}
+              <Input
+                className="flex-1 py-2.5 aria-[invalid=true]:border-red-600 aria-[invalid=true]:bg-red-100 aria-[invalid=true]:placeholder:text-red-500"
+                aria-invalid={errors.price ? "true" : "false"}
+                placeholder="Price PKR (please input per watt rate, e.g., 30.0 or 40.5)"
+                {...register("price", {
+                  required: "Price is required",
+                  pattern: {
+                    value: /^\d+(\.\d{1})?$/,
+                    message: "Price must be a number with up to 1 decimal place",
+                  },
+                })}
+                type="number"
+                step="0.1"
+                onDoubleClick={() => {
+                  setValue("price", 31.0); // Set default value on double click
+                }}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (!isNaN(value)) {
+                    setValue("price", Math.round(value * 10) / 10); // Limit to 1 decimal place
+                  }
+                }}
+              />
+
 
               <div className="w-full">
                 {isEdit && (

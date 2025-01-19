@@ -111,6 +111,13 @@ function Inverter({ setIsLoading }) {
           <AccordionContent className="p-4 bg-neutral-50 rounded-[8px] 0">
             <Tabs defaultValue={"onGrid"} className="w-full">
               <div className="flex items-center justify-between gap-x-4 mb-6">
+                {/*  */}
+                <DialogTrigger asChild>
+                  <Button className="outline-orange-primary border border-orange-primary text-orange-primary">
+                    Add
+                  </Button>
+                </DialogTrigger>
+                {/*  */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -154,12 +161,6 @@ function Inverter({ setIsLoading }) {
                     </TabsList>
                   </DropdownMenuContent>
                 </DropdownMenu>
-
-                <DialogTrigger asChild>
-                  <Button className="outline-orange-primary border border-orange-primary text-orange-primary">
-                    Add
-                  </Button>
-                </DialogTrigger>
               </div>
 
               <div className="flex items-center gap-2 mb-4">
