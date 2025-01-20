@@ -22,6 +22,7 @@ const ProductDetailList = () => {
   const [packageData, setPackageData] = useState(null);
   const [displayName, setDisplayName] = useState("");
   const [existingImages, setExistingImages] = useState([]);
+  const [componentsSaved, setComponentsSaved] = useState(false);
 
   // Image upload states
   const [files, setFiles] = useState([]);
@@ -260,7 +261,7 @@ const ProductDetailList = () => {
 
       if (response.ok) {
         console.log("Package updated successfully");
-        setShowImageUploader(true);
+        setComponentsSaved(true);
       } else {
         throw new Error("Failed to update components and services");
       }
@@ -299,68 +300,71 @@ const ProductDetailList = () => {
           Back
         </button>
       )}
-      <h2 className="text-4xl font-medium text-center mt-10 my-10 text-[#ff6f20]">
+      <h2 className="text-4xl font-medium text-center mt-10 mb-10 text-[#ff6f20]">
         {displayName}
       </h2>
 
-      {!showImageUploader ? (
-        <>
-          <h1>Components</h1>
-          <SolarPanel
-            components={components}
-            handleSelectComponent={handleSelectComponent}
-          />
-          <Inverter
-            components={components}
-            handleSelectComponent={handleSelectComponent}
-          />
-          <Battery
-            components={components}
-            handleSelectComponent={handleSelectComponent}
-          />
-          <ElectricalWork
-            components={components}
-            handleSelectComponent={handleSelectComponent}
-          />
-          <MechanicalWork
-            components={components}
-            handleSelectComponent={handleSelectComponent}
-          />
-          <CivilWork
-            components={components}
-            handleSelectComponent={handleSelectComponent}
-          />
+      {/* Components Section */}
+      <div className="space-y-6 mb-8">
+        <h1>Components</h1>
+        <SolarPanel
+          components={components}
+          handleSelectComponent={handleSelectComponent}
+        />
+        <Inverter
+          components={components}
+          handleSelectComponent={handleSelectComponent}
+        />
+        <Battery
+          components={components}
+          handleSelectComponent={handleSelectComponent}
+        />
+        <ElectricalWork
+          components={components}
+          handleSelectComponent={handleSelectComponent}
+        />
+        <MechanicalWork
+          components={components}
+          handleSelectComponent={handleSelectComponent}
+        />
+        <CivilWork
+          components={components}
+          handleSelectComponent={handleSelectComponent}
+        />
 
-          <Services
-            services={services}
-            setServices={setServices}
-            transportationDistance={transportationDistance}
-            setTransportationDistance={setTransportationDistance}
-            afssWarrantyYears={afssWarrantyYears}
-            setAfssWarrantyYears={setAfssWarrantyYears}
-            additionalNote={additionalNote}
-            setAdditionalNote={setAdditionalNote}
-          />
+        <Services
+          services={services}
+          setServices={setServices}
+          transportationDistance={transportationDistance}
+          setTransportationDistance={setTransportationDistance}
+          afssWarrantyYears={afssWarrantyYears}
+          setAfssWarrantyYears={setAfssWarrantyYears}
+          additionalNote={additionalNote}
+          setAdditionalNote={setAdditionalNote}
+        />
 
-          <button
-            className={`comp-sending-btn relative ${
-              isSaving ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-            onClick={updateServer}
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-                Saving...
-              </div>
-            ) : (
-              "Next"
-            )}
-          </button>
-        </>
-      ) : (
-        <div className="p-6 bg-gray-100">
+        <button
+          className={`comp-sending-btn relative ${
+            isSaving ? "opacity-70 cursor-not-allowed" : ""
+          }`}
+          onClick={updateServer}
+          disabled={isSaving}
+        >
+          {isSaving ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+              Saving...
+            </div>
+          ) : (
+            "Save Components"
+          )}
+        </button>
+      </div>
+
+      {/* Image Upload Section */}
+      {/* Image Upload Section - Only shown after components are saved */}
+      {componentsSaved && (
+        <div className="p-6 bg-gray-100 rounded-lg mt-12">
           <h2 className="text-2xl font-bold text-center text-[#FF6F20] mb-4">
             Upload Your Images
           </h2>
@@ -401,10 +405,9 @@ const ProductDetailList = () => {
                     } rounded-lg overflow-hidden shadow-md`}
                   >
                     <img
-                      src={image.image_url || image.url || image.image} // Try different possible image URL properties
+                      src={image.image_url || image.url || image.image}
                       alt={`Image ${image.id}`}
                       className="w-32 h-24 object-cover rounded-md"
-                      onError={(e) => console.log("Image load error:", e)} // Debug image loading
                     />
                     <button
                       onClick={() => handleRemoveExistingImage(image.id)}
@@ -473,33 +476,24 @@ const ProductDetailList = () => {
             </div>
           )}
 
-          <div className="flex gap-4 justify-center mt-6">
-            <button
-              onClick={() => setShowImageUploader(false)}
-              className="px-8 py-3 bg-gray-500 text-white font-bold rounded-lg hover:bg-gray-600 transition"
-              disabled={isUploading}
-            >
-              Back
-            </button>
-            <button
-              onClick={handleImageUpload}
-              className={`px-8 py-3 bg-[#FF6F20] text-white font-bold rounded-lg hover:bg-[#e65a14] transition ${
-                isUploading || files.length === 0
-                  ? "opacity-70 cursor-not-allowed"
-                  : ""
-              }`}
-              disabled={isUploading || files.length === 0}
-            >
-              {isUploading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-                  Uploading...
-                </div>
-              ) : (
-                "Upload Photos"
-              )}
-            </button>
-          </div>
+          <button
+            onClick={handleImageUpload}
+            className={`w-full mt-6 px-8 py-3 bg-[#FF6F20] text-white font-bold rounded-lg hover:bg-[#e65a14] transition ${
+              isUploading || files.length === 0
+                ? "opacity-70 cursor-not-allowed"
+                : ""
+            }`}
+            disabled={isUploading || files.length === 0}
+          >
+            {isUploading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+                Uploading...
+              </div>
+            ) : (
+              "Upload Photos"
+            )}
+          </button>
         </div>
       )}
     </div>

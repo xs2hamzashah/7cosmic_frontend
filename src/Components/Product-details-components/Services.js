@@ -52,7 +52,7 @@ const Services = ({
             )}
           </li>
           <li
-            onClick={() => toggleService(" hse_equipment_included")}
+            onClick={() => toggleService("hse_equipment_included")}
             className={services.hse_equipment_included ? "active" : ""}
           >
             <p>HSE Equipment</p>
