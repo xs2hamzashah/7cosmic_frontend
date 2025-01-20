@@ -27,6 +27,7 @@ const ProductDetailList = () => {
   // Image upload states
   const [files, setFiles] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [isLoadingImages, setIsLoadingImages] = useState(false); // Changed initial state to false
   const [showImageUploader, setShowImageUploader] = useState(false);
 
   // Loading states
@@ -152,6 +153,7 @@ const ProductDetailList = () => {
   };
 
   const handleSetDisplayImage = async (imageId) => {
+    setIsLoadingImages(true);
     try {
       const formData = new FormData();
       formData.append("image_id", imageId);
@@ -176,6 +178,8 @@ const ProductDetailList = () => {
       );
     } catch (error) {
       console.error("Error setting display image:", error);
+    } finally {
+      setIsLoadingImages(false);
     }
   };
 
@@ -361,7 +365,6 @@ const ProductDetailList = () => {
         </button>
       </div>
 
-      {/* Image Upload Section */}
       {/* Image Upload Section - Only shown after components are saved */}
       {componentsSaved && (
         <div className="p-6 bg-gray-100 rounded-lg mt-12">
@@ -397,39 +400,54 @@ const ProductDetailList = () => {
                 Existing Images
               </h3>
               <div className="flex flex-wrap gap-4 p-4 border border-gray-300 rounded-lg bg-white">
-                {existingImages.map((image) => (
-                  <div
-                    key={image.id}
-                    className={`relative group border ${
-                      image.isDisplay ? "border-[#FF6F20]" : "border-gray-300"
-                    } rounded-lg overflow-hidden shadow-md`}
-                  >
-                    <img
-                      src={image.image_url || image.url || image.image}
-                      alt={`Image ${image.id}`}
-                      className="w-32 h-24 object-cover rounded-md"
-                    />
-                    <button
-                      onClick={() => handleRemoveExistingImage(image.id)}
-                      className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
-                    >
-                      <IonIcon icon={closeOutline} />
-                    </button>
-                    {!image.isDisplay && (
-                      <button
-                        onClick={() => handleSetDisplayImage(image.id)}
-                        className="absolute bottom-1 left-1 text-xs text-[#FF6F20] bg-white px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition"
+                {isLoadingImages ? (
+                  // Loading skeleton
+                  <>
+                    {[1, 2, 3, 4].map((index) => (
+                      <div
+                        key={`skeleton-${index}`}
+                        className="relative w-32 h-24 bg-gray-200 rounded-md animate-pulse"
                       >
-                        Set as Display
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  // Actual images
+                  existingImages.map((image) => (
+                    <div
+                      key={image.id}
+                      className={`relative group border ${
+                        image.isDisplay ? "border-[#FF6F20]" : "border-gray-300"
+                      } rounded-lg overflow-hidden shadow-md`}
+                    >
+                      <img
+                        src={image.image_url || image.url || image.image}
+                        alt={`Image ${image.id}`}
+                        className="w-32 h-24 object-cover rounded-md"
+                      />
+                      <button
+                        onClick={() => handleRemoveExistingImage(image.id)}
+                        className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-sm group-hover:opacity-100 opacity-0 transition"
+                      >
+                        <IonIcon icon={closeOutline} />
                       </button>
-                    )}
-                    {image.isDisplay && (
-                      <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
-                        Display Image
-                      </p>
-                    )}
-                  </div>
-                ))}
+                      {!image.isDisplay && (
+                        <button
+                          onClick={() => handleSetDisplayImage(image.id)}
+                          className="absolute bottom-1 left-1 text-xs text-[#FF6F20] bg-white px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition"
+                        >
+                          Set as Display
+                        </button>
+                      )}
+                      {image.isDisplay && (
+                        <p className="absolute bottom-1 left-1 text-xs text-white bg-[#FF6F20] px-2 py-0.5 rounded-md">
+                          Display Image
+                        </p>
+                      )}
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}
