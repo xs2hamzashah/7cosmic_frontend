@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../config";
 
 const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
@@ -148,6 +150,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
 
   return (
     <div className="popup-phone-number-overlay">
+      <ToastContainer />
       <div className="popup-phone-number-content">
         <p onClick={onClose} className="close-button">
           X
