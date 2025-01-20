@@ -15,7 +15,6 @@ const SellerListing = ({ sellers, onSellerClick, selectedCity }) => {
       <table className="seller-table w-full border-collapse bg-white shadow-lg rounded-lg overflow-hidden my-10">
         <thead>
           <tr className="bg-[#ff6f20] text-white text-left text-sm uppercase font-semibold">
-            <th className="p-4">#</th>
             <th className="p-4">Company Name</th>
             <th className="p-4">City</th>
             <th className="p-4">Packages</th>
@@ -30,7 +29,6 @@ const SellerListing = ({ sellers, onSellerClick, selectedCity }) => {
               onClick={() => onSellerClick(seller)}
               className="cursor-pointer hover:scale-[0.98] hover:bg-gray-100 transition transform duration-200 ease-out"
             >
-              <td className="p-4 border-b border-gray-200">{index + 1}</td>
               <td className="p-4 border-b border-gray-200">
                 {seller.company?.name || "N/A"}
               </td>

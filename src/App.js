@@ -22,7 +22,8 @@ import { Contact } from "lucide-react";
 import ContactUsPage from "./Pages/ContactUsPage";
 import SubscriptionPlan from "./Pages/SubscriptionPlan";
 import AdminProductDetail from "./Components/AdminProductDetail";
-import GuestRoute from "./Components/GuestRoute"; // Import the GuestRoute
+import GuestRoute from "./Components/GuestRoute";
+import AdminRoute from "./Components/AdminRoute";
 
 function App() {
   return (
@@ -33,7 +34,14 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/product-detail/:id" element={<ProductDetail />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                }
+              />
               <Route
                 path="/sign-up"
                 element={
