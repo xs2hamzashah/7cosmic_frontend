@@ -3,19 +3,19 @@ nav {
   display: flex;
   justify-content: space-around;
   margin: 2rem auto;
-  padding-bottom: 2rem;
+  padding-bottom: 5.5rem;
   position: relative;
 }
 
 .logo {
   text-transform: uppercase;
-  width: 140px;
-  height: 140px;
+  width: 300px;
+  height: 300px;
   color: #ff6f20;
   font-weight: 500;
   position: absolute;
-  left: -10px;
-  top: -25px;
+  left: -65px;
+  top: -45px;
 }
 
 .logo:hover {
@@ -25,6 +25,7 @@ nav {
 .search-box form {
   width: 800px;
   display: flex;
+  margin-top: 2.5rem;
   justify-content: space-around;
 }
 
@@ -52,6 +53,7 @@ nav {
   border: none;
   text-decoration: none;
   border-radius: 5px;
+  margin-top: 2.5rem;
   width: 130px;
   background: #ff6f20;
   font-size: 16px;
@@ -65,17 +67,18 @@ nav {
   position: absolute;
   font-size: 30px;
   display: flex;
+
   gap: 15px;
-  margin-top: 1px;
-  right: 10px;
+  margin-top: 2.6rem;
+  right: 0px;
 }
 
 .profile-icon {
   color: #ff6f20;
+  margin-top: 2.5rem;
   display: flex;
   align-items: center;
   padding: 5px 5px;
-  margin-top: 5px;
   transition: transform 0.3s ease-in-out;
 }
 
