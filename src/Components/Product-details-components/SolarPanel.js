@@ -247,7 +247,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                           handleSelectComponent(solar);
                           setIsOpen(false);
                         }}
-                        className={`p-2 transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-offset-2 flex justify-center items-center bg-[#ff6f20] text-white rounded-md ${
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                           highlightedIds.includes(solar.id)
                             ? "hover:bg-red-50 focus:ring-red-500"
                             : "hover:bg-green-50 focus:ring-green-500"
