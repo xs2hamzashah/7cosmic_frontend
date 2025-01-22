@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
@@ -108,6 +113,8 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -117,7 +124,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="component-head">
         <h2>Mechanical Work</h2>
         <button className="button" onClick={toggleSection}>
@@ -175,6 +182,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
                 <th>Mechanical Material</th>
                 <th>Mechanical Structure Type</th>
                 <th>Warranty</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -182,7 +190,11 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
                 mechanicalData.map((mechanical) => (
                   <tr
                     key={mechanical.id}
-                    onClick={() => handleSelectComponent(mechanical)}
+                    className={
+                      highlightedIds.includes(mechanical.id)
+                        ? "bg-green-50"
+                        : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(mechanical.id) && {
@@ -193,11 +205,46 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
                     <td>{mechanical.mechanical_material}</td>
                     <td>{mechanical.mechanical_structure_type}</td>
                     <td>{mechanical.warranty}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(mechanical);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(mechanical.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(mechanical.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3">No data available</td>
+                  <td colSpan="4">No data available</td>{" "}
+                  {/* Updated colspan to 4 for the new action column */}
                 </tr>
               )}
             </tbody>

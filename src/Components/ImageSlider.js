@@ -3,8 +3,12 @@ import { IonIcon } from "@ionic/react";
 import { chevronBackOutline, chevronForwardOutline } from "ionicons/icons";
 
 const ImageSlider = ({ packageData }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const images = packageData.images;
+
+  // Find the index of the image with `is_display_image` set to true
+  const defaultIndex = images.findIndex((image) => image.is_display_image) || 0;
+
+  const [currentIndex, setCurrentIndex] = useState(defaultIndex);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
@@ -22,7 +26,7 @@ const ImageSlider = ({ packageData }) => {
     <div className="detail-box">
       {images && images.length > 0 && (
         <div className="slider-container">
-          {/* Updated image with conditional className */}
+          {/* Display the current image */}
           <img
             src={images[currentIndex].image}
             alt={`${packageData.display_name}-${currentIndex}`}

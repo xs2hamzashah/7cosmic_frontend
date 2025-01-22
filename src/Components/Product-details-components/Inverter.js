@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import {
+  removeOutline,
+  addOutline,
+  removeCircleOutline,
+  addCircleOutline,
+} from "ionicons/icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
@@ -140,6 +145,8 @@ const Inverter = ({ components, handleSelectComponent }) => {
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -149,7 +156,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="component-head">
         <h2>Inverter</h2>
         <button className="button" onClick={toggleSection}>
@@ -224,6 +231,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
                 <th>Warranty</th>
                 <th>Quantity</th>
                 <th>IP Rating</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -231,7 +239,9 @@ const Inverter = ({ components, handleSelectComponent }) => {
                 inverterData.map((inverter) => (
                   <tr
                     key={inverter.id}
-                    onClick={() => handleSelectComponent(inverter)}
+                    className={
+                      highlightedIds.includes(inverter.id) ? "bg-green-50" : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(inverter.id) && {
@@ -246,11 +256,46 @@ const Inverter = ({ components, handleSelectComponent }) => {
                     <td>{inverter.warranty}</td>
                     <td>{inverter.quantity}</td>
                     <td>{inverter.ip_rating}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(inverter);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(inverter.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(inverter.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626" // Red-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a" // Green-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7">No data available</td>
+                  <td colSpan="8">No data available</td>{" "}
+                  {/* Updated colspan to 8 for the new action column */}
                 </tr>
               )}
             </tbody>

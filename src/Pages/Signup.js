@@ -24,17 +24,46 @@ function SignupForm() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(true);
+  const [isVerifyButtonDisabled, setIsVerifyButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const navigate = useNavigate();
 
+  // Validate phone number
+  const isValidPhoneNumber = (phoneNumber) => {
+    // Remove any spaces, hyphens, or parentheses from the number
+    const cleanedNumber = phoneNumber.replace(/[\s\-()]/g, "");
+
+    // Allow:
+    // - Optional + at the start
+    // - Followed by 8-15 digits (most international numbers fall in this range)
+    const phoneRegex = /^\+?[0-9]{8,15}$/;
+
+    return phoneRegex.test(cleanedNumber);
+  };
+
+  // Handle phone number and other form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+
+    // Enable/disable Send OTP button based on phone number validation
+    if (name === "phoneNumber") {
+      setIsOtpButtonDisabled(!isValidPhoneNumber(value));
+    }
+  };
+
+  // Handle OTP input changes
+  const handleOtpChange = (e) => {
+    const value = e.target.value;
+    setOtp(value);
+    // Enable verify button only if OTP is entered and OTP was sent
+    setIsVerifyButtonDisabled(!(value.length > 0 && otpSent));
   };
 
   const handleCheckboxChange = (e) => {
@@ -47,15 +76,12 @@ function SignupForm() {
       return;
     }
 
-    // Regular expression for validating phone numbers (basic validation for digits and length)
-    const phoneRegex = /^[0-9]{10}$/; // Assuming a 10-digit phone number format
+    if (!isValidPhoneNumber(formData.phoneNumber)) {
+      toast.error("Please enter a valid 10-digit phone number.");
+      return;
+    }
 
-    // if (!phoneRegex.test(formData.phoneNumber)) {
-    //   toast.error("Please enter a valid phone number. It should contain 10 digits.");
-    //   return;
-    // }
-
-    setLoading(true); // Set loading to true
+    setLoading(true);
     try {
       const response = await fetch(
         `${API_BASE_URL}/api/operations/otp/send_otp/`,
@@ -68,21 +94,23 @@ function SignupForm() {
         }
       );
       if (response.ok) {
-        const data = await response.json(); // testing
-        console.log(data); // testing
+        const data = await response.json();
         startTimer();
         setShowTimer(true);
         setIsOtpButtonDisabled(true);
+        setOtpSent(true);
         toast.success("OTP sent successfully!");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to send OTP.");
+        toast.error(errorData.message || "Failed to send OTP.");
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
       setErrorMessage("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
 
@@ -92,7 +120,7 @@ function SignupForm() {
       return;
     }
 
-    setLoading(true); // Set loading to true
+    setLoading(true);
     const payload = {
       phone_number: formData.phoneNumber,
       otp_code: otp,
@@ -112,16 +140,19 @@ function SignupForm() {
       if (response.ok) {
         setOtpVerified(true);
         setShowTimer(false);
+        setIsVerifyButtonDisabled(true);
         toast.success("OTP verified successfully!");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to verify OTP.");
+        toast.error(errorData.message || "Failed to verify OTP.");
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
       setErrorMessage("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
 
@@ -171,12 +202,11 @@ function SignupForm() {
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
-    // Stop form submission if there are validation errors
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
 
-    setLoading(true); // Set loading to true
+    setLoading(true);
     const signupData = {
       user: {
         email: formData.email,
@@ -205,7 +235,7 @@ function SignupForm() {
       });
       if (response.ok) {
         toast.success("Account created successfully!");
-        navigate("/login"); // Navigate to the dashboard
+        navigate("/login");
       } else {
         const errorData = await response.json();
         console.error("Failed to create account", errorData);
@@ -215,21 +245,19 @@ function SignupForm() {
       console.error("Error:", error);
       toast.error("Something went wrong, please try again.");
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
 
-  // Implementing the countdown timer logic
   const startTimer = () => {
-    let countdown = 59; // Set initial time to 59 seconds
-    setTimer(countdown); // Set the timer state
+    let countdown = 59;
+    setTimer(countdown);
     const interval = setInterval(() => {
       countdown -= 1;
-      setTimer(countdown); // Update timer state every second
+      setTimer(countdown);
       if (countdown <= 0) {
-        clearInterval(interval); // Clear interval when the timer reaches 0
-        setIsOtpButtonDisabled(false); // Re-enable "Send OTP" button
-        // setShowTimer(false); // Hide the timer
+        clearInterval(interval);
+        setIsOtpButtonDisabled(false);
       }
     }, 1000);
   };
@@ -286,9 +314,11 @@ function SignupForm() {
                   />
                   <button
                     type="button"
-                    className="ghost-otp"
+                    className={`ghost-otp ${
+                      isOtpButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     onClick={handleSendOtp}
-                    disabled={isOtpButtonDisabled}
+                    disabled={isOtpButtonDisabled || loading}
                   >
                     Send OTP
                   </button>
@@ -302,12 +332,18 @@ function SignupForm() {
                     className="otp"
                     placeholder="Enter OTP"
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
+                    onChange={handleOtpChange}
+                    disabled={!otpSent}
                   />
                   <button
                     type="button"
-                    className="ghost-otp"
+                    className={`ghost-otp ${
+                      isVerifyButtonDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
                     onClick={handleVerifyOtp}
+                    disabled={isVerifyButtonDisabled || loading}
                   >
                     Verify OTP
                   </button>
@@ -362,7 +398,6 @@ function SignupForm() {
           </div>
 
           <div className="otp-timer w-full max-w-md mx-auto flex flex-col items-center p-4">
-            {/* Terms Section */}
             <div className="terms-section flex items-center gap-2 mt-2 w-full justify-center">
               <input
                 type="checkbox"
@@ -388,7 +423,6 @@ function SignupForm() {
               )}
             </div>
 
-            {/* Button Section */}
             <div className="w-full flex justify-center mt-2">
               <button
                 type="submit"
@@ -403,7 +437,6 @@ function SignupForm() {
               </button>
             </div>
 
-            {/* Timer Section */}
             {showTimer && (
               <div className="flex items-center justify-center my-1 w-full">
                 <p className="text-sm">
@@ -424,7 +457,6 @@ function SignupForm() {
             )}
           </div>
 
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
         </form>
       </div>

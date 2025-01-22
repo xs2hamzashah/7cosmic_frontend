@@ -61,7 +61,7 @@ export default function HomePage() {
       }).toString();
 
       const response = await fetch(
-        `${API_BASE_URL}/api/listings/solar-solutions/?${queryString}`
+        `${API_BASE_URL}/api/listings/solar-solutions/?${queryString}&approved=true`
       );
 
       if (!response.ok) {

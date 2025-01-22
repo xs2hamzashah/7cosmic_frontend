@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import { removeOutline, addOutline,removeCircleOutline,addCircleOutline } from "ionicons/icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
@@ -140,6 +140,8 @@ const Battery = ({ components, handleSelectComponent }) => {
       setTotalBackupCapacity("");
     } catch (error) {
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -226,35 +228,70 @@ const Battery = ({ components, handleSelectComponent }) => {
                 <th>Warranty</th>
                 <th>Quantity</th>
                 <th>Total Backup Capacity</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {batteryData.length > 0 ? (
-                batteryData.map((battery) => (
-                  <tr
-                    key={battery.id}
-                    onClick={() => handleSelectComponent(battery)}
-                    style={{
-                      cursor: "pointer",
-                      ...(highlightedIds.includes(battery.id) && {
-                        backgroundColor: "#ff6e2088",
-                      }), // Change color if id matches
-                    }}
-                  >
-                    <td>{battery.subtype}</td>
-                    <td>{battery.brand}</td>
-                    <td>{battery.details}</td>
-                    <td>{battery.capacity}</td>
-                    <td>{battery.warranty}</td>
-                    <td>{battery.quantity}</td>
-                    <td>{battery.total_backup_capacity}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6">No data available</td>
-                </tr>
-              )}
+            {batteryData.length > 0 ? (
+  batteryData.map((battery) => (
+    <tr
+      key={battery.id}
+      className={highlightedIds.includes(battery.id) ? 'bg-green-50' : ''}
+      style={{
+        cursor: "pointer",
+        ...(highlightedIds.includes(battery.id) && {
+          backgroundColor: "#ff6e2088",
+        }),
+      }}
+    >
+      <td>{battery.subtype}</td>
+      <td>{battery.brand}</td>
+      <td>{battery.details}</td>
+      <td>{battery.capacity}</td>
+      <td>{battery.warranty}</td>
+      <td>{battery.quantity}</td>
+      <td>{battery.total_backup_capacity}</td>
+      <td>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            handleSelectComponent(battery);
+            setIsOpen(false);
+          }}
+          className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            highlightedIds.includes(battery.id)
+              ? 'hover:bg-red-50 focus:ring-red-500'
+              : 'hover:bg-green-50 focus:ring-green-500'
+          }`}
+        >
+          {highlightedIds.includes(battery.id) ? (
+            <IonIcon
+              icon={removeCircleOutline}
+              className="w-6 h-6 transition-transform duration-200"
+              color="#dc2626"
+              style={{
+                filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'
+              }}
+            />
+          ) : (
+            <IonIcon
+              icon={addCircleOutline}
+              className="w-6 h-6 transition-transform duration-200"
+              color="#16a34a"
+              style={{
+                filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'
+              }}
+            />
+          )}
+        </button>
+      </td>
+    </tr>
+  ))
+) : (
+  <tr>
+    <td colSpan="8">No data available</td> {/* Updated colspan to 8 for the new action column */}
+  </tr>
+)}
             </tbody>
           </table>
         </div>

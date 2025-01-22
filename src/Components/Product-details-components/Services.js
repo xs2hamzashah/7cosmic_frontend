@@ -29,36 +29,28 @@ const Services = ({
             className={services.net_metering_included ? "active" : ""}
           >
             <p>Net Metering File</p>
-            {services.net_metering_included && (
-              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li
             onClick={() => toggleService("dc_earthing_included")}
             className={services.dc_earthing_included ? "active" : ""}
           >
             <p>DC Earthing</p>
-            {services.dc_earthing_included && (
-              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li
             onClick={() => toggleService("online_monitoring_included")}
             className={services.online_monitoring_included ? "active" : ""}
           >
             <p>Online Monitoring</p>
-            {services.online_monitoring_included && (
-              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li
             onClick={() => toggleService("hse_equipment_included")}
             className={services.hse_equipment_included ? "active" : ""}
           >
             <p>HSE Equipment</p>
-            {services.hse_equipment_included && (
-              <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li>
             <input
@@ -66,7 +58,7 @@ const Services = ({
               placeholder="Transportation Distance"
               value={transportationDistance}
               onChange={(e) =>
-                setTransportationDistance(Math.max(0, e.target.value))
+                setTransportationDistance(Math.max(e.target.value))
               }
             />
           </li>
@@ -75,12 +67,11 @@ const Services = ({
               type="number"
               placeholder="AFSS Warranty Years"
               value={afssWarrantyYears}
-              onChange={(e) =>
-                setAfssWarrantyYears(Math.max(0, e.target.value))
-              }
+              onChange={(e) => setAfssWarrantyYears(Math.max(e.target.value))}
             />
           </li>
         </ul>
+
         <div className="additional-note">
           <textarea
             placeholder="Additional Note (Optional)"

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
@@ -41,6 +46,8 @@ const CivilWork = ({ components, handleSelectComponent }) => {
       setCivilData(filteredData || []);
     } catch (error) {
       console.error("Error fetching civil work data:", error);
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -147,6 +154,7 @@ const CivilWork = ({ components, handleSelectComponent }) => {
               <tr>
                 <th>Material Type</th>
                 <th>Warranty</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -154,21 +162,58 @@ const CivilWork = ({ components, handleSelectComponent }) => {
                 civilData.map((civil) => (
                   <tr
                     key={civil.id}
-                    onClick={() => handleSelectComponent(civil)}
+                    className={
+                      highlightedIds.includes(civil.id) ? "bg-green-50" : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(civil.id) && {
                         backgroundColor: "#ff6e2088",
-                      }), // Change color if id matches
+                      }),
                     }}
                   >
                     <td>{civil.civil_material}</td>
                     <td>{civil.warranty}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(civil);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(civil.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(civil.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2">No data available</td>
+                  <td colSpan="3">No data available</td>{" "}
+                  {/* Updated colspan to 3 for the new action column */}
                 </tr>
               )}
             </tbody>

@@ -268,7 +268,7 @@ const SellerAnalytics = () => {
           <div className="bg-white p-6 rounded-lg  h-[400px] shadow-lg">
             <h3
               className="text-lg font-medium text-gray-700 mb-2 cursor-pointer hover:text-[#ff6f20] transition-colors"
-              onClick={() => resetBuyerNumbers()}
+              onClick={() => setIsNumbersModalOpen(true)}
             >
               Total Buyers
             </h3>
@@ -281,7 +281,7 @@ const SellerAnalytics = () => {
                 sellerData.products.map((product) => (
                   <li
                     key={product.id}
-                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md cursor-pointer hover:bg-gray-200 hover:text-[#ff6f20] transition-colors"
+                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                     onClick={() => handleProductClick(product)}
                   >
                     <span className="font-medium">{product.display_name}</span>
@@ -303,7 +303,7 @@ const SellerAnalytics = () => {
           </div>
         </div>
 
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <h2
             className="text-xl font-semibold text-gray-800 cursor-pointer hover:text-[#ff6f20]"
             onClick={() => setIsNumbersModalOpen(true)}
@@ -313,7 +313,7 @@ const SellerAnalytics = () => {
           <p className="text-sm text-gray-500 mt-2">
             Click to view all {buyerNumbers.length} buyer numbers
           </p>
-        </div>
+        </div> */}
 
         <div className="calculator">
           <CalculatorButtons />

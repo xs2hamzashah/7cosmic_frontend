@@ -3,13 +3,17 @@ import { usePanelsQuery } from "../../service/priceList/panel";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
 import API_BASE_URL from "../../config";
 
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [solarData, setSolarData] = useState([]);
-  const [solarType, setSolarType] = useState("");
   const [brand, setBrand] = useState("");
   const [detail, setDetail] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -39,7 +43,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
       const data = await response.json();
       const filteredData = data.results.map((item) => ({
-        subtype: item.subtype,
         brand: item.brand,
         capacity: item.capacity,
         details: item.details,
@@ -59,7 +62,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
   }, []);
 
   const validateInputs = () => {
-    if (!solarType.trim() || !brand.trim() || !detail.trim()) {
+    if (!brand.trim() || !detail.trim()) {
       toast.error("Please fill in all required text fields.");
       return false;
     }
@@ -106,7 +109,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
           },
           body: JSON.stringify({
             component_type: "PV Module",
-            subtype: solarType,
             brand: brand,
             details: detail,
             capacity: capacity,
@@ -128,7 +130,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
       fetchData();
 
-      setSolarType("");
       setBrand("");
       setDetail("");
       setCapacity("");
@@ -137,6 +138,8 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -161,12 +164,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
       <div className={`component-body ${isOpen ? "open" : ""}`}>
         <div className="component-input">
-          <input
-            type="text"
-            placeholder="Solar Type"
-            value={solarType}
-            onChange={(e) => setSolarType(e.target.value)}
-          />
           <input
             type="text"
             placeholder="Brand Name"
@@ -223,6 +220,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                 <th>Capacity</th>
                 <th>Warranty</th>
                 <th>Quantity</th>
+                <th>Action</th> {/* New column for the button */}
               </tr>
             </thead>
             <tbody>
@@ -230,7 +228,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                 solarData.map((solar) => (
                   <tr
                     key={solar.id}
-                    onClick={() => handleSelectComponent(solar)}
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(solar.id) && {
@@ -243,11 +240,45 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
                     <td>{solar.capacity}</td>
                     <td>{solar.warranty}</td>
                     <td>{solar.quantity}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(solar);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-offset-2 flex justify-center items-center bg-[#ff6f20] text-white rounded-md ${
+                          highlightedIds.includes(solar.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(solar.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200 "
+                            color="#dc2626" // Red-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a" // Green-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5">No data available</td>
+                  <td colSpan="6">No data available</td>
                 </tr>
               )}
             </tbody>

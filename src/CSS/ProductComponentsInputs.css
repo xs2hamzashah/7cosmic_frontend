@@ -145,13 +145,28 @@
   transition: opacity 0.3s ease;
 }
 
-.services ul li ion-icon {
-  color: #045c17;
-  font-size: 25px;
+.services ul li {
+  color: grey; /* Default grey color for inactive text */
+  font-size: 16px; /* Adjust font size if needed */
+  opacity: 0.7; /* Optional for a slightly faded look */
+  transition: color 0.3s ease, opacity 0.3s ease; /* Smooth transition */
 }
 
 .services ul li.active {
-  opacity: 1;
+  color: #023d0f; /* Darker green for active text */
+  opacity: 1; /* Full visibility */
+}
+
+.services ul li ion-icon {
+  color: grey; /* Default grey color for inactive icons */
+  font-size: 25px;
+  opacity: 0.7; /* Optional for slightly faded look */
+  transition: color 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+}
+
+.services ul li.active ion-icon {
+  color: #045c17; /* Green color for active icons */
+  opacity: 1; /* Full visibility */
 }
 
 .services .sales-services {
@@ -161,10 +176,21 @@
 }
 
 .services ul li input {
-  border: none;
-  font-size: 19px;
-  appearance: none;
-  outline: none;
+  opacity: 1; /* Ensure full visibility */
+  font-size: 16px; /* Adjust font size for readability */
+  color: #333; /* Darker text for better contrast */
+  border: 1px solid #ccc; /* Add a light border */
+  border-radius: 5px; /* Smooth corners */
+  padding: 8px; /* Add padding for a better user experience */
+  width: 100%; /* Adjust width to match the container */
+  box-sizing: border-box; /* Ensure padding doesn't affect total width */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover/focus effects */
+}
+
+.services ul li input:focus {
+  border-color: #ff6f20; /* Green border on focus */
+  box-shadow: 0 0 5px rgba(255, 111, 32, 0.5); /* Slight glow effect */
+  outline: none; /* Remove default focus outline */
 }
 
 .hidden {

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
-import { removeOutline, addOutline } from "ionicons/icons";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../../config";
@@ -98,6 +103,8 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -107,7 +114,7 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="component-head">
         <h2>Electrical Work</h2>
         <button className="button" onClick={toggleSection}>
@@ -147,6 +154,7 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
               <tr>
                 <th>Wire Material</th>
                 <th>Warranty</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -154,7 +162,11 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
                 electricalData.map((electrical) => (
                   <tr
                     key={electrical.id}
-                    onClick={() => handleSelectComponent(electrical)}
+                    className={
+                      highlightedIds.includes(electrical.id)
+                        ? "bg-green-50"
+                        : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(electrical.id) && {
@@ -164,11 +176,46 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
                   >
                     <td>{electrical.wire_material}</td>
                     <td>{electrical.warranty}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(electrical);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(electrical.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(electrical.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2">No data available</td>
+                  <td colSpan="3">No data available</td>{" "}
+                  {/* Updated colspan to 3 for the new action column */}
                 </tr>
               )}
             </tbody>

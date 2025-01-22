@@ -8,9 +8,7 @@ const SearchBox = ({ onSearch, onClose }) => {
   const [priceRange, setPriceRange] = useState("");
   const [inputText, setInputText] = useState("");
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-
+  const performSearch = () => {
     const params = {
       city: city === "all" ? "" : city,
       size: size === "any" ? "" : size,
@@ -18,27 +16,31 @@ const SearchBox = ({ onSearch, onClose }) => {
       query: inputText,
     };
 
-    // Check if at least one field is filled
-    const isAnyFieldFilled = Object.values(params).some((value) => value);
+    // const isAnyFieldFilled = Object.values(params).some((value) => value);
 
-    if (!isAnyFieldFilled) {
-      toast.info("Please fill at least one field to perform a search.");
-      return; // Exit without performing the search
-    }
+    // if (!isAnyFieldFilled) {
+    //   toast.info("Please fill at least one field to perform a search.");
+    //   return;
+    // }
 
     onSearch(params);
-    onClose();
+    if (onClose) onClose();
+  };
+
+  const handleSelectChange = (setter, value) => {
+    setter(value); // Update the state
+    performSearch(); // Trigger the search
   };
 
   return (
-    <form onSubmit={handleSearch} className="search-form">
+    <form className="search-form">
       <ToastContainer />
       <select
         value={city}
-        onChange={(e) => setCity(e.target.value)}
+        onChange={(e) => handleSelectChange(setCity, e.target.value)}
         className="search-select"
       >
-        <option value="" disabled selected hidden>
+        <option value="" disabled hidden>
           City
         </option>
         <option value="all">All Cities</option>
@@ -57,10 +59,10 @@ const SearchBox = ({ onSearch, onClose }) => {
 
       <select
         value={size}
-        onChange={(e) => setSize(e.target.value)}
+        onChange={(e) => handleSelectChange(setSize, e.target.value)}
         className="search-select"
       >
-        <option value="" disabled selected hidden>
+        <option value="" disabled hidden>
           Size (kW)
         </option>
         <option value="any">Any size</option>
@@ -72,10 +74,10 @@ const SearchBox = ({ onSearch, onClose }) => {
 
       <select
         value={priceRange}
-        onChange={(e) => setPriceRange(e.target.value)}
+        onChange={(e) => handleSelectChange(setPriceRange, e.target.value)}
         className="search-select"
       >
-        <option value="" disabled selected hidden>
+        <option value="" disabled hidden>
           Price (PKR)
         </option>
         <option value="any">Any range</option>
@@ -85,7 +87,11 @@ const SearchBox = ({ onSearch, onClose }) => {
         <option value="above_3M">Above 30 Lac</option>
       </select>
 
-      <button type="submit" className="search-btn">
+      <button
+        type="button" // Change to button type so it doesn't reload
+        className="search-btn"
+        onClick={performSearch}
+      >
         Search
       </button>
     </form>

@@ -3,18 +3,19 @@ nav {
   display: flex;
   justify-content: space-around;
   margin: 2rem auto;
+  padding-bottom: 2rem;
   position: relative;
 }
 
 .logo {
   text-transform: uppercase;
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   color: #ff6f20;
   font-weight: 500;
   position: absolute;
-  left: 10px;
-  top: -20px;
+  left: -10px;
+  top: -25px;
 }
 
 .logo:hover {
@@ -155,6 +156,7 @@ nav {
   padding: 10px 16px;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #eaeaea;
   gap: 8px;
   font-size: 14px;
   color: #333;
