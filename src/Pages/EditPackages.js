@@ -4,7 +4,9 @@ import { IonIcon } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 import axios from "axios";
 import API_BASE_URL from "../config";
-import AddPackageForm from "./AddPackageForm";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PackageEditor from "../Components/PackageEditor";
 import ProductDetailList from "./ProductDetailsList";
 import Spinner from "../Components/Spinner";
 
@@ -12,6 +14,10 @@ const EditPackage = () => {
   const [packageData, setPackageData] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [price, setPrice] = useState();
+  const [size, setSize] = useState();
+  const [solutionType, setSolutionType] = useState();
 
   useEffect(() => {
     const fetchPackageDetails = async () => {
@@ -25,6 +31,9 @@ const EditPackage = () => {
           }
         );
         setPackageData(response.data);
+        setPrice(response.data.price);
+        setSize(response.data.size);
+        setSolutionType(response.data.solution_type);
       } catch (error) {
         console.error("Error fetching package details:", error.response?.data);
       }
@@ -33,8 +42,15 @@ const EditPackage = () => {
     if (id) fetchPackageDetails();
   }, [id]);
 
-  const handlePackageUpdate = async (updatedPackage) => {
+  const handlePackageUpdate = async (price, size, solutionType) => {
     try {
+      // Wrap the values in an object to match the API's expectations
+      const updatedPackage = {
+        price,
+        size,
+        solution_type: solutionType,
+      };
+
       const response = await axios.patch(
         `${API_BASE_URL}/api/listings/solar-solutions/${id}/`,
         updatedPackage,
@@ -46,8 +62,7 @@ const EditPackage = () => {
         }
       );
       if (response.status === 200) {
-        console.log("Package updated successfully");
-        navigate(`/product-image-upload/${id}`);
+        toast.success("Package updated successfully");
       }
     } catch (error) {
       console.error("Error updating package:", error.response?.data);
@@ -58,14 +73,17 @@ const EditPackage = () => {
 
   return (
     <div id="body" className="edit-package-page">
+      <ToastContainer />
       {/* AddPackageForm appears at the top for editing */}
       <button className="back-button" onClick={() => navigate(-1)}>
         <IonIcon icon={arrowBackOutline} />
         Back
       </button>
-      <AddPackageForm
+      <PackageEditor
         mode="edit"
-        packageData={packageData}
+        price={price}
+        size={size}
+        solutionType={solutionType}
         packageId={id}
         onUpdate={handlePackageUpdate}
       />
