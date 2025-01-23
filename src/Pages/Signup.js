@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "../CSS/SignUp.css";
 import API_BASE_URL from "../config";
 import CompanyNameInput from "../Components/CompanyNameInput";
+import PasswordInput from "../Components/PasswordInput";
 import Navbar from "../Components/Navbar";
 
 function SignupForm() {
@@ -29,6 +30,7 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   // Validate phone number
@@ -374,8 +376,7 @@ function SignupForm() {
               {errors.username && (
                 <div className="error-message">{errors.username}</div>
               )}
-              <input
-                type="password"
+              <PasswordInput
                 placeholder="Password"
                 name="password"
                 value={formData.password}
@@ -384,8 +385,7 @@ function SignupForm() {
               {errors.password && (
                 <div className="error-message">{errors.password}</div>
               )}
-              <input
-                type="password"
+              <PasswordInput
                 placeholder="Confirm Password"
                 name="confirmPassword"
                 value={formData.confirmPassword}

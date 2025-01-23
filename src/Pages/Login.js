@@ -5,6 +5,7 @@ import { ProfileContext } from "../context/ProfileContext"; // Import ProfileCon
 import API_BASE_URL from "../config";
 import "../CSS/Login.css";
 import Navbar from "../Components/Navbar";
+import PasswordInput from "../Components/PasswordInput";
 
 // Create Axios Instance
 const api = axios.create({
@@ -106,8 +107,7 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <input
-              type="password"
+            <PasswordInput
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
