@@ -392,23 +392,23 @@ const Dashboard = () => {
       />
       <StatsComponent title="Buyers" {...statsData.buyers} />
 
-      <div className="stats-container bg-gray-100 p-6 rounded-lg shadow-md ">
-        <h3 className="stats-title text-2xl font-bold text-gray-800 mb-6">
+      <div className="stats-container bg-gray-100 p-3 rounded-lg shadow-md ">
+        <h3 className="stats-title text-xl font-bold text-gray-800 mb-4">
           Packages
         </h3>
         <div className="stats-box grid grid-cols-3 gap-6 items-center">
           {/* Total Packages */}
-          <div className="stats-total bg-[#ff6f20] text-white p-6 rounded-lg text-center">
-            <span className="block text-lg font-medium uppercase">
+          <div className="stats-total bg-[#ff6f20] text-white p-2 rounded-lg text-center">
+            <span className="block text-md font-medium uppercase">
               Total Packages
             </span>
-            <h2 className="text-4xl font-extrabold">
+            <h2 className="text-3xl font-extrabold">
               {statsData.packages.total}
             </h2>
           </div>
 
           {/* Approved Packages */}
-          <div className="stats-city bg-white border border-gray-300 rounded-lg p-6 text-center">
+          <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
             <span className="block text-[#ff6f20] font-semibold uppercase">
               Approved Packages
             </span>
@@ -418,7 +418,7 @@ const Dashboard = () => {
           </div>
 
           {/* Unapproved Packages */}
-          <div className="stats-city bg-white border border-gray-300 rounded-lg p-6 text-center">
+          <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
             <span className="block text-[#ff6f20] font-semibold uppercase">
               Unapproved Packages
             </span>
