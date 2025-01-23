@@ -33,16 +33,22 @@ function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const isFormIncomplete =
+    !formData.email ||
+    !formData.companyName ||
+    !formData.phoneNumber ||
+    !formData.city ||
+    !formData.username ||
+    !formData.password ||
+    !formData.confirmPassword ||
+    !termsAccepted;
+
   // Validate phone number
   const isValidPhoneNumber = (phoneNumber) => {
     // Remove any spaces, hyphens, or parentheses from the number
     const cleanedNumber = phoneNumber.replace(/[\s\-()]/g, "");
 
-    // Allow:
-    // - Optional + at the start
-    // - Followed by 8-15 digits (most international numbers fall in this range)
-    const phoneRegex = /^\+?[0-9]{8,15}$/;
-
+    const phoneRegex = /^(?:\+92|0)?3[0-9]{9}$/;
     return phoneRegex.test(cleanedNumber);
   };
 
@@ -63,7 +69,9 @@ function SignupForm() {
   // Handle OTP input changes
   const handleOtpChange = (e) => {
     const value = e.target.value;
-    setOtp(value);
+    if (/^\d{0,4}$/.test(value)) {
+      setOtp(value);
+    }
     // Enable verify button only if OTP is entered and OTP was sent
     setIsVerifyButtonDisabled(!(value.length > 0 && otpSent));
   };
@@ -75,6 +83,7 @@ function SignupForm() {
   const handleSendOtp = async () => {
     if (!formData.phoneNumber) {
       toast.error("Please enter your phone number.");
+      setIsOtpButtonDisabled(true);
       return;
     }
 
@@ -264,6 +273,8 @@ function SignupForm() {
     }, 1000);
   };
 
+  const isButtonDisabled = otp.length !== 4;
+
   const handleNavigateToLogin = () => {
     navigate("/login");
   };
@@ -340,12 +351,10 @@ function SignupForm() {
                   <button
                     type="button"
                     className={`ghost-otp ${
-                      isVerifyButtonDisabled
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
+                      isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                     onClick={handleVerifyOtp}
-                    disabled={isVerifyButtonDisabled || loading}
+                    disabled={isButtonDisabled || loading}
                   >
                     Verify OTP
                   </button>
@@ -426,9 +435,9 @@ function SignupForm() {
             <div className="w-full flex justify-center mt-2">
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isFormIncomplete || loading}
                 className={`w-full max-w-xs rounded-lg bg-orange-500 text-white text-sm font-medium uppercase py-3 ${
-                  loading
+                  isFormIncomplete || loading
                     ? "bg-gray-400 cursor-not-allowed"
                     : "hover:bg-orange-600"
                 }`}
