@@ -46,10 +46,10 @@ const ComponentDetail = ({ component }) => {
           .map((field) => (
             <li
               key={field.label}
-              className="flex justify-between items-center border-b border-gray-300 py-2 last:border-b-0 py-2"
+              className="flex justify-between items-center border-b border-gray-300 py-2 last:border-b-0"
             >
               <span className="text-gray-600">{field.label}:</span>
-              <strong className="ml-8">{field.value}</strong>
+              <strong className="mr-20">{field.value}</strong>
             </li>
           ))}
       </ul>

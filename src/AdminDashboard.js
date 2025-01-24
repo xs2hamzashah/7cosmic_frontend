@@ -381,82 +381,102 @@ const Dashboard = () => {
     }
   };
 
+  function handleLogout() {
+    // Clear any stored tokens or session data
+    localStorage.removeItem("accessToken"); // Assuming the token is stored as 'accessToken'
+
+    // Redirect to the login page or homepage
+    window.location.href = "/login"; // Update this path based on your application's routing
+  }
+
   return (
-    <div id="body" className="py-10">
-      <ToastContainer />
-      <StatsComponent
-        title="Sellers"
-        {...statsData.sellers}
-        onCityClick={(city) => handleStatsClick("city", city)}
-        onTotalClick={() => handleStatsClick("city", "all")}
-      />
-      <StatsComponent title="Buyers" {...statsData.buyers} />
-
-      <div className="stats-container bg-gray-100 p-3 rounded-lg shadow-md ">
-        <h3 className="stats-title text-xl font-bold text-gray-800 mb-4">
-          Packages
-        </h3>
-        <div className="stats-box grid grid-cols-3 gap-6 items-center">
-          {/* Total Packages */}
-          <div className="stats-total bg-[#ff6f20] text-white p-2 rounded-lg text-center">
-            <span className="block text-md font-medium uppercase">
-              Total Packages
-            </span>
-            <h2 className="text-3xl font-extrabold">
-              {statsData.packages.total}
-            </h2>
-          </div>
-
-          {/* Approved Packages */}
-          <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
-            <span className="block text-[#ff6f20] font-semibold uppercase">
-              Approved Packages
-            </span>
-            <p className="text-2xl font-bold text-gray-900">
-              {statsData.packages.approved}
-            </p>
-          </div>
-
-          {/* Unapproved Packages */}
-          <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
-            <span className="block text-[#ff6f20] font-semibold uppercase">
-              Unapproved Packages
-            </span>
-            <p className="text-2xl font-bold text-gray-900">
-              {statsData.packages.unapproved}
-            </p>
-          </div>
-        </div>
+    <>
+      <div className="header flex justify-between items-center px-6 py-4  border-b-1 border-[#ff6f20]">
+        <h1 className="text-2xl font-bold text-[#ff6f20]">Admin Dashboard</h1>
+        <button
+          className="border-2 border-[#ff6f20] text-[#ff6f20] font-medium py-2 px-4 rounded-lg transition duration-200 hover:bg-[#ff6f20] hover:text-white"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
 
-      {/* Seller Table */}
-      <SellerListing
-        sellers={sellerListingData}
-        onSellerClick={handleSellerClick}
-        selectedCity={selectedCity}
-      />
+      <div id="body" className="py-10">
+        <ToastContainer />
+        <StatsComponent
+          title="Sellers"
+          {...statsData.sellers}
+          onCityClick={(city) => handleStatsClick("city", city)}
+          onTotalClick={() => handleStatsClick("city", "all")}
+        />
+        <StatsComponent title="Buyers" {...statsData.buyers} />
 
-      {selectedSeller && (
-        <div className="seller-packages-section my-10">
-          <h3
-            className={`text-2xl font-bold mt-5 my-5 ${
-              selectedSellerPackages.length > 0 ? "#ff6f20" : "#dc3545"
-            }`}
-          >
-            {selectedSellerPackages.length > 0
-              ? `${selectedSeller.company?.name}'s Packages`
-              : `No Packages Found for ${selectedSeller.company?.name}`}
+        <div className="stats-container bg-gray-100 p-3 rounded-lg shadow-md ">
+          <h3 className="stats-title text-xl font-bold text-gray-800 mb-4">
+            Packages
           </h3>
-          <AdminPackageManager
-            packages={selectedSellerPackages}
-            onEdit={handleEdit}
-            onApprove={handleApprove}
-            onDelete={handleDelete}
-            isLoading={isLoading}
-          />
+          <div className="stats-box grid grid-cols-3 gap-6 items-center">
+            {/* Total Packages */}
+            <div className="stats-total bg-[#ff6f20] text-white p-2 rounded-lg text-center">
+              <span className="block text-md font-medium uppercase">
+                Total Packages
+              </span>
+              <h2 className="text-3xl font-extrabold">
+                {statsData.packages.total}
+              </h2>
+            </div>
+
+            {/* Approved Packages */}
+            <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
+              <span className="block text-[#ff6f20] font-semibold uppercase">
+                Approved Packages
+              </span>
+              <p className="text-2xl font-bold text-gray-900">
+                {statsData.packages.approved}
+              </p>
+            </div>
+
+            {/* Unapproved Packages */}
+            <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
+              <span className="block text-[#ff6f20] font-semibold uppercase">
+                Unapproved Packages
+              </span>
+              <p className="text-2xl font-bold text-gray-900">
+                {statsData.packages.unapproved}
+              </p>
+            </div>
+          </div>
         </div>
-      )}
-    </div>
+
+        {/* Seller Table */}
+        <SellerListing
+          sellers={sellerListingData}
+          onSellerClick={handleSellerClick}
+          selectedCity={selectedCity}
+        />
+
+        {selectedSeller && (
+          <div className="seller-packages-section my-10">
+            <h3
+              className={`text-2xl font-bold mt-5 my-5 ${
+                selectedSellerPackages.length > 0 ? "#ff6f20" : "#dc3545"
+              }`}
+            >
+              {selectedSellerPackages.length > 0
+                ? `${selectedSeller.company?.name}'s Packages`
+                : `No Packages Found for ${selectedSeller.company?.name}`}
+            </h3>
+            <AdminPackageManager
+              packages={selectedSellerPackages}
+              onEdit={handleEdit}
+              onApprove={handleApprove}
+              onDelete={handleDelete}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
