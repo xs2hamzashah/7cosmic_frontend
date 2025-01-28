@@ -7,8 +7,6 @@ const SellerListing = ({ sellers, onSellerClick, selectedCity }) => {
       ? sellers
       : sellers.filter((seller) => seller.company?.city === selectedCity);
 
-  console.log("Selected City:", selectedCity);
-
   return (
     <div className="seller-listing">
       {/* Seller table */}
@@ -36,9 +34,11 @@ const SellerListing = ({ sellers, onSellerClick, selectedCity }) => {
                 {seller.company?.city || "N/A"}
               </td>
               <td className="p-4 border-b border-gray-200">
-                {seller.packages}
+                {seller.packages_count}
               </td>
-              <td className="p-4 border-b border-gray-200">{seller.buyers}</td>
+              <td className="p-4 border-b border-gray-200">
+                {seller.buyers_count}
+              </td>
               <td className="p-4 border-b border-gray-200">
                 {seller.company?.phone_number || "N/A"}
               </td>

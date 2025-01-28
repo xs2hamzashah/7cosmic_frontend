@@ -100,7 +100,7 @@ const EditPackage = () => {
         onClick={() => navigate(-1)}
         className="bg-[#ff6f20] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#e65e1a] hover:shadow-lg active:scale-95 transition transform duration-200"
       >
-        Back
+        Back to Dashboard
       </button>
     </div>
   );

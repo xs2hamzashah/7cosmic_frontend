@@ -16,6 +16,7 @@ import "../CSS/Navbar.css";
 import SearchBox from "./SearchBox";
 
 import Logo from "../assets/logo.svg";
+import AdminDropdown from "./AdminDropdown";
 
 export default function Navbar({
   onSearch,
@@ -91,7 +92,8 @@ export default function Navbar({
       {!(
         location.pathname.startsWith("/product-detail") ||
         location.pathname === "/login" ||
-        location.pathname === "/sign-up"
+        location.pathname === "/sign-up" ||
+        localStorage.getItem("role") === "admin"
       ) && (
         <div className="icon-section">
           {!isLoggedIn ? (
@@ -216,6 +218,12 @@ export default function Navbar({
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {localStorage.getItem("role") === "admin" && (
+        <div className="icon-section">
+          <AdminDropdown />
         </div>
       )}
     </nav>
