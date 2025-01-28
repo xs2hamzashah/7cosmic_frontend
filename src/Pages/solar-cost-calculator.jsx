@@ -16,6 +16,8 @@ export const Calculator = () => {
   }
 
   const modifiedUrl = `http://localhost:3000/tools/solar-cost-calculator?access-token=${token}`;
+  // const modifiedUrl = `https://7-solar-calculators-production.up.railway.app/tools/solar-cost-calculator?access-token=${token}`;
+  console.log("🚀 ~ Calculator ~ modifiedUrl:", modifiedUrl);
 
   return (
     <div

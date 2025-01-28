@@ -16,7 +16,7 @@ import { PriceList } from "./Pages/PriseList";
 import { Provider } from "react-redux";
 import { persister, store } from "./redux/store/store";
 import { ToastProvider } from "react-toast-notifications";
-import { Calculator } from "./Pages/Calculator";
+import { Calculator } from "./Pages/solar-cost-calculator";
 import SolarCostCalculator from "./Pages/tools/solar-cost-calculator";
 
 function App() {
@@ -25,6 +25,8 @@ function App() {
       <ToastProvider>
         <BrowserRouter>
           <Routes>
+            {/* TODO: SOLAR ENERGY CALCULATOR */}
+            <Route path="/solar-energy-calculator" element={<Calculator />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/sign-up" element={<Signup />} />

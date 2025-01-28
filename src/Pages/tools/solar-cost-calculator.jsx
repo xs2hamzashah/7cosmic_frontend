@@ -12,6 +12,7 @@ export const SolarCostCalculator = () => {
   // const search = searchParams.get("search");
   //   const systemType = searchParams.get("systemType");
   const modifiedUrl = `http://localhost:3000/tools/solar-cost-calculator/${params.id}?${searchParams.toString()}`;
+  // const modifiedUrl = `https://7-solar-calculators-production.up.railway.app/tools/solar-cost-calculator/${params.id}?${searchParams.toString()}`;
 
   //   return (
   //     <div>
