@@ -49,14 +49,6 @@ const SearchBox = ({ onSearch, onClose }) => {
         <option value="LHR">Lahore</option>
       </select>
 
-      <input
-        type="text"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        placeholder="Search by keyword"
-        className="search-bar"
-      />
-
       <select
         value={size}
         onChange={(e) => handleSelectChange(setSize, e.target.value)}
@@ -86,6 +78,14 @@ const SearchBox = ({ onSearch, onClose }) => {
         <option value="below_3M">Below 30 Lac</option>
         <option value="above_3M">Above 30 Lac</option>
       </select>
+
+      <input
+        type="text"
+        value={inputText}
+        onChange={(e) => setInputText(e.target.value)}
+        placeholder="Search by keyword"
+        className="search-bar"
+      />
 
       <button
         type="button" // Change to button type so it doesn't reload
