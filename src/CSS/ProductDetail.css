@@ -88,15 +88,15 @@ h3 {
   margin-top: 10px;
 }
 
-.component-list {
-  max-height: 150px; /* Initial half-open height */
+/* .component-list {
+  max-height: 150px; 
   overflow: hidden;
   transition: max-height 0.3s ease;
-}
+} */
 
-.component-list.expanded {
-  max-height: none; /* Fully expanded height */
-}
+/* .component-list.expanded {
+  max-height: none; 
+} */
 
 .service-list p span {
   font-weight: 600;

@@ -27,6 +27,7 @@ export default function Navbar({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
@@ -221,7 +222,7 @@ export default function Navbar({
         </div>
       )}
 
-      {localStorage.getItem("role") === "admin" && (
+      {location.pathname === "/" && role === "admin" && (
         <div className="icon-section">
           <AdminDropdown />
         </div>
