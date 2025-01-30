@@ -127,8 +127,8 @@ const SellerAnalytics = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        const response = await fetch(
+        let token = localStorage.getItem("accessToken");
+        let response = await fetch(
           `${API_BASE_URL}/api/listings/analytics/seller_analytics/`,
           {
             headers: {
@@ -137,12 +137,66 @@ const SellerAnalytics = () => {
           }
         );
 
+        // Handle token expiration
+        if (response.status === 401) {
+          // Try to refresh the token
+          const refreshToken = localStorage.getItem("refreshToken");
+          if (!refreshToken) {
+            // No refresh token available, redirect to login
+            localStorage.clear();
+            navigate("/login");
+            return;
+          }
+
+          try {
+            // Attempt to get a new token
+            const refreshResponse = await fetch(
+              `${API_BASE_URL}/api/refresh-token/`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ refresh_token: refreshToken }),
+              }
+            );
+
+            if (!refreshResponse.ok) {
+              // Refresh token failed, clear everything and redirect to login
+              localStorage.clear();
+              navigate("/login");
+              return;
+            }
+
+            // Get new tokens
+            const tokens = await refreshResponse.json();
+            localStorage.setItem("accessToken", tokens.access);
+            localStorage.setItem("refreshToken", tokens.refresh);
+
+            // Retry the original request with new token
+            response = await fetch(
+              `${API_BASE_URL}/api/listings/analytics/seller_analytics/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${tokens.access}`,
+                },
+              }
+            );
+          } catch (refreshError) {
+            console.error("Error refreshing token:", refreshError);
+            localStorage.clear();
+            navigate("/login");
+            return;
+          }
+        }
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
         setSellerData(data);
+
         const buyersCount = data.products.reduce(
           (acc, product) => acc + product.buyer_interaction_count,
           0
@@ -164,7 +218,7 @@ const SellerAnalytics = () => {
     };
 
     fetchData();
-  }, []);
+  }, [navigate]);
 
   if (!sellerData) return <Spinner />;
 

@@ -23,109 +23,148 @@ const Dashboard = () => {
   console.log(sellerListingData);
   const navigate = useNavigate();
 
+  const handleTokenRefresh = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) {
+      localStorage.clear();
+      navigate("/login");
+      return null;
+    }
+
+    try {
+      const refreshResponse = await fetch(
+        `${API_BASE_URL}/api/refresh-token/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        }
+      );
+
+      if (!refreshResponse.ok) {
+        localStorage.clear();
+        navigate("/login");
+        return null;
+      }
+
+      const tokens = await refreshResponse.json();
+      localStorage.setItem("accessToken", tokens.access);
+      localStorage.setItem("refreshToken", tokens.refresh);
+      return tokens.access;
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+      localStorage.clear();
+      navigate("/login");
+      return null;
+    }
+  };
+
+  const makeAuthenticatedRequest = async (url) => {
+    let token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No access token found. Please log in.");
+
+    let response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 401) {
+      const newToken = await handleTokenRefresh();
+      if (!newToken) return null;
+
+      response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${newToken}`,
+        },
+      });
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return response.json();
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllData = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("No access token found. Please log in.");
+        setIsLoading(true);
+        // setError(null);
 
         // Fetch stats data
-        const response = await fetch(
-          `${API_BASE_URL}/api/listings/analytics/admin_analytics/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const data = await makeAuthenticatedRequest(
+          `${API_BASE_URL}/api/listings/analytics/admin_analytics/`
         );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (data) {
+          const sellersByCity = {
+            islamabad:
+              data.sellers.seller_by_city_count.find(
+                (city) => city.city === "ISB"
+              )?.count || 0,
+            lahore:
+              data.sellers.seller_by_city_count.find(
+                (city) => city.city === "LHR"
+              )?.count || 0,
+            karachi:
+              data.sellers.seller_by_city_count.find(
+                (city) => city.city === "KRH"
+              )?.count || 0,
+            total: data.sellers.total,
+          };
+
+          const buyersByCity = {
+            islamabad:
+              data.buyers.buyer_by_city_count.find(
+                (city) => city.city === "ISB"
+              )?.count || 0,
+            lahore:
+              data.buyers.buyer_by_city_count.find(
+                (city) => city.city === "LHR"
+              )?.count || 0,
+            karachi:
+              data.buyers.buyer_by_city_count.find(
+                (city) => city.city === "KRH"
+              )?.count || 0,
+            total: data.buyers.total,
+          };
+
+          const packagesByCity = {
+            total: data.solar_solutions.total,
+            approved: data.solar_solutions.approved,
+            unapproved: data.solar_solutions.unapproved,
+          };
+
+          setStatsData({
+            sellers: sellersByCity,
+            buyers: buyersByCity,
+            packages: packagesByCity,
+          });
         }
 
-        const data = await response.json();
-
-        // Process city stats data
-        const sellersByCity = {
-          islamabad:
-            data.sellers.seller_by_city_count.find(
-              (city) => city.city === "ISB"
-            )?.count || 0,
-          lahore:
-            data.sellers.seller_by_city_count.find(
-              (city) => city.city === "LHR"
-            )?.count || 0,
-          karachi:
-            data.sellers.seller_by_city_count.find(
-              (city) => city.city === "KRH"
-            )?.count || 0,
-          total: data.sellers.total,
-        };
-
-        const buyersByCity = {
-          islamabad:
-            data.buyers.buyer_by_city_count.find((city) => city.city === "ISB")
-              ?.count || 0,
-          lahore:
-            data.buyers.buyer_by_city_count.find((city) => city.city === "LHR")
-              ?.count || 0,
-          karachi:
-            data.buyers.buyer_by_city_count.find((city) => city.city === "KRH")
-              ?.count || 0,
-          total: data.buyers.total,
-        };
-
-        const packagesByCity = {
-          total: data.solar_solutions.total,
-          approved: data.solar_solutions.approved,
-          unapproved: data.solar_solutions.unapproved,
-        };
-
-        // Update stats data
-        setStatsData({
-          sellers: sellersByCity,
-          buyers: buyersByCity,
-          packages: packagesByCity,
-        });
-      } catch (error) {
-        console.error("Error fetching stats data:", error);
-      }
-    };
-
-    const fetchSellers = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("No access token found. Please log in.");
-
-        const response = await fetch(
-          `${API_BASE_URL}/api/accounts/profiles/?role=seller`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        // Fetch sellers data
+        const sellerData = await makeAuthenticatedRequest(
+          `${API_BASE_URL}/api/accounts/profiles/?role=seller`
         );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (sellerData) {
+          setSellerListingData(sellerData.results || []);
         }
-
-        const sellerData = await response.json();
-
-        // console.log(sellerData.results[0].company.name);
-
-        // Extract results array
-        setSellerListingData(sellerData.results || []); // Default to empty array
       } catch (error) {
-        console.error("Error fetching seller data:", error);
+        console.error("Error fetching data:", error);
+        // setError(error.message);
         setSellerListingData([]); // Ensure state doesn't break
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    // Call both fetch functions
-    fetchData();
-    fetchSellers();
-  }, []);
+    fetchAllData();
+  }, [navigate]);
 
   // =================================================
   // Packages total and city base

@@ -238,7 +238,13 @@ const ProductDetailList = () => {
         online_monitoring_included: services.online_monitoring_included,
         net_metering_included: services.net_metering_included,
         hse_equipment_included: services.hse_equipment_included,
-        transportation_distance: parseInt(transportationDistance, 10) || 0,
+        transportation_included: Boolean(
+          transportationDistance && transportationDistance.trim() !== ""
+        ),
+        transportation_distance:
+          transportationDistance && transportationDistance.trim() !== ""
+            ? parseInt(transportationDistance, 10)
+            : 0,
       },
       seller_note: additionalNote,
       component_ids: componentIds,

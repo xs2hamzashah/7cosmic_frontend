@@ -93,13 +93,13 @@ export default function ProductDetail() {
             ))}
           </div>
 
-          <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
+          {/* <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
             {expanded ? (
               <IonIcon icon={caretUpOutline} />
             ) : (
               <IonIcon icon={caretDownOutline} />
             )}
-          </button>
+          </button> */}
         </div>
       </div>
       <PhoneNumberPopup
