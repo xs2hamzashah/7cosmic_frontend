@@ -4,7 +4,7 @@ import {
   AccordionTrigger,
 } from "../../../core/accordion/Accordion";
 
-import { Edit, Loader2, Pencil, Plus, Trash, X } from "lucide-react";
+import { Edit, Loader2, Pencil, Plus, X } from "lucide-react";
 import * as yup from "yup";
 
 import { useToasts } from "react-toast-notifications";
@@ -40,17 +40,18 @@ const schema = yup
 
     unit: yup.string().required(),
     price: yup
-    .number()
-    .positive()
-    .test(
-      "is-decimal",
-      "Price must be a number with up to one decimal place",
-      (value) => {
-        return value === undefined || /^\d+(\.\d{1})?$/.test(value.toString());
-      }
-    )
-    .required("Price is required"),
-
+      .number()
+      .positive()
+      .test(
+        "is-decimal",
+        "Price must be a number with up to one decimal place",
+        (value) => {
+          return (
+            value === undefined || /^\d+(\.\d{1})?$/.test(value.toString())
+          );
+        }
+      )
+      .required("Price is required"),
   })
   .required();
 
@@ -88,7 +89,7 @@ function Panel({ setIsLoading }) {
     const payload = isEdit ? { ...data, id: currentItemId } : data;
     const response = await action(payload);
 
-    console.log("response", response)
+    console.log("response", response);
     if ("data" in response) {
       await Promise.all([
         reset(),
@@ -139,7 +140,7 @@ function Panel({ setIsLoading }) {
   //   }
   // };
 
-  const onError = () => { };
+  const onError = () => {};
   // ----------------- functions ----------------------------->
 
   const onPriceListEditHandler = async (id) => {
@@ -322,7 +323,8 @@ function Panel({ setIsLoading }) {
                   required: "Price is required",
                   pattern: {
                     value: /^\d+(\.\d{1})?$/,
-                    message: "Price must be a number with up to 1 decimal place",
+                    message:
+                      "Price must be a number with up to 1 decimal place",
                   },
                 })}
                 type="number"
@@ -337,7 +339,6 @@ function Panel({ setIsLoading }) {
                   }
                 }}
               />
-
 
               <div className="w-full">
                 {isEdit && (
