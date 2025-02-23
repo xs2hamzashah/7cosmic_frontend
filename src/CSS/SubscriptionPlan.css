@@ -1,0 +1,155 @@
+/* SubscriptionPlan.css */
+.subscription-plan {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ff6f20;
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .plan-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  
+  .price-section {
+    background-color: white;
+    color: #ff6f20;
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: fit-content;
+    margin: 0 auto 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .price-section h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .price-section p {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .price-section span {
+    font-weight: 600;
+  }
+  
+  .plan-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .plan-section {
+    background-color: white;
+    color: #ff6f20;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .plan-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  
+  .plan-section ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .plan-section ul li {
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .plan-section ul li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #ff6f20;
+  }
+  
+  .discount-section {
+    background-color: #ff6f20;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .discount-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .discount-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .discount-right {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .subscription-plan {
+      padding: 1rem;
+    }
+  
+    .plan-title {
+      font-size: 1.5rem;
+    }
+  
+    .price-section h3 {
+      font-size: 2rem;
+    }
+  
+    .discount-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .discount-right {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    .discount-left {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .plan-section {
+      padding: 1rem;
+    }
+  
+    .plan-section h2 {
+      font-size: 1.2rem;
+    }
+  
+    .price-section {
+      padding: 1rem;
+    }
+  }

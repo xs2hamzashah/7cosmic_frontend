@@ -37,7 +37,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 
 import { Filter, FilterIcon, MoreHorizontal } from "lucide-react";
 

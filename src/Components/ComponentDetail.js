@@ -44,8 +44,12 @@ const ComponentDetail = ({ component }) => {
         {formattedFields
           .filter((field) => field.value !== null && field.value !== undefined)
           .map((field) => (
-            <li key={field.label}>
-              {field.label}: <strong>{field.value}</strong>
+            <li
+              key={field.label}
+              className="flex justify-between items-center border-b border-gray-300 py-2 last:border-b-0"
+            >
+              <span className="text-gray-600">{field.label}:</span>
+              <strong className="mr-20">{field.value}</strong>
             </li>
           ))}
       </ul>

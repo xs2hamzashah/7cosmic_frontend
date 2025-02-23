@@ -7,20 +7,17 @@ const SellerListing = ({ sellers, onSellerClick, selectedCity }) => {
       ? sellers
       : sellers.filter((seller) => seller.company?.city === selectedCity);
 
-  console.log("Selected City:", selectedCity);
-
   return (
     <div className="seller-listing">
       {/* Seller table */}
-      <table className="seller-table">
+      <table className="seller-table w-full border-collapse bg-white shadow-lg rounded-lg overflow-hidden my-10">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Company Name</th>
-            <th>City</th>
-            <th>Packages</th>
-            <th>Buyers</th>
-            <th>Whatsapp Number</th>
+          <tr className="bg-[#ff6f20] text-white text-left text-sm uppercase font-semibold">
+            <th className="p-4">Company Name</th>
+            <th className="p-4">City</th>
+            <th className="p-4">Packages</th>
+            <th className="p-4">Buyers</th>
+            <th className="p-4">Whatsapp Number</th>
           </tr>
         </thead>
         <tbody>
@@ -28,14 +25,23 @@ const SellerListing = ({ sellers, onSellerClick, selectedCity }) => {
             <tr
               key={seller.id}
               onClick={() => onSellerClick(seller)}
-              style={{ cursor: "pointer" }}
+              className="cursor-pointer hover:scale-[0.98] hover:bg-gray-100 transition transform duration-200 ease-out"
             >
-              <td>{index + 1}</td>
-              <td>{seller.company?.name || "N/A"}</td>
-              <td>{seller.company?.city || "N/A"}</td>
-              <td>{seller.packages}</td>
-              <td>{seller.buyers}</td>
-              <td>{seller.company?.phone_number || "N/A"}</td>
+              <td className="p-4 border-b border-gray-200">
+                {seller.company?.name || "N/A"}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {seller.company?.city || "N/A"}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {seller.packages_count}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {seller.buyers_count}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {seller.company?.phone_number || "N/A"}
+              </td>
             </tr>
           ))}
         </tbody>

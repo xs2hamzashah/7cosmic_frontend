@@ -9,6 +9,7 @@ import PhoneNumberPopup from "./PhoneNumberPopup";
 import Navbar from "./Navbar";
 import API_BASE_URL from "../config";
 import "../CSS/ProductDetail.css";
+import Spinner from "./Spinner";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ export default function ProductDetail() {
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [sellerPhoneNumber, setSellerPhoneNumber] = useState();
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -28,6 +30,7 @@ export default function ProductDetail() {
 
         const data = await response.json();
         setPackageData(data);
+        setSellerPhoneNumber(data.company.phone_number);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -46,14 +49,15 @@ export default function ProductDetail() {
     setPopupOpen(false);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div id="body">
       <Navbar />
-      <div className="detail">
-        <div className="detail-imgs">
+      <div className="detail flex gap-6">
+        {/* Sticky Image Section */}
+        <div className="detail-imgs sticky top-4 h-max">
           <ImageSlider packageData={packageData} />
 
           <ServicesList serviceData={packageData.service} />
@@ -65,13 +69,14 @@ export default function ProductDetail() {
           ) : null}
         </div>
 
-        <div className="text">
+        {/* Scrollable Text Section */}
+        <div className="text flex-1">
           <h2>{packageData.display_name}</h2>
           <p>
             Price: <span>{packageData.price}M</span>
           </p>
           <p>
-            Size: <span>{packageData.size}</span>
+            Company: <span>{packageData.company.name}</span>
           </p>
           <p>
             Type: <span>{packageData.solution_type}</span>
@@ -96,12 +101,13 @@ export default function ProductDetail() {
             )}
           </button>
         </div>
-        <PhoneNumberPopup
-          isOpen={isPopupOpen}
-          onClose={handleClosePopup}
-          id={id}
-        />
       </div>
+      <PhoneNumberPopup
+        phoneNumber={sellerPhoneNumber}
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        id={id}
+      />
     </div>
   );
 }

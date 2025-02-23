@@ -1,4 +1,6 @@
 import React from "react";
+import { IonIcon } from "@ionic/react";
+import { checkmarkCircleOutline } from "ionicons/icons";
 
 const Services = ({
   services,
@@ -23,59 +25,41 @@ const Services = ({
       <div className="services">
         <ul>
           <li
-            onClick={() => toggleService("netMetering")}
-            className={services.netMetering ? "active" : ""}
+            onClick={() => toggleService("net_metering_included")}
+            className={services.net_metering_included ? "active" : ""}
           >
             <p>Net Metering File</p>
-            {services.netMetering && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li
-            onClick={() => toggleService("dcEarthing")}
-            className={services.dcEarthing ? "active" : ""}
+            onClick={() => toggleService("dc_earthing_included")}
+            className={services.dc_earthing_included ? "active" : ""}
           >
             <p>DC Earthing</p>
-            {services.dcEarthing && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li
-            onClick={() => toggleService("onlineMonitoring")}
-            className={services.onlineMonitoring ? "active" : ""}
+            onClick={() => toggleService("online_monitoring_included")}
+            className={services.online_monitoring_included ? "active" : ""}
           >
             <p>Online Monitoring</p>
-            {services.onlineMonitoring && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li
-            onClick={() => toggleService("hseEquipment")}
-            className={services.hseEquipment ? "active" : ""}
+            onClick={() => toggleService("hse_equipment_included")}
+            className={services.hse_equipment_included ? "active" : ""}
           >
             <p>HSE Equipment</p>
-            {services.hseEquipment && (
-              <ion-icon
-                name="checkmark-circle-outline"
-                class="checkmark"
-              ></ion-icon>
-            )}
+            <IonIcon icon={checkmarkCircleOutline} className="checkmark" />
           </li>
           <li>
             <input
               type="number"
               placeholder="Transportation Distance"
               value={transportationDistance}
-              onChange={(e) => setTransportationDistance(e.target.value)}
+              onChange={(e) =>
+                setTransportationDistance(Math.max(e.target.value))
+              }
             />
           </li>
           <li>
@@ -83,10 +67,11 @@ const Services = ({
               type="number"
               placeholder="AFSS Warranty Years"
               value={afssWarrantyYears}
-              onChange={(e) => setAfssWarrantyYears(e.target.value)}
+              onChange={(e) => setAfssWarrantyYears(Math.max(e.target.value))}
             />
           </li>
         </ul>
+
         <div className="additional-note">
           <textarea
             placeholder="Additional Note (Optional)"

@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../../config"; 
+
+import { IonIcon } from "@ionic/react";
+import {
+  removeOutline,
+  addOutline,
+  removeCircleOutline,
+  addCircleOutline,
+} from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import API_BASE_URL from "../../config";
 
 const Inverter = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,12 +60,45 @@ const Inverter = ({ components, handleSelectComponent }) => {
     fetchData();
   }, []);
 
+  // Function to validate inputs
+  const validateInputs = () => {
+    // Validation for required text fields
+    if (!inverterType || !brand || !detail) {
+      toast.error("Inverter Type, Brand, and Specifications are required.");
+      return false;
+    }
+
+    // Validation for numeric fields, ensuring they are numbers and positive integers
+    if (
+      isNaN(capacity) ||
+      isNaN(warranty) ||
+      isNaN(quantity) ||
+      isNaN(ipRating) ||
+      Math.max(Number(capacity), 0) <= 0 ||
+      Math.max(Number(warranty), 0) <= 0 ||
+      Math.max(Number(quantity), 0) <= 0 ||
+      Math.max(Number(ipRating), 0) <= 0
+    ) {
+      toast.error(
+        "Capacity, Warranty, Quantity, and IP Rating must be positive numbers."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!validateInputs()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -83,7 +126,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -102,7 +145,9 @@ const Inverter = ({ components, handleSelectComponent }) => {
       setIpRating("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -112,6 +157,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Inverter</h2>
         <button className="button" onClick={toggleSection}>
@@ -140,28 +186,31 @@ const Inverter = ({ components, handleSelectComponent }) => {
             onChange={(e) => setDetail(e.target.value)}
           />
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Capacity"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => setCapacity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="IP Rating"
             value={ipRating}
-            onChange={(e) => setIpRating(e.target.value)}
+            onChange={(e) => setIpRating(Math.max(0, e.target.value))}
           />
           <button type="submit" className="add-component-btn">
             Add
@@ -179,6 +228,7 @@ const Inverter = ({ components, handleSelectComponent }) => {
                 <th>Warranty</th>
                 <th>Quantity</th>
                 <th>IP Rating</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -186,7 +236,9 @@ const Inverter = ({ components, handleSelectComponent }) => {
                 inverterData.map((inverter) => (
                   <tr
                     key={inverter.id}
-                    onClick={() => handleSelectComponent(inverter)}
+                    className={
+                      highlightedIds.includes(inverter.id) ? "bg-green-50" : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(inverter.id) && {
@@ -201,11 +253,46 @@ const Inverter = ({ components, handleSelectComponent }) => {
                     <td>{inverter.warranty}</td>
                     <td>{inverter.quantity}</td>
                     <td>{inverter.ip_rating}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(inverter);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(inverter.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(inverter.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626" // Red-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a" // Green-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7">No data available</td>
+                  <td colSpan="8">No data available</td>{" "}
+                  {/* Updated colspan to 8 for the new action column */}
                 </tr>
               )}
             </tbody>

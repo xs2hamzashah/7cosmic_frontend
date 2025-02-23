@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../CSS/Calculator.css";
 import { useNavigate } from "react-router-dom";
+import "../CSS/Calculator.css";
 
 const CalculatorButtons = () => {
   // implement functionality to redirect to the calculator page
@@ -39,8 +39,7 @@ const CalculatorButtons = () => {
   };
 
   return (
-    <div>
-      {/* Buttons */}
+    <div className="space-x-4">
       <button
         className="btn"
         style={{ marginRight: "10px" }}
@@ -49,7 +48,6 @@ const CalculatorButtons = () => {
         Solar Cost Calculator
       </button>
 
-      {/* TODO:// need to add seller price list */}
       <button
         className="btn"
         style={{ marginRight: "10px" }}

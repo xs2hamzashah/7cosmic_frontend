@@ -25,7 +25,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 
 import { systemTypeEnum } from "../../../types/system-type.enum";
 

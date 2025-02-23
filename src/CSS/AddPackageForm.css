@@ -1,54 +1,81 @@
-/* ========================================================================== */
-/* ============================= Add Package Section ======================== */
-/* ========================================================================== */
-
 .adding-package {
-  max-width: 1100px;
-  margin: 10rem auto;
+  max-width: 960px; /* Reduce the maximum width */
+  margin: 5rem auto; /* Reduce vertical margin */
   text-align: center;
 }
 
 .adding-package h1 {
-  font-size: 64px;
+  font-size: 48px; /* Reduce font size */
   font-weight: 400;
-  margin: 5rem 0;
+  margin: 3rem 0; /* Adjust margin */
   color: #ff6f20;
 }
 
 .form {
-  padding: 5rem 0;
-  box-shadow: 1px 5px 10px 5px #a1a1a18f;
+  padding: 3rem 0; /* Reduce padding */
+  box-shadow: 1px 3px 6px 3px #a1a1a18f; /* Slightly reduce shadow effect */
 }
 
 .adding-package .form form input,
 .adding-package .form form select {
-  width: 270px;
-  margin: 0 10px;
-  padding: 10px;
-  font-size: 19px;
+  width: 240px; /* Reduce width */
+  margin: 0 8px; /* Reduce spacing */
+  padding: 8px; /* Reduce padding */
+  font-size: 16px; /* Reduce font size */
   border-radius: 5px;
   border: 2px solid #a7aaab;
   outline: none;
 }
 
 .adding-package .form form button {
-  padding: 8px;
-  font-size: 21px;
-  width: 80px;
-  border-radius: 5px;
+  display: inline-flex; /* Inline-flex to align with other inputs */
+  align-items: center; /* Center the IonIcon vertically */
+  justify-content: center; /* Center the IonIcon horizontally */
+  padding: 10px 20px; /* Add padding to match input height */
+  font-size: 18px; /* Match font size for consistency */
+  border-radius: 5px; /* Set consistent border radius */
   border: 2px solid #ff6f20;
   background-color: #ff6f20;
   color: #fff;
   outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+  vertical-align: middle; /* Align with text inputs */
+}
+
+.adding-package .form form button ion-icon {
+  font-size: 20px; /* Adjust size of IonIcon */
+  transition: transform 0.3s ease; /* Smooth animation */
+}
+
+.adding-package .form form button:hover {
+  background-color: #ff8f40; /* Change button color on hover */
+}
+
+.adding-package .form form button:hover ion-icon {
+  animation: arrowMove 0.6s ease forwards; /* Trigger hover animation */
+}
+
+/* Arrow hover animation */
+@keyframes arrowMove {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px); /* Move arrow forward */
+  }
+  100% {
+    transform: translateX(0); /* Move back to the original position */
+  }
 }
 
 .error {
-  width: 500px;
+  width: 400px; /* Reduce width */
   margin: 0 auto;
   color: #f32222;
   border: 2px solid #f32222;
   border-radius: 5px;
-  padding: 20px;
-  font-size: 20px;
-  margin-top: 40px;
+  padding: 15px; /* Reduce padding */
+  font-size: 18px; /* Adjust font size */
+  margin-top: 30px; /* Adjust top margin */
 }

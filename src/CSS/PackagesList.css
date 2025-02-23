@@ -34,7 +34,35 @@
 
 .card {
   width: 300px;
-  margin: 30px 0;
+
+  height: 400px;
+  cursor: pointer;
+  box-sizing: border-box; /* Prevent padding from affecting size */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+}
+
+/* Responsive adjustments */
+
+/* Medium screens (up to 940px): 2 cards per row */
+@media (max-width: 940px) {
+  .cards {
+    max-width: 640px; /* 2 * 300px + 1 * 20px gaps */
+  }
+}
+
+/* Small screens (up to 640px): 1 card per row */
+@media (max-width: 740px) {
+  .cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .card {
+    width: 100%; /* Make card full width of the container */
+  }
 }
 
 .card img {

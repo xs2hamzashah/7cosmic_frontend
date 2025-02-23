@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../CSS/SignUp.css";
 import API_BASE_URL from "../config";
 import CompanyNameInput from "../Components/CompanyNameInput";
+import PasswordInput from "../Components/PasswordInput";
+import Navbar from "../Components/Navbar";
 
 function SignupForm() {
   const [formData, setFormData] = useState({
@@ -21,25 +25,74 @@ function SignupForm() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(true);
+  const [isVerifyButtonDisabled, setIsVerifyButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const isFormIncomplete =
+    !formData.email ||
+    !formData.companyName ||
+    !formData.phoneNumber ||
+    !formData.city ||
+    !formData.username ||
+    !formData.password ||
+    !formData.confirmPassword ||
+    !termsAccepted;
+
+  // Validate phone number
+  const isValidPhoneNumber = (phoneNumber) => {
+    // Remove any spaces, hyphens, or parentheses from the number
+    const cleanedNumber = phoneNumber.replace(/[\s\-()]/g, "");
+
+    const phoneRegex = /^(?:\+92|0)?3[0-9]{9}$/;
+    return phoneRegex.test(cleanedNumber);
+  };
+
+  // Handle phone number and other form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+
+    // Enable/disable Send OTP button based on phone number validation
+    if (name === "phoneNumber") {
+      setIsOtpButtonDisabled(!isValidPhoneNumber(value));
+    }
+  };
+
+  // Handle OTP input changes
+  const handleOtpChange = (e) => {
+    const value = e.target.value;
+    if (/^\d{0,4}$/.test(value)) {
+      setOtp(value);
+    }
+    // Enable verify button only if OTP is entered and OTP was sent
+    setIsVerifyButtonDisabled(!(value.length > 0 && otpSent));
+  };
+
+  const handleCheckboxChange = (e) => {
+    setTermsAccepted(e.target.checked);
   };
 
   const handleSendOtp = async () => {
     if (!formData.phoneNumber) {
-      alert("Please enter your phone number.");
+      toast.error("Please enter your phone number.");
+      setIsOtpButtonDisabled(true);
       return;
     }
 
-    setLoading(true); // Set loading to true
+    if (!isValidPhoneNumber(formData.phoneNumber)) {
+      toast.error("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const response = await fetch(
         `${API_BASE_URL}/api/operations/otp/send_otp/`,
@@ -52,31 +105,33 @@ function SignupForm() {
         }
       );
       if (response.ok) {
-        const data = await response.json(); // testing
-        console.log(data); // testing
+        const data = await response.json();
         startTimer();
         setShowTimer(true);
         setIsOtpButtonDisabled(true);
-        alert("OTP sent successfully!");
+        setOtpSent(true);
+        toast.success("OTP sent successfully!");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to send OTP.");
+        toast.error(errorData.message || "Failed to send OTP.");
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
       setErrorMessage("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
     if (!otp) {
-      alert("Please enter the OTP.");
+      toast.error("Please enter the OTP.");
       return;
     }
 
-    setLoading(true); // Set loading to true
+    setLoading(true);
     const payload = {
       phone_number: formData.phoneNumber,
       otp_code: otp,
@@ -96,16 +151,19 @@ function SignupForm() {
       if (response.ok) {
         setOtpVerified(true);
         setShowTimer(false);
-        alert("OTP verified successfully!");
+        setIsVerifyButtonDisabled(true);
+        toast.success("OTP verified successfully!");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to verify OTP.");
+        toast.error(errorData.message || "Failed to verify OTP.");
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
       setErrorMessage("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
 
@@ -142,6 +200,10 @@ function SignupForm() {
       newErrors.otp = "Please verify OTP before signing up.";
     }
 
+    if (!termsAccepted) {
+      newErrors.terms = "You must accept the terms and conditions to proceed.";
+    }
+
     return newErrors;
   };
 
@@ -151,12 +213,11 @@ function SignupForm() {
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
-    // Stop form submission if there are validation errors
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
 
-    setLoading(true); // Set loading to true
+    setLoading(true);
     const signupData = {
       user: {
         email: formData.email,
@@ -184,18 +245,18 @@ function SignupForm() {
         body: JSON.stringify(signupData),
       });
       if (response.ok) {
-        alert("Account created successfully!");
-        navigate("/login"); // Navigate to the dashboard
+        toast.success("Account created successfully!");
+        navigate("/login");
       } else {
         const errorData = await response.json();
         console.error("Failed to create account", errorData);
-        alert(`Error: ${errorData.message || "Check your input fields"}`);
+        toast.error(`Error: ${errorData.message || "Check your input fields"}`);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong, please try again.");
+      toast.error("Something went wrong, please try again.");
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
 
@@ -207,160 +268,207 @@ function SignupForm() {
       setTimer(countdown);
       if (countdown <= 0) {
         clearInterval(interval);
-        setIsOtpButtonDisabled(false); // Re-enable "Send OTP" button
-        setShowTimer(false); // Hide timer
+        setIsOtpButtonDisabled(false);
       }
     }, 1000);
   };
+
+  const isButtonDisabled = otp.length !== 4;
 
   const handleNavigateToLogin = () => {
     navigate("/login");
   };
 
   return (
-    <section className="signup-section">
-      <h1>Create Business Account</h1>
-      <p>
-        Already have an account?
-        <a onClick={handleNavigateToLogin} style={{ cursor: "pointer" }}>
-          Log in
-        </a>
-      </p>
+    <section>
+      <Navbar />
+      <ToastContainer />
+      <div className="signup-section">
+        <h1>Create Business Account</h1>
+        <p>
+          Already have an account?{" "}
+          <a onClick={handleNavigateToLogin} style={{ cursor: "pointer" }}>
+            Log in
+          </a>
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        {errors.form && <div className="error-message">{errors.form}</div>}
-        <div className="inputs-section">
-          <div className="right-side">
-            <input
-              type="text"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && (
-              <span className="error-message">{errors.email}</span>
-            )}
-            <CompanyNameInput
-              value={formData.companyName}
-              onChange={(newValue) =>
-                setFormData({ ...formData, companyName: newValue })
-              }
-            />
-            {errors.companyName && (
-              <span className="error-message">{errors.companyName}</span>
-            )}
-            <input
-              type="text"
-              className="otp"
-              placeholder="WhatsApp Number"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-            {errors.phoneNumber && (
-              <span className="error-message">{errors.phoneNumber}</span>
-            )}
-            <input
-              type="text"
-              className="otp"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-            />
-            {errors.otp && <span className="error-message">{errors.otp}</span>}
-            <div className="side-otp-buttons">
-              <button
-                type="button"
-                className="ghost-otp send-otp"
-                style={{
-                  marginBottom:
-                    errors.phoneNumber || errors.otp ? "43px" : "10px",
-                }}
-                onClick={handleSendOtp}
-                disabled={isOtpButtonDisabled}
-              >
-                Send OTP
-              </button>
-              <button
-                type="button"
-                className="ghost-otp verify-otp"
-                style={{
-                  marginBottom:
-                    errors.phoneNumber || errors.otp ? "25px" : "10px",
-                }}
-                onClick={handleVerifyOtp}
-              >
-                Verify OTP
-              </button>
+        <form onSubmit={handleSubmit}>
+          {errors.form && <div className="error-message">{errors.form}</div>}
+          <div className="inputs-section">
+            <div className="right-side">
+              <input
+                type="text"
+                placeholder="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {errors.email && (
+                <span className="error-message">{errors.email}</span>
+              )}
+              <CompanyNameInput
+                value={formData.companyName}
+                onChange={(newValue) =>
+                  setFormData({ ...formData, companyName: newValue })
+                }
+              />
+              {errors.companyName && (
+                <span className="error-message">{errors.companyName}</span>
+              )}
+              <div className="otp-container">
+                <div className="input-button-pair">
+                  <input
+                    type="text"
+                    className="otp"
+                    placeholder="WhatsApp Number"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className={`ghost-otp ${
+                      isOtpButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={handleSendOtp}
+                    disabled={isOtpButtonDisabled || loading}
+                  >
+                    Send OTP
+                  </button>
+                </div>
+                {errors.phoneNumber && (
+                  <span className="error-message">{errors.phoneNumber}</span>
+                )}
+                <div className="input-button-pair">
+                  <input
+                    type="text"
+                    className="otp"
+                    placeholder="Enter OTP"
+                    value={otp}
+                    onChange={handleOtpChange}
+                    disabled={!otpSent}
+                  />
+                  <button
+                    type="button"
+                    className={`ghost-otp ${
+                      isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={handleVerifyOtp}
+                    disabled={isButtonDisabled || loading}
+                  >
+                    Verify OTP
+                  </button>
+                </div>
+                {errors.otp && (
+                  <span className="error-message">{errors.otp}</span>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="left-side">
-            <select name="city" value={formData.city} onChange={handleChange}>
-              <option value="">Select City</option>
-              <option value="Islamabad">Islamabad</option>
-              <option value="Karachi">Karachi</option>
-              <option value="Lahore">Lahore</option>
-            </select>
-            {errors.city && <div className="error-message">{errors.city}</div>}
-            <input
-              type="text"
-              placeholder="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-            />
-            {errors.username && (
-              <div className="error-message">{errors.username}</div>
-            )}
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {errors.password && (
-              <div className="error-message">{errors.password}</div>
-            )}
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            {errors.confirmPassword && (
-              <div className="error-message">{errors.confirmPassword}</div>
-            )}
-          </div>
-        </div>
-
-        <div className="otp-timer">
-          {showTimer && ( // Conditionally show timer
-            <div>
-              <p>
-                Time remaining:{" "}
-                {timer > 0
-                  ? `00:${timer.toString().padStart(2, "0")}`
-                  : "Expired"}
-              </p>
-              {timer === 0 && (
-                <a onClick={handleSendOtp} style={{ cursor: "pointer" }}>
-                  Resend OTP
-                </a>
+            <div className="left-side">
+              <select name="city" value={formData.city} onChange={handleChange}>
+                <option value="">Select City</option>
+                <option value="ISB">Islamabad</option>
+                <option value="KAR">Karachi</option>
+                <option value="LHR">Lahore</option>
+              </select>
+              {errors.city && (
+                <div className="error-message">{errors.city}</div>
+              )}
+              <input
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+              {errors.username && (
+                <div className="error-message">{errors.username}</div>
+              )}
+              <PasswordInput
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              {errors.password && (
+                <div className="error-message">{errors.password}</div>
+              )}
+              <PasswordInput
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+              {errors.confirmPassword && (
+                <div className="error-message">{errors.confirmPassword}</div>
               )}
             </div>
-          )}
-          <button type="submit" disabled={loading}>
-            {loading ? "Processing..." : "Create"}
-          </button>
-        </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+          </div>
 
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-      </form>
+          <div className="otp-timer w-full max-w-md mx-auto flex flex-col items-center p-4">
+            <div className="terms-section flex items-center gap-2 mt-2 w-full justify-center">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={handleCheckboxChange}
+                className="w-4 h-4 accent-orange-500 border-gray-400 cursor-pointer"
+              />
+              <label className="text-sm text-gray-800">
+                I agree to the{" "}
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-500 no-underline hover:underline"
+                >
+                  terms and conditions
+                </a>
+              </label>
+              {errors.terms && (
+                <span className="text-xs text-red-500 ml-2">
+                  {errors.terms}
+                </span>
+              )}
+            </div>
+
+            <div className="w-full flex justify-center mt-2">
+              <button
+                type="submit"
+                disabled={isFormIncomplete || loading}
+                className={`w-full max-w-xs rounded-lg bg-orange-500 text-white text-sm font-medium uppercase py-3 ${
+                  isFormIncomplete || loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "hover:bg-orange-600"
+                }`}
+              >
+                {loading ? "Processing..." : "Create"}
+              </button>
+            </div>
+
+            {showTimer && (
+              <div className="flex items-center justify-center my-1 w-full">
+                <p className="text-sm">
+                  Time remaining:{" "}
+                  {timer > 0
+                    ? `00:${timer.toString().padStart(2, "0")}`
+                    : "Expired"}
+                </p>
+                {timer === 0 && (
+                  <a
+                    onClick={handleSendOtp}
+                    className="text-orange-500 cursor-pointer hover:underline ml-2"
+                  >
+                    Resend OTP
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </form>
+      </div>
     </section>
   );
 }

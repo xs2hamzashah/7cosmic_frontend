@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import API_BASE_URL from "../config";
 
-const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
+const PhoneNumberPopup = ({ isOpen, onClose, id, sellerPhoneNumber }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [timer, setTimer] = useState(60);
+  const [phoneError, setPhoneError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let interval;
@@ -17,15 +21,50 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
     return () => clearInterval(interval);
   }, [isOtpSent, timer]);
 
+  const validatePakistaniNumber = (number) => {
+    const cleanNumber = number.replace(/[\s-]/g, "");
+    const pakistaniMobileRegex = /^03\d{9}$/;
+    const pakistaniInternationalRegex = /^\+92\d{10}$/;
+    return (
+      pakistaniMobileRegex.test(cleanNumber) ||
+      pakistaniInternationalRegex.test(cleanNumber)
+    );
+  };
+
+  const formatToInternationalFormat = (number) => {
+    const cleanNumber = number.replace(/[\s-]/g, "");
+    if (cleanNumber.startsWith("03")) {
+      return "+92" + cleanNumber.substring(1);
+    }
+    return cleanNumber;
+  };
+
   const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
+    const value = e.target.value;
+    setPhoneNumber(value);
+    setPhoneError("");
   };
 
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
   };
 
+  const redirectToWhatsApp = (phoneNumber) => {
+    const internationalNumber = formatToInternationalFormat(phoneNumber);
+    const whatsappUrl = `https://wa.me/${internationalNumber}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
   const handleSendOtp = async () => {
+    if (!validatePakistaniNumber(phoneNumber)) {
+      setPhoneError(
+        "Please enter a valid Pakistani mobile number (03XXXXXXXXX or +92XXXXXXXXXX)"
+      );
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
       const response = await fetch(
         `${API_BASE_URL}/api/operations/otp/send_otp/`,
@@ -40,25 +79,25 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
 
       if (!response.ok) throw new Error("Failed to send OTP");
 
-      console.log("OTP sent to:", phoneNumber);
-      const data = await response.json(); // Assuming the response includes the OTP message
-      console.log(data);
+      const data = await response.json();
       setIsOtpSent(true);
-      setTimer(60); // Reset the timer
+      setTimer(60);
     } catch (error) {
-      alert("Error sending OTP. Please try again.");
+      toast.error("Error sending OTP. Please try again.");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
+    setIsLoading(true);
+
     const payload = {
       phone_number: phoneNumber,
       otp_code: otp,
-      solar_solution_id: id, // Use the id from props
+      solar_solution_id: id,
     };
-
-    console.log("Payload being sent:", payload); // Log the payload
 
     try {
       const response = await fetch(
@@ -68,23 +107,29 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload), // Send the payload as JSON
+          body: JSON.stringify(payload),
         }
       );
 
       const responseBody = await response.json();
-      console.log("Full response body:", responseBody); // Log the full response
 
       if (!response.ok) throw new Error("OTP verification failed");
 
-      console.log("OTP verified!");
       setPhoneNumber("");
       setOtp("");
       setIsOtpSent(false);
       onClose();
+
+      if (sellerPhoneNumber) {
+        redirectToWhatsApp(sellerPhoneNumber);
+      } else {
+        console.error("Seller phone number is missing");
+      }
     } catch (error) {
-      alert("Invalid OTP. Please try again.");
+      toast.error("Invalid OTP. Please try again.");
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,6 +150,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
 
   return (
     <div className="popup-phone-number-overlay">
+      <ToastContainer />
       <div className="popup-phone-number-content">
         <p onClick={onClose} className="close-button">
           X
@@ -118,8 +164,9 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
               onChange={handlePhoneNumberChange}
               placeholder="03XXXXXXXXX"
               required
-              disabled={isOtpSent} // Disable input after OTP is sent
+              disabled={isOtpSent || isLoading}
             />
+            {phoneError && <p className="error-message">{phoneError}</p>}
             {isOtpSent && (
               <>
                 <input
@@ -128,6 +175,7 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
                   onChange={handleOtpChange}
                   placeholder="Enter OTP"
                   required
+                  disabled={isLoading}
                 />
                 <div className="product-otp-timer">
                   <p>
@@ -139,8 +187,41 @@ const PhoneNumberPopup = ({ isOpen, onClose, id }) => {
                 </div>
               </>
             )}
-            <button type="submit">
-              {isOtpSent ? "Verify OTP" : "Send OTP"}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded transition-all duration-300 ${
+                isLoading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "hover:bg-[#ff6f20]"
+              }`}
+            >
+              {isLoading ? (
+                <svg
+                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              ) : isOtpSent ? (
+                "Verify OTP"
+              ) : (
+                "Send OTP"
+              )}
             </button>
           </form>
         </div>

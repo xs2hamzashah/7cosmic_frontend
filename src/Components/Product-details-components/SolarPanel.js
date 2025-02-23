@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { usePanelsQuery } from "../../service/priceList/panel";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { IonIcon } from "@ionic/react";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
+
 import API_BASE_URL from "../../config";
 
 const SolarPanel = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [solarData, setSolarData] = useState([]);
-  const [solarType, setSolarType] = useState("");
   const [brand, setBrand] = useState("");
   const [detail, setDetail] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -14,27 +23,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
   const [quantity, setQuantity] = useState("");
 
   const { data } = usePanelsQuery({ page: 1 });
-
-  console.log("🚀 ~ SolarPanel ~ data:", data);
-
-  // <td>{solar.subtype}</td>
-  // <td>{solar.brand}</td>
-  // <td>{solar.details}</td>
-  // <td>{solar.capacity}</td>
-  // <td>{solar.warranty}</td>
-  // <td>{solar.quantity}</td>
-
-  const _solarData = Array.isArray(data?.results)
-    ? data.results.map((item) => ({
-        id: item.id,
-        brand: item.brand_name,
-        details: item.specification,
-        quantity: item.quantity,
-        capacity: item.capacity,
-      }))
-    : [];
-
-  console.log("🚀 ~ SolarPanel ~ _solarData:", _solarData);
 
   const highlightedIds = components.map((component) => component.id);
 
@@ -57,7 +45,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
       const data = await response.json();
       const filteredData = data.results.map((item) => ({
-        subtype: item.subtype,
         brand: item.brand,
         capacity: item.capacity,
         details: item.details,
@@ -76,11 +63,41 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
     fetchData();
   }, []);
 
+  const validateInputs = () => {
+    if (!brand.trim() || !detail.trim()) {
+      toast.error("Please fill in all required text fields.");
+      return false;
+    }
+
+    // Convert values to numbers and validate
+    const capacityNum = Number(capacity);
+    const warrantyNum = Number(warranty);
+    const quantityNum = Number(quantity);
+
+    if (
+      isNaN(capacityNum) ||
+      capacityNum <= 0 ||
+      isNaN(warrantyNum) ||
+      warrantyNum <= 0 ||
+      isNaN(quantityNum) ||
+      quantityNum <= 0
+    ) {
+      toast.error("Capacity, Warranty, and Quantity must be positive numbers.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -94,12 +111,11 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
           },
           body: JSON.stringify({
             component_type: "PV Module",
-            subtype: solarType,
             brand: brand,
             details: detail,
-            capacity: capacity.toString(),
-            warranty: warranty.toString(),
-            quantity: parseInt(quantity, 10), // Ensure quantity is an integer
+            capacity: capacity,
+            warranty: warranty,
+            quantity: parseInt(quantity, 10),
           }),
         }
       );
@@ -107,17 +123,15 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
       const createdComponent = await postResponse.json();
       handleSelectComponent(createdComponent);
 
-      // Refresh the list to include the newly added component
       fetchData();
 
-      setSolarType("");
       setBrand("");
       setDetail("");
       setCapacity("");
@@ -125,7 +139,9 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
       setQuantity("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -135,6 +151,7 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Solar Panel</h2>
         <button className="button " onClick={toggleSection}>
@@ -144,12 +161,6 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
 
       <div className={`component-body ${isOpen ? "open" : ""}`}>
         <div className="component-input">
-          <input
-            type="text"
-            placeholder="Solar Type"
-            value={solarType}
-            onChange={(e) => setSolarType(e.target.value)}
-          />
           <input
             type="text"
             placeholder="Brand Name"
@@ -163,22 +174,34 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
             onChange={(e) => setDetail(e.target.value)}
           />
           <input
-            type="text"
-            placeholder="Warranty"
+            type="number"
+            placeholder="Warranty (Years)"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+              setWarranty(value);
+            }}
+            onWheel={(e) => e.target.blur()} // Prevent up/down buttons
           />
           <input
-            type="text"
+            type="number"
             placeholder="Capacity"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+              setCapacity(value);
+            }}
+            onWheel={(e) => e.target.blur()}
           />
           <input
-            type="text"
+            type="number"
             placeholder="Quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+              setQuantity(value);
+            }}
+            onWheel={(e) => e.target.blur()}
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add
@@ -189,33 +212,65 @@ const SolarPanel = ({ components, handleSelectComponent }) => {
           <table>
             <thead>
               <tr>
-                {/* <th>Solar Type</th> */}
                 <th>Brand</th>
                 <th>Specification</th>
                 <th>Capacity</th>
                 <th>Warranty</th>
                 <th>Quantity</th>
+                <th>Action</th> {/* New column for the button */}
               </tr>
             </thead>
             <tbody>
-              {_solarData.length > 0 ? (
-                _solarData.map((solar) => (
+              {solarData.length > 0 ? (
+                solarData.map((solar) => (
                   <tr
                     key={solar.id}
-                    onClick={() => handleSelectComponent(solar)}
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(solar.id) && {
                         backgroundColor: "#ff6e2088",
-                      }), // Change color if id matches
+                      }),
                     }}
                   >
-                    {/* <td>{solar.subtype}</td> */}
                     <td>{solar.brand}</td>
                     <td>{solar.details}</td>
                     <td>{solar.capacity}</td>
                     <td>{solar.warranty}</td>
                     <td>{solar.quantity}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(solar);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(solar.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(solar.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200 "
+                            color="#dc2626" // Red-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a" // Green-600
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import StatsComponent from "./Components/StatsComponent";
 import SellerListing from "./Components/SellerListing";
 import AdminPackageManager from "./Components/AdminPackageManager";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "./config";
+// import "react-toastify/dist/ReactToastify.css";
 import "./CSS/Admin.css";
-import { API_URL } from "./api/request";
 
 const Dashboard = () => {
   const [statsData, setStatsData] = useState({
@@ -18,7 +19,9 @@ const Dashboard = () => {
   const [selectedCity, setSelectedCity] = useState("All"); // Add state for selected city
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [selectedSellerPackages, setSelectedSellerPackages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  console.log(sellerListingData);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,7 +99,8 @@ const Dashboard = () => {
         if (!token) throw new Error("No access token found. Please log in.");
 
         const response = await fetch(
-          `${API_URL}/accounts/profiles/?role=seller`,
+          `${API_BASE_URL}/api/accounts/profiles/?role=seller`,
+
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -134,7 +138,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("No access token found. Please log in.");
 
-      let apiUrl = `${API_URL}/listings/analytics/admin_analytics/`;
+      let apiUrl = `${API_BASE_URL}/api/listings/analytics/admin_analytics/`;
 
       // Append city filter if it's not "all"
       if (type === "city" && filter !== "all") {
@@ -175,12 +179,7 @@ const Dashboard = () => {
         packages: packagesByCity,
       }));
 
-      console.log(filter);
-      // Optional: Log or update additional data if needed
-      console.log(
-        "Updated stats for:",
-        filter === "all" ? "All Cities" : filter
-      );
+      setSelectedSeller(null);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -197,7 +196,8 @@ const Dashboard = () => {
 
       // Fetch packages associated with the seller's `id`
       const response = await fetch(
-        `${API_URL}/listings/solar-solutions/?seller=${seller.id}`,
+        `${API_BASE_URL}/api/listings/solar-solutions/?seller=${seller.id}`,
+
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -216,11 +216,13 @@ const Dashboard = () => {
       }
 
       setSelectedSeller(seller); // Save seller for UI context
-      console.log(data[0]);
-      setSelectedSellerPackages(data || []); // Store packages in state
+      console.log(seller.id);
+      setSelectedSellerPackages(data.results || []); // Store packages in state
     } catch (error) {
       console.error("Error fetching seller packages:", error);
       setSelectedSellerPackages([]); // Clear packages on error
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -232,49 +234,113 @@ const Dashboard = () => {
     navigate(`/edit-product/${id}`);
   };
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (packageId) => {
+    let approval = null; // Ensure that 'approval' is defined before usage
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("No access token found. Please log in.");
+      if (!token) {
+        throw new Error("No access token found. Please log in.");
+      }
 
-      const url = `${API_BASE_URL}/api/operations/approvals/${id}/approve/`;
+      // Step 1: Fetch the package data to get the `approval` object
+      const packageUrl = `${API_BASE_URL}/api/listings/solar-solutions/${packageId}/`;
 
-      const payload = {
-        admin_verified: true,
-        discrepancy: "No issues found", // Optional: Make this dynamic if needed
-        discrepancy_resolved: true,
-        email_notification_sent: true,
-      };
+      const packageResponse = await fetch(packageUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      const response = await fetch(url, {
+      if (!packageResponse.ok) {
+        throw new Error(
+          `Failed to fetch package data. HTTP status: ${packageResponse.status}`
+        );
+      }
+
+      const packageData = await packageResponse.json();
+      approval = packageData?.approval;
+
+      if (!approval) {
+        throw new Error("Approval object not found in package data.");
+      }
+
+      // Step 2: Check if the approval status is true or false and make the appropriate API call
+      const approvalUrl = approval.admin_verified
+        ? `${API_BASE_URL}/api/operations/approvals/${approval.id}/unapprove/`
+        : `${API_BASE_URL}/api/operations/approvals/${approval.id}/approve/`;
+
+      const payload = approval.admin_verified
+        ? {} // Unapprove may not require a payload
+        : {
+            admin_verified: true,
+            discrepancy: "No issues found", // Adjust dynamically if needed
+            discrepancy_resolved: true,
+            email_notification_sent: true,
+          };
+
+      // Step 3: Make the API call to approve or unapprove
+      const approvalResponse = await fetch(approvalUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: approval.admin_verified ? null : JSON.stringify(payload),
       });
 
-      if (!response.ok) {
+      if (!approvalResponse.ok) {
+        const errorData = await approvalResponse.json();
         throw new Error(
-          `Failed to approve package. HTTP status: ${response.status}`
+          `Failed to ${
+            approval.admin_verified ? "unapprove" : "approve"
+          } package. HTTP status: ${approvalResponse.status}. Message: ${
+            errorData.message || "Unknown error"
+          }`
         );
       }
 
-      const data = await response.json();
-      console.log("Package approved successfully:", data);
+      const approvalData = await approvalResponse.json();
+      console.log(
+        `Package ${
+          approval.admin_verified ? "unapproved" : "approved"
+        } successfully:`,
+        approvalData
+      );
 
-      alert("Package approved successfully!");
+      toast.success(
+        `Package ${
+          approval.admin_verified ? "unapproved" : "approved"
+        } successfully!`
+      );
 
-      // Update the package list locally
+      // Step 4: Update the package list locally
       setSelectedSellerPackages((prevPackages) =>
         prevPackages.map((pkg) =>
-          pkg.id === id ? { ...pkg, admin_verified: true } : pkg
+          pkg.id === packageId
+            ? {
+                ...pkg,
+                approval: {
+                  ...pkg.approval,
+                  admin_verified: !approval.admin_verified, // Toggle approval status
+                },
+              }
+            : pkg
         )
       );
+
+      await handleStatsClick();
+
+      // Step 5: Reload the seller's packages
+      if (selectedSeller) {
+        await handleSellerClick(selectedSeller);
+      }
     } catch (error) {
-      console.error("Error approving package:", error);
-      alert(`Failed to approve the package: ${error.message}`);
+      console.error("Error updating package approval status:", error);
+      toast.error(
+        `Failed to ${
+          approval && approval.admin_verified ? "unapprove" : "approve"
+        } the package: ${error.message || "Unknown error"}`
+      );
     }
   };
 
@@ -304,69 +370,116 @@ const Dashboard = () => {
         );
       }
 
-      alert("Package deleted successfully!");
+      toast.success("Package deleted successfully!");
 
       // Update the package list locally
       setSelectedSellerPackages((prevPackages) =>
         prevPackages.filter((pkg) => pkg.id !== id)
       );
+
+      // await handleStatsClick();
     } catch (error) {
       console.error("Error deleting package:", error);
-      alert(`Failed to delete the package: ${error.message}`);
+      toast.error(`Failed to delete the package: ${error.message}`);
     }
   };
 
-  return (
-    <div id="body">
-      <StatsComponent
-        title="Sellers"
-        {...statsData.sellers}
-        onCityClick={(city) => handleStatsClick("city", city)}
-        onTotalClick={() => handleStatsClick("city", "all")}
-      />
-      <StatsComponent title="Buyers" {...statsData.buyers} />
+  function handleLogout() {
+    // Clear any stored tokens or session data
+    localStorage.removeItem("accessToken"); // Assuming the token is stored as 'accessToken'
 
-      <h3 className="stats-title">Packages</h3>
-      <div className="stats-box">
-        <div className="stats-total">
-          <span>Total Packages</span>
-          <h2>{statsData.packages.total}</h2>
-        </div>
-        <div className="stats-cities">
-          <div className="stats-city">
-            <span>Approved Packages</span>
-            <p>{statsData.packages.approved}</p>
-          </div>
-          <div className="stats-city">
-            <span>Unapproved Packages</span>
-            <p>{statsData.packages.unapproved}</p>
-          </div>
-        </div>
+    // Redirect to the login page or homepage
+    window.location.href = "/login"; // Update this path based on your application's routing
+  }
+
+  return (
+    <>
+      <div className="header flex justify-between items-center px-6 py-4  border-b-1 border-[#ff6f20]">
+        <h1 className="text-2xl font-bold text-[#ff6f20]">Admin Dashboard</h1>
+        <button
+          className="border-2 border-[#ff6f20] text-[#ff6f20] font-medium py-2 px-4 rounded-lg transition duration-200 hover:bg-[#ff6f20] hover:text-white"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
 
-      {/* Seller Table */}
-      <SellerListing
-        sellers={sellerListingData}
-        onSellerClick={handleSellerClick}
-        selectedCity={selectedCity}
-      />
+      <div id="body" className="py-10">
+        <ToastContainer />
+        <StatsComponent
+          title="Sellers"
+          {...statsData.sellers}
+          onCityClick={(city) => handleStatsClick("city", city)}
+          onTotalClick={() => handleStatsClick("city", "all")}
+        />
+        <StatsComponent title="Buyers" {...statsData.buyers} />
 
-      {selectedSeller && (
-        <div className="seller-packages-section">
-          <h3>
-            {selectedSellerPackages.length > 0
-              ? `${selectedSeller.company?.name}'s Packages`
-              : `No Packages Found for ${selectedSeller.company?.name}`}
+        <div className="stats-container bg-gray-100 p-3 rounded-lg shadow-md ">
+          <h3 className="stats-title text-xl font-bold text-gray-800 mb-4">
+            Packages
           </h3>
-          <AdminPackageManager
-            packages={selectedSellerPackages}
-            onEdit={handleEdit}
-            onApprove={handleApprove}
-            onDelete={handleDelete}
-          />
+          <div className="stats-box grid grid-cols-3 gap-6 items-center">
+            {/* Total Packages */}
+            <div className="stats-total bg-[#ff6f20] text-white p-2 rounded-lg text-center">
+              <span className="block text-md font-medium uppercase">
+                Total Packages
+              </span>
+              <h2 className="text-3xl font-extrabold">
+                {statsData.packages.total}
+              </h2>
+            </div>
+
+            {/* Approved Packages */}
+            <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
+              <span className="block text-[#ff6f20] font-semibold uppercase">
+                Approved Packages
+              </span>
+              <p className="text-2xl font-bold text-gray-900">
+                {statsData.packages.approved}
+              </p>
+            </div>
+
+            {/* Unapproved Packages */}
+            <div className="stats-city bg-white border border-gray-300 rounded-lg p-3 text-center">
+              <span className="block text-[#ff6f20] font-semibold uppercase">
+                Unapproved Packages
+              </span>
+              <p className="text-2xl font-bold text-gray-900">
+                {statsData.packages.unapproved}
+              </p>
+            </div>
+          </div>
         </div>
-      )}
-    </div>
+
+        {/* Seller Table */}
+        <SellerListing
+          sellers={sellerListingData}
+          onSellerClick={handleSellerClick}
+          selectedCity={selectedCity}
+        />
+
+        {selectedSeller && (
+          <div className="seller-packages-section my-10">
+            <h3
+              className={`text-2xl font-bold mt-5 my-5 ${
+                selectedSellerPackages.length > 0 ? "#ff6f20" : "#dc3545"
+              }`}
+            >
+              {selectedSellerPackages.length > 0
+                ? `${selectedSeller.company?.name}'s Packages`
+                : `No Packages Found for ${selectedSeller.company?.name}`}
+            </h3>
+            <AdminPackageManager
+              packages={selectedSellerPackages}
+              onEdit={handleEdit}
+              onApprove={handleApprove}
+              onDelete={handleDelete}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

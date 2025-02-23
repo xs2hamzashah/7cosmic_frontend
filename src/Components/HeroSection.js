@@ -1,6 +1,6 @@
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[80vh] bg-white flex items-center px-8 md:px-16">
+    <section className="relative min-h-[80vh] flex items-center px-8 md:px-16">
       <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900">

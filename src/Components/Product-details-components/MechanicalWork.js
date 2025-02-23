@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../../config"; 
+
+import { IonIcon } from "@ionic/react";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import API_BASE_URL from "../../config";
 
 const MechanicalWork = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,10 +63,17 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
   }, []);
 
   const handleSubmit = async () => {
+    if (!mechanicalMaterial || !mechanicalStructureType || !warranty) {
+      toast.error(
+        "Mechanical Material, Mechanical StructureType and Warranty feilds are required."
+      );
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -80,7 +97,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -96,7 +113,9 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
       setWarranty("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -106,6 +125,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Mechanical Work</h2>
         <button className="button" onClick={toggleSection}>
@@ -142,10 +162,10 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
             <option value="Other">Other</option>
           </select>
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add
@@ -159,6 +179,7 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
                 <th>Mechanical Material</th>
                 <th>Mechanical Structure Type</th>
                 <th>Warranty</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -166,7 +187,11 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
                 mechanicalData.map((mechanical) => (
                   <tr
                     key={mechanical.id}
-                    onClick={() => handleSelectComponent(mechanical)}
+                    className={
+                      highlightedIds.includes(mechanical.id)
+                        ? "bg-green-50"
+                        : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(mechanical.id) && {
@@ -177,11 +202,46 @@ const MechanicalWork = ({ components, handleSelectComponent }) => {
                     <td>{mechanical.mechanical_material}</td>
                     <td>{mechanical.mechanical_structure_type}</td>
                     <td>{mechanical.warranty}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(mechanical);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(mechanical.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(mechanical.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3">No data available</td>
+                  <td colSpan="4">No data available</td>{" "}
+                  {/* Updated colspan to 4 for the new action column */}
                 </tr>
               )}
             </tbody>

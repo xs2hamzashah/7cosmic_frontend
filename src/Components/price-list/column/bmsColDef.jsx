@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 import { Button } from "../../../core/button/Button";
 
 export const getBmsColDef = ({ onEdit, onDelete }) => {

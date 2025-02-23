@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../../config"; 
+import { IonIcon } from "@ionic/react";
+import {
+  removeOutline,
+  addOutline,
+  removeCircleOutline,
+  addCircleOutline,
+} from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+
+import API_BASE_URL from "../../config";
 
 const Battery = ({ components, handleSelectComponent }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +63,42 @@ const Battery = ({ components, handleSelectComponent }) => {
     fetchData();
   }, []);
 
+  // Function to validate inputs
+  const validateInputs = () => {
+    // Validation for required text fields
+    if (!batteryType || !brand || !detail) {
+      toast.error("Battery Type, Brand, and Specifications are required.");
+      return false;
+    }
+
+    // Validation for numeric fields, ensuring they are numbers and positive integers
+    if (
+      isNaN(capacity) ||
+      isNaN(warranty) ||
+      isNaN(quantity) ||
+      isNaN(totalBackupCapacity) ||
+      Math.max(Number(capacity), 0) <= 0 ||
+      Math.max(Number(warranty), 0) <= 0 ||
+      Math.max(Number(quantity), 0) <= 0 ||
+      Math.max(Number(totalBackupCapacity), 0) <= 0
+    ) {
+      toast.error(
+        "Capacity, Warranty, Quantity, and Total Backup Capacity must be positive numbers."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateInputs()) {
+      return;
+    }
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -86,7 +126,7 @@ const Battery = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -104,8 +144,9 @@ const Battery = ({ components, handleSelectComponent }) => {
       setQuantity("");
       setTotalBackupCapacity("");
     } catch (error) {
-      console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -115,10 +156,15 @@ const Battery = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Battery</h2>
         <button className="button" onClick={toggleSection}>
-          <ion-icon name={isOpen ? "remove-outline" : "add-outline"}></ion-icon>
+          <IonIcon
+            icon={isOpen ? removeOutline : addOutline}
+            className="toggle-icon"
+            onClick={() => setIsOpen(!isOpen)}
+          />
         </button>
       </div>
 
@@ -143,28 +189,33 @@ const Battery = ({ components, handleSelectComponent }) => {
             onChange={(e) => setDetail(e.target.value)}
           />
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Capacity"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => setCapacity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
+            type="number"
             placeholder="Quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(Math.max(0, e.target.value))}
           />
+
           <input
-            type="text"
-            placeholder="total Backup Capacity"
+            type="number"
+            placeholder="Total Backup Capacity"
             value={totalBackupCapacity}
-            onChange={(e) => setTotalBackupCapacity(e.target.value)}
+            onChange={(e) =>
+              setTotalBackupCapacity(Math.max(0, e.target.value))
+            }
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add
@@ -182,6 +233,7 @@ const Battery = ({ components, handleSelectComponent }) => {
                 <th>Warranty</th>
                 <th>Quantity</th>
                 <th>Total Backup Capacity</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -189,12 +241,14 @@ const Battery = ({ components, handleSelectComponent }) => {
                 batteryData.map((battery) => (
                   <tr
                     key={battery.id}
-                    onClick={() => handleSelectComponent(battery)}
+                    className={
+                      highlightedIds.includes(battery.id) ? "bg-green-50" : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(battery.id) && {
                         backgroundColor: "#ff6e2088",
-                      }), // Change color if id matches
+                      }),
                     }}
                   >
                     <td>{battery.subtype}</td>
@@ -204,11 +258,46 @@ const Battery = ({ components, handleSelectComponent }) => {
                     <td>{battery.warranty}</td>
                     <td>{battery.quantity}</td>
                     <td>{battery.total_backup_capacity}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(battery);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(battery.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(battery.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6">No data available</td>
+                  <td colSpan="8">No data available</td>{" "}
+                  {/* Updated colspan to 8 for the new action column */}
                 </tr>
               )}
             </tbody>

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ProfileContext } from "../context/ProfileContext"; // Import ProfileContex
 import API_BASE_URL from "../config";
 import "../CSS/Login.css";
+import Navbar from "../Components/Navbar";
+import PasswordInput from "../Components/PasswordInput";
 
 // Create Axios Instance
 const api = axios.create({
@@ -22,6 +25,7 @@ api.interceptors.request.use(
 );
 
 function Login() {
+  const { fetchProfileData } = useContext(ProfileContext); // Access fetchProfileData
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -31,67 +35,37 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
-      // Determine the role based on email and password
-      let role = "seller"; // Default role
-      if (email === "admin@example.com" && password === "useradmin") {
-        role = "admin";
-      }
+      // Send login request
+      const response = await api.post("auth/login/", { email, password });
 
-      // Send login request with email, password, and role
-      const response = await api.post("auth/login/", { email, password, role });
-      const { access, refresh } = response.data;
+      // Extract data from the response
+      const { access, refresh, role } = response.data;
 
-      // Store tokens in local storage
+      // Store tokens in localStorage
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
-      // Navigate to the correct dashboard based on the role
+      // Store role in localStorage
+      localStorage.setItem("role", role);
+
+      // Fetch profile data after login
+      await fetchProfileData();
+
+      // Navigate based on the role
       if (role === "admin") {
-        try {
-          // Verify admin access
-          const adminResponse = await api.get(
-            "/listings/analytics/admin_analytics/"
-          );
-          if (adminResponse.data) {
-            navigate("/admin");
-            return;
-          }
-        } catch (error) {
-          setError("Admin access failed.");
-          return;
-        }
+        navigate("/admin");
+      } else if (role === "seller") {
+        navigate("/seller-analytics");
       } else {
-        try {
-          // Verify seller access
-          const sellerResponse = await api.get(
-            "/listings/analytics/seller_analytics/"
-          );
-          if (sellerResponse.data && sellerResponse.data.seller_id) {
-            const sellerId = sellerResponse.data.seller_id;
-
-            // Store seller ID in local storage for future use
-            localStorage.setItem("sellerId", sellerId);
-
-            // Navigate to seller analytics page
-            navigate(`/seller-analytics/${sellerId}`);
-            return;
-          }
-        } catch (error) {
-          setError("Seller access failed.");
-          return;
-        }
+        console.error("Unknown role, unable to navigate.");
       }
-
-      // If neither role works, show error
-      setError("You do not have permission to access this data.");
     } catch (error) {
-      // Handle login failure
       setError(error.response?.data?.detail || "Invalid email or password");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -114,53 +88,55 @@ function Login() {
   };
 
   return (
-    <section id="body" className="login-container">
-      <div className="login-form">
-        <h2>Business Login</h2>
-        <p>
-          Don't have an account yet?{" "}
-          <a onClick={handleNavigateToSignUp} style={{ cursor: "pointer" }}>
-            Create Account
-          </a>
-        </p>
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleForgotPassword();
-            }}
-          >
-            Forgot your password?
-          </a>
-          <button className="btn" type="submit" disabled={loading}>
-            {loading ? (
-              <span className="loading-dots">
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-              </span>
-            ) : (
-              "Sign In"
-            )}
-          </button>
-        </form>
-        {error && <p className="login-error">{error}</p>}
-        {forgotMessage && <p className="forgot-message">{forgotMessage}</p>}
+    <section id="body">
+      <Navbar />
+      <div className="login-container">
+        <div className="login-form">
+          <h2>Business Login</h2>
+          <p>
+            Don't have an account yet?{" "}
+            <a onClick={handleNavigateToSignUp} style={{ cursor: "pointer" }}>
+              Create Account
+            </a>
+          </p>
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <PasswordInput
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleForgotPassword();
+              }}
+            >
+              Forgot your password?
+            </a>
+            <button className="btn" type="submit" disabled={loading}>
+              {loading ? (
+                <span className="loading-dots">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </form>
+          {error && <p className="login-error">{error}</p>}
+          {forgotMessage && <p className="forgot-message">{forgotMessage}</p>}
+        </div>
       </div>
     </section>
   );

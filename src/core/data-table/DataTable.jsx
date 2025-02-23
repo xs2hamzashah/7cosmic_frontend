@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 
 import { useState } from "react";
-import { Input } from "../input/Input";
 
 import {
   Table,
@@ -37,7 +36,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-} from "../dropdownMenu/DropDownMenu";
+} from "../dropdown-menu/dropdown-menu";
 
 export function DataTable({ columns, data }) {
   const [sorting, setSorting] = useState([]);

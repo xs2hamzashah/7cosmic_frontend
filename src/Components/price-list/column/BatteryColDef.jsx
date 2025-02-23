@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 

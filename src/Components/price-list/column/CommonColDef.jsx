@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 
 import moment from "moment";
 

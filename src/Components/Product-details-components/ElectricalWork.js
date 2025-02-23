@@ -1,4 +1,15 @@
 import React, { useState, useEffect } from "react";
+
+import { IonIcon } from "@ionic/react";
+import {
+  removeOutline,
+  addOutline,
+  addCircleOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import API_BASE_URL from "../../config";
 
 const ElectricalWork = ({ components, handleSelectComponent }) => {
@@ -47,10 +58,15 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
   }, []);
 
   const handleSubmit = async () => {
+    if (!wireMaterial || !warranty) {
+      toast.error("Both Wire Material and Warranty are required.");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("Authorization required. Please log in.");
+        toast.error("Authorization required. Please log in.");
         return;
       }
 
@@ -73,7 +89,7 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
       if (!postResponse.ok) {
         const errorData = await postResponse.json();
         console.error("POST Error:", errorData);
-        alert(`Failed to post data: ${JSON.stringify(errorData)}`);
+        toast.error(`Failed to post data: ${JSON.stringify(errorData)}`);
         return;
       }
 
@@ -88,7 +104,9 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
       setWireMaterial("");
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsOpen(false);
     }
   };
 
@@ -98,6 +116,7 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
 
   return (
     <div className="roller">
+      <ToastContainer />
       <div className="component-head">
         <h2>Electrical Work</h2>
         <button className="button" onClick={toggleSection}>
@@ -114,15 +133,13 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
           >
             <option value="">Wire Material</option>
             <option value="Copper">Copper</option>
-            <option value="Aluminium">Aluminium</option>
-            <option value="PVC">PVC</option>
             <option value="Other">Other</option>
           </select>
           <input
-            type="text"
+            type="number"
             placeholder="Warranty"
             value={warranty}
-            onChange={(e) => setWarranty(e.target.value)}
+            onChange={(e) => setWarranty(Math.max(0, e.target.value))}
           />
           <button onClick={handleSubmit} className="add-component-btn">
             Add
@@ -135,6 +152,7 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
               <tr>
                 <th>Wire Material</th>
                 <th>Warranty</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -142,7 +160,11 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
                 electricalData.map((electrical) => (
                   <tr
                     key={electrical.id}
-                    onClick={() => handleSelectComponent(electrical)}
+                    className={
+                      highlightedIds.includes(electrical.id)
+                        ? "bg-green-50"
+                        : ""
+                    }
                     style={{
                       cursor: "pointer",
                       ...(highlightedIds.includes(electrical.id) && {
@@ -152,11 +174,46 @@ const ElectricalWork = ({ components, handleSelectComponent }) => {
                   >
                     <td>{electrical.wire_material}</td>
                     <td>{electrical.warranty}</td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectComponent(electrical);
+                          setIsOpen(false);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          highlightedIds.includes(electrical.id)
+                            ? "hover:bg-red-50 focus:ring-red-500"
+                            : "hover:bg-green-50 focus:ring-green-500"
+                        }`}
+                      >
+                        {highlightedIds.includes(electrical.id) ? (
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#dc2626"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        ) : (
+                          <IonIcon
+                            icon={addCircleOutline}
+                            className="w-6 h-6 transition-transform duration-200"
+                            color="#16a34a"
+                            style={{
+                              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+                            }}
+                          />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2">No data available</td>
+                  <td colSpan="3">No data available</td>{" "}
+                  {/* Updated colspan to 3 for the new action column */}
                 </tr>
               )}
             </tbody>

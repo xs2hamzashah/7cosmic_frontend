@@ -31,7 +31,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 
 import {
   Dialog,
@@ -231,7 +231,7 @@ function Battery({ setIsLoading }) {
                 Add
               </Button>
 
-              <DropdownMenu >
+              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"

@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "../dropdownMenu/DropDownMenu";
+} from "../dropdown-menu/dropdown-menu";
 
 export const columns = [
   {

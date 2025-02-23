@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "../../../core/dropdownMenu/DropDownMenu";
+} from "../../../core/dropdown-menu/dropdown-menu";
 
 export const getInverterColDef = ({ addNew, onEdit, onDelete }) => {
   const inverterDefCols = [
